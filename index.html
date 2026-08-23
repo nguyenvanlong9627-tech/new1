@@ -126,7 +126,9 @@
             <div class="bg-slate-900 border border-amber-500/30 rounded-2xl p-4 flex items-center justify-between shadow-md relative overflow-hidden">
                 <div>
                     <p class="text-xs font-medium text-slate-400">Hồ thủy điện mở cửa xả</p>
-                    <h3 class="text-xl font-bold font-heading text-amber-400 mt-1" id="activeHydroReservoirs">4 Hồ Trọng Điểm</h3>
+                    <h3 class="text-xl font-bold font-heading text-amber-400 mt-1 flex items-center gap-2" id="activeHydroReservoirs">
+                        4 Hồ Trọng Điểm <i class="fa-solid fa-water text-sm fa-fade"></i>
+                    </h3>
                     <p class="text-xs text-slate-400 mt-1">Tuyên Quang, Thác Bà, Bản Lải, Hòa Bình</p>
                 </div>
                 <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl shrink-0">
@@ -273,16 +275,32 @@
                         <span class="text-xs font-bold text-red-400 uppercase tracking-wider"><i class="fa-solid fa-triangle-exclamation mr-1"></i> Nguy Cơ Lũ Quét & Sạt Lở</span>
                         <span class="text-[10px] bg-red-500/20 text-red-300 px-2 py-0.5 rounded animate-pulse">Báo động đỏ</span>
                     </div>
-                    <p class="text-xs text-slate-300 leading-relaxed">
-                        Mưa lớn dồn dập khiến đất bão hòa nước. Nguy cơ rất cao xảy ra sạt lở đất đá trượt dốc và lũ quét cục bộ tại:
+                    <p class="text-[11px] text-slate-300 leading-relaxed">
+                        Mưa lớn dồn dập khiến đất bão hòa nước. Các khu vực cảnh báo sạt lở đất đá trượt dốc và lũ quét:
                     </p>
-                    <div class="flex flex-wrap gap-1.5 text-[10px]">
+                    <div class="flex flex-wrap gap-1.5 text-[10px] h-[105px] overflow-y-auto pr-1">
+                        <div class="w-full text-red-400 font-semibold mb-0.5 mt-0.5">Nguy cơ RẤT CAO:</div>
+                        <span class="px-2 py-0.5 rounded bg-red-900/50 text-red-200 border border-red-700/50">Lào Cai</span>
+                        <span class="px-2 py-0.5 rounded bg-red-900/50 text-red-200 border border-red-700/50">Yên Bái</span>
                         <span class="px-2 py-0.5 rounded bg-red-900/50 text-red-200 border border-red-700/50">Lạng Sơn</span>
-                        <span class="px-2 py-0.5 rounded bg-red-900/50 text-red-200 border border-red-700/50">Bắc Giang</span>
                         <span class="px-2 py-0.5 rounded bg-red-900/50 text-red-200 border border-red-700/50">Quảng Ninh</span>
-                        <span class="px-2 py-0.5 rounded bg-red-900/50 text-red-200 border border-red-700/50">Bắc Ninh</span>
-                        <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">Thái Nguyên</span>
-                        <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300">Cao Bằng</span>
+                        <span class="px-2 py-0.5 rounded bg-red-900/50 text-red-200 border border-red-700/50">Bắc Giang</span>
+                        <span class="px-2 py-0.5 rounded bg-red-900/50 text-red-200 border border-red-700/50">Hà Giang</span>
+                        <span class="px-2 py-0.5 rounded bg-red-900/50 text-red-200 border border-red-700/50">Lai Châu</span>
+                        
+                        <div class="w-full text-orange-400 font-semibold mb-0.5 mt-1">Nguy cơ CAO:</div>
+                        <span class="px-2 py-0.5 rounded bg-orange-900/50 text-orange-200 border border-orange-700/50">Tuyên Quang</span>
+                        <span class="px-2 py-0.5 rounded bg-orange-900/50 text-orange-200 border border-orange-700/50">Cao Bằng</span>
+                        <span class="px-2 py-0.5 rounded bg-orange-900/50 text-orange-200 border border-orange-700/50">Bắc Kạn</span>
+                        <span class="px-2 py-0.5 rounded bg-orange-900/50 text-orange-200 border border-orange-700/50">Điện Biên</span>
+                        <span class="px-2 py-0.5 rounded bg-orange-900/50 text-orange-200 border border-orange-700/50">Sơn La</span>
+                        <span class="px-2 py-0.5 rounded bg-orange-900/50 text-orange-200 border border-orange-700/50">Hòa Bình</span>
+                        
+                        <div class="w-full text-yellow-400 font-semibold mb-0.5 mt-1">Lưu ý đề phòng:</div>
+                        <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">Thái Nguyên</span>
+                        <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">Phú Thọ</span>
+                        <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">Vĩnh Phúc</span>
+                        <span class="px-2 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">Bắc Ninh</span>
                     </div>
                 </div>
             </div>
@@ -1250,13 +1268,21 @@
             reservoirs.forEach(res => {
                 const isDischarging = res.openGates > 0;
                 container.innerHTML += `
-                    <div class="p-2.5 rounded-lg bg-slate-950/80 border border-slate-800 flex items-center justify-between">
-                        <div>
-                            <div class="font-semibold text-slate-200">${res.name} <span class="text-slate-500 font-normal">(${res.river})</span></div>
-                            <div class="text-[10px] ${isDischarging ? 'text-amber-400 font-medium' : 'text-slate-400'}">${res.status}</div>
+                    <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800 flex items-center justify-between transition-all hover:bg-slate-800/50">
+                        <div class="flex items-center gap-2.5">
+                            <div class="w-8 h-8 rounded-full ${isDischarging ? 'bg-amber-500/20 border-amber-500/30 text-amber-400' : 'bg-slate-800 border-slate-700 text-slate-500'} border flex items-center justify-center shrink-0">
+                                <i class="fa-solid fa-water"></i>
+                            </div>
+                            <div>
+                                <div class="font-semibold text-slate-200">${res.name} <span class="text-slate-500 font-normal text-[10px] ml-1">(${res.river})</span></div>
+                                <div class="text-[10px] ${isDischarging ? 'text-amber-400 font-medium' : 'text-slate-400'} flex items-center gap-1 mt-0.5">
+                                    <i class="fa-solid ${isDischarging ? 'fa-triangle-exclamation' : 'fa-circle-check'}"></i> ${res.status}
+                                </div>
+                            </div>
                         </div>
                         <div class="text-right">
-                            <span class="text-xs font-mono font-bold ${isDischarging ? 'text-amber-300' : 'text-slate-400'}">${res.flow}</span>
+                            <div class="text-xs font-mono font-bold ${isDischarging ? 'text-amber-300' : 'text-slate-400'}">${res.flow}</div>
+                            <div class="text-[9px] text-slate-500 mt-0.5">${isDischarging ? `${res.openGates} cửa xả` : 'Đóng cửa xả'}</div>
                         </div>
                     </div>
                 `;

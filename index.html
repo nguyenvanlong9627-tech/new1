@@ -45,22 +45,26 @@
         /* Navigation Tabs */
         .nav-tabs {
             display: flex;
-            gap: 8px;
+            flex-wrap: wrap;
+            gap: 6px;
             margin-bottom: 16px;
             border-bottom: 2px solid #cbd5e1;
-            padding-bottom: 4px;
+            padding-bottom: 8px;
         }
 
         .tab-btn {
-            padding: 10px 20px;
+            padding: 8px 14px;
             font-weight: 700;
-            font-size: 13.5px;
-            border-radius: 8px 8px 0 0;
+            font-size: 12.5px;
+            border-radius: 8px;
             cursor: pointer;
-            border: 1px solid transparent;
+            border: 1px solid #cbd5e1;
             background: #e2e8f0;
             color: #475569;
             transition: all 0.2s;
+            flex: 1 1 calc(25% - 8px);
+            min-width: 150px;
+            text-align: center;
         }
 
         .tab-btn:hover {
@@ -72,6 +76,7 @@
             background: #0284c7 !important;
             color: #ffffff !important;
             border-color: #0284c7 !important;
+            box-shadow: 0 2px 4px rgba(2, 132, 199, 0.25);
         }
 
         .tab-content {
@@ -159,6 +164,12 @@
             gap: 8px;
         }
 
+        .row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 8px;
+        }
+
         /* Tier Selector Pills */
         .tier-selector {
             display: grid;
@@ -201,6 +212,18 @@
             line-height: 1.4;
         }
 
+        /* Stock Pill Badges */
+        .stock-badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10.5px;
+            font-weight: 700;
+        }
+        .stock-ok { background: #dcfce7; color: #15803d; border: 1px solid #86efac; }
+        .stock-low { background: #fef3c7; color: #b45309; border: 1px solid #fcd34d; }
+        .stock-out { background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
+
         /* Buttons */
         .btn {
             display: inline-flex;
@@ -232,7 +255,7 @@
 
         /* Catalog Box */
         .catalog-list {
-            max-height: 200px;
+            max-height: 220px;
             overflow-y: auto;
             border: 1px solid #e2e8f0;
             border-radius: 6px;
@@ -414,7 +437,7 @@
             gap: 12px;
             align-items: center;
             padding: 10px 14px;
-            border: 2px dashed #0284c7;
+            border: none;
             border-radius: 10px;
             background: #f0f9ff;
         }
@@ -451,7 +474,7 @@
         }
 
         .summary-table {
-            width: 370px;
+            width: 380px;
             border-collapse: collapse;
         }
 
@@ -467,6 +490,14 @@
             color: #166534;
             border-top: 2px solid #86efac;
             border-bottom: 2px solid #86efac;
+        }
+
+        .summary-table tr.remaining-row {
+            background: #fff1f2;
+            font-weight: 800;
+            font-size: 13.5px;
+            color: #b91c1c;
+            border-bottom: 2px solid #fca5a5;
         }
 
         .quote-footer {
@@ -642,7 +673,7 @@
             }
             .no-print, .modal-toolbar { display: none !important; }
             .editable-input { border: none !important; padding: 0 !important; }
-            .qr-bank-card { border: 1px solid #cbd5e1 !important; background: #fff !important; }
+            .qr-bank-card { border: none !important; background: #fff !important; }
         }
     
         /* Mobile-First Responsive Styles */
@@ -658,19 +689,16 @@
             }
 
             .nav-tabs {
-                display: flex;
-                overflow-x: auto;
-                white-space: nowrap;
-                gap: 4px;
+                gap: 5px;
                 padding-bottom: 6px;
                 margin-bottom: 12px;
-                -webkit-overflow-scrolling: touch;
             }
 
             .tab-btn {
-                padding: 8px 12px;
-                font-size: 12px;
-                flex-shrink: 0;
+                padding: 7px 10px;
+                font-size: 11.5px;
+                flex: 1 1 calc(50% - 6px);
+                min-width: 130px;
             }
 
             .toolbar {
@@ -774,12 +802,6 @@
                 gap: 6px;
             }
 
-            .modal-toolbar > div {
-                width: 100%;
-                display: flex;
-                justify-content: space-between;
-            }
-
             .order-card-header {
                 flex-direction: column;
                 align-items: flex-start;
@@ -787,6 +809,63 @@
             }
         }
 
+        /* Login Overlay & User Bar Styles */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            z-index: 99999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .login-card {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+            width: 100%;
+            max-width: 420px;
+            padding: 32px 28px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .login-header h2 {
+            font-size: 20px;
+            color: #0369a1;
+            font-weight: 800;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        .login-header p {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .user-info-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #0369a1;
+            margin-left: auto;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
     </style>
 </head>
 <body>
@@ -794,12 +873,20 @@
 <div class="container">
     
     <!-- Top Navigation Tabs -->
-    <div class="nav-tabs no-print">
+    <div class="nav-tabs no-print" style="align-items: center;">
         <button class="tab-btn active" id="btn-tab-quote" onclick="switchTab('tab-quote')">📝 Lập Báo Giá Thiết Bị</button>
+        <button class="tab-btn" id="btn-tab-inventory" onclick="switchTab('tab-inventory')">📦 Quản Lý Tồn Kho & Nhập Xuất</button>
         <button class="tab-btn" id="btn-tab-contract" onclick="switchTab('tab-contract')">📜 Hợp Đồng Mua Bán</button>
         <button class="tab-btn" id="btn-tab-customers" onclick="switchTab('tab-customers')">👥 Quản Lý Khách Hàng</button>
-        <button class="tab-btn" id="btn-tab-history" onclick="switchTab('tab-history')">💳 Quản Lý Đơn Hàng</button>
+        <button class="tab-btn" id="btn-tab-history" onclick="switchTab('tab-history')">💳 Quản Lý Đơn Hàng & Công Nợ</button>
         <button class="tab-btn" id="btn-tab-stats" onclick="switchTab('tab-stats')">📊 Thống Kê Sản Phẩm & Doanh Thu</button>
+        <button class="tab-btn" id="btn-tab-settings" onclick="switchTab('tab-settings')">⚙️ Cài Đặt Kho & Sao Lưu</button>
+        
+        <!-- Account Badge & Logout Button -->
+        <div class="user-info-pill no-print">
+            <span>👤 <span id="lblLoggedInUser">Admin</span></span>
+            <button class="btn btn-danger" style="padding: 3px 8px; font-size: 11px; margin-left: 4px;" onclick="handleLogout()" title="Đăng xuất khỏi hệ thống">🚪 Đăng Xuất</button>
+        </div>
     </div>
 
     <!-- TAB 1: TẠO BÁO GIÁ -->
@@ -811,6 +898,9 @@
             </button>
             <button class="btn btn-primary" onclick="printActiveQuotation()">
                 🖨️ In Báo Giá (Print)
+            </button>
+            <button class="btn btn-success" style="background: #0284c7;" onclick="copyQuoteForZalo()">
+                📱 Copy Báo Giá Cho Zalo
             </button>
             <button class="btn btn-success" onclick="saveOrderAsSold()">
                 ✅ Lưu Đơn Hàng & Khách Hàng
@@ -840,71 +930,87 @@
                         <button class="btn btn-outline" style="padding: 2px 6px; font-size: 10.5px;" onclick="viewHistoryOfCurrentCustomer()">🔍 Lịch Sử Mua</button>
                     </div>
                     
-                    <div class="form-group">
-                        <label>Chọn Khách Hàng Quen Đã Lưu</label>
-                        <select id="savedCustomersSelect" onchange="onSelectSavedCustomer()">
-                            <option value="">-- Chọn khách quen (hoặc nhập mới bên dưới) --</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Mã Số Thuế Doanh Nghiệp (MST)</label>
-                        <div style="display: flex; gap: 5px;">
-                            <input type="text" id="custTaxCode" list="customerTaxSuggestions" placeholder="Nhập MST để tự tra cứu (VD: 230136120...)" oninput="onCustTaxCodeInput()" style="font-weight: 600; color: #0369a1;">
-                            <button class="btn btn-outline" style="padding: 4px 8px; flex-shrink: 0;" title="Tra cứu doanh nghiệp theo MST" onclick="lookupCompanyByTaxCode()">🔍 Tra Cứu</button>
-                        </div>
-                        <datalist id="customerTaxSuggestions"></datalist>
-                        <span id="taxLookupStatus" style="font-size: 10.5px; display: block; margin-top: 3px; color: #64748b;"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Tên Doanh Nghiệp / Công Ty</label>
-                        <input type="text" id="custName" list="customerNameSuggestions" placeholder="Nhập tên khách / công ty..." oninput="onCustNameInput()"><datalist id="customerNameSuggestions"></datalist>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Người Đại Diện Pháp Luật / Người Liên Hệ</label>
-                        <input type="text" id="custRepresentative" placeholder="Tự động điền đại diện pháp luật khi tra cứu MST..." oninput="updateClientInfo()">
-                    </div>
-
+                    <!-- Dòng 1: Tìm kiếm & Chọn khách quen (2 Cột) -->
                     <div class="row-2">
                         <div class="form-group">
-                            <label>Số Điện Thoại / Zalo</label>
-                            <input type="text" id="custPhone" list="customerPhoneSuggestions" placeholder="09xx xxx xxx" oninput="onCustPhoneInput()"><datalist id="customerPhoneSuggestions"></datalist>
-                        </div>
-                        <div class="form-group">
-                            <label>Email / Gmail Công Ty</label>
-                            <input type="email" id="custEmail" placeholder="Tự động điền khi tra cứu MST..." oninput="updateClientInfo()">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-                            <label style="margin: 0;">Địa Chỉ / Trụ Sở Công Ty</label>
-                            <div style="display: flex; gap: 8px; font-size: 11px;">
-                                <label style="text-transform: none; font-weight: 600; cursor: pointer; color: #0284c7;">
-                                    <input type="radio" name="addrType" value="new" checked onchange="switchAddressStandard(this.value)"> 🏛️ HC Mới
-                                </label>
-                                <label style="text-transform: none; font-weight: 600; cursor: pointer; color: #64748b;">
-                                    <input type="radio" name="addrType" value="old" onchange="switchAddressStandard(this.value)"> 📜 Địa danh Cũ
-                                </label>
+                            <label>🔍 Tìm Khách Quen</label>
+                            <div style="display: flex; gap: 3px;">
+                                <input type="text" id="searchSavedCustomerInput" placeholder="Tên, SĐT, MST..." oninput="filterSavedCustomerSelect()" style="font-size: 11.5px;">
+                                <button class="btn btn-outline" style="padding: 2px 6px; flex-shrink: 0;" title="Xóa tìm kiếm" onclick="clearSavedCustomerSearch()">✕</button>
                             </div>
                         </div>
-                        <input type="text" id="custAddr" list="provincesList" placeholder="Gõ địa chỉ / chọn khu vực..." oninput="updateClientInfo()">
-                        <!-- Danh sách gợi ý địa chỉ linh hoạt 2 phương án -->
-                        <datalist id="provincesList"></datalist>
+                        <div class="form-group">
+                            <label>Chọn Khách Đã Lưu</label>
+                            <select id="savedCustomersSelect" onchange="onSelectSavedCustomer()" style="font-size: 11.5px;">
+                                <option value="">-- Chọn khách quen --</option>
+                            </select>
+                        </div>
                     </div>
 
+                    <!-- Dòng 2: Mã số thuế & Tên công ty / Khách hàng (2 Cột) -->
+                    <div class="row-2">
+                        <div class="form-group">
+                            <label>Mã Số Thuế (MST)</label>
+                            <div style="display: flex; gap: 3px;">
+                                <input type="text" id="custTaxCode" list="customerTaxSuggestions" placeholder="Nhập MST..." oninput="onCustTaxCodeInput()" style="font-weight: 600; color: #0369a1; font-size: 11.5px;">
+                                <button class="btn btn-outline" style="padding: 2px 6px; flex-shrink: 0; font-size: 11px;" title="Tra cứu" onclick="lookupCompanyByTaxCode()">🔍</button>
+                            </div>
+                            <datalist id="customerTaxSuggestions"></datalist>
+                        </div>
+                        <div class="form-group">
+                            <label>Tên Doanh Nghiệp / Khách</label>
+                            <input type="text" id="custName" list="customerNameSuggestions" placeholder="Tên khách / công ty..." oninput="onCustNameInput()" style="font-size: 11.5px;"><datalist id="customerNameSuggestions"></datalist>
+                        </div>
+                    </div>
+                    <span id="taxLookupStatus" style="font-size: 10.5px; display: block; margin-top: -6px; margin-bottom: 6px; color: #64748b;"></span>
+
+                    <!-- Dòng 3: Người Đại Diện & Số Điện Thoại / Zalo (2 Cột) -->
+                    <div class="row-2">
+                        <div class="form-group">
+                            <label>Người Đại Diện / Liên Hệ</label>
+                            <input type="text" id="custRepresentative" placeholder="Đại diện PL..." oninput="updateClientInfo()" style="font-size: 11.5px;">
+                        </div>
+                        <div class="form-group">
+                            <label>Số Điện Thoại / Zalo</label>
+                            <input type="text" id="custPhone" list="customerPhoneSuggestions" placeholder="09xx xxx xxx" oninput="onCustPhoneInput()" style="font-size: 11.5px;"><datalist id="customerPhoneSuggestions"></datalist>
+                        </div>
+                    </div>
+
+                    <!-- Dòng 4: Email & Địa Chỉ / Trụ Sở (2 Cột) -->
+                    <div class="row-2">
+                        <div class="form-group">
+                            <label>Email Công Ty</label>
+                            <input type="email" id="custEmail" placeholder="Email công ty..." oninput="updateClientInfo()" style="font-size: 11.5px;">
+                        </div>
+                        <div class="form-group">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                                <label style="margin: 0;">Địa Chỉ / Trụ Sở</label>
+                                <div style="display: flex; gap: 4px; font-size: 10px;">
+                                    <label style="text-transform: none; font-weight: 600; cursor: pointer; color: #0284c7;">
+                                        <input type="radio" name="addrType" value="new" checked onchange="switchAddressStandard(this.value)"> HC Mới
+                                    </label>
+                                    <label style="text-transform: none; font-weight: 600; cursor: pointer; color: #64748b;">
+                                        <input type="radio" name="addrType" value="old" onchange="switchAddressStandard(this.value)"> Cũ
+                                    </label>
+                                </div>
+                            </div>
+                            <input type="text" id="custAddr" list="provincesList" placeholder="Gõ địa chỉ..." oninput="updateClientInfo()" style="font-size: 11.5px;">
+                            <datalist id="provincesList"></datalist>
+                        </div>
+                    </div>
+
+                    <!-- Dòng 5: Số Hóa Đơn / Báo Giá & Thuế VAT (2 Cột) -->
                     <div class="row-2">
                         <div class="form-group">
                             <label>Số Hóa Đơn / Báo Giá</label>
                             <div style="display: flex; gap: 4px;">
-                                <input type="text" id="quoteNo" value="" readonly style="background: #f8fafc; font-weight: bold; color: #0369a1;">
+                                <input type="text" id="quoteNo" value="" readonly style="background: #f8fafc; font-weight: bold; color: #0369a1; font-size: 11.5px;">
                                 <button class="btn btn-outline" style="padding: 4px 7px;" title="Tạo số hóa đơn mới" onclick="generateNewInvoiceNumber()">🔄</button>
                             </div>
                         </div>
                         <div class="form-group">
                             <label>Thuế VAT (%)</label>
-                            <select id="vatRate" onchange="renderQuotationTable()">
+                            <select id="vatRate" onchange="renderQuotationTable()" style="font-size: 11.5px;">
                                 <option value="8" selected>8% (Chuẩn)</option>
                                 <option value="10">10%</option>
                                 <option value="0">0% (Không VAT)</option>
@@ -912,10 +1018,28 @@
                         </div>
                     </div>
 
-                    <!-- MẶC ĐỊNH LUÔN ƯU TIÊN CHƯA THANH TOÁN -->
-                    <div class="form-group">
-                        <label>Trạng Thái Thanh Toán Của Đơn (Mặc định: Chưa thanh toán)</label>
-                        <select id="orderPaymentStatus" style="font-weight: 700; background: #fff1f2; border-color: #fca5a5; color: #b91c1c;">
+                    <!-- Dòng 6: TẠM ỨNG / TIỀN CỌC & CHIẾT KHẤU ĐƠN HÀNG (2 Cột) -->
+                    <div class="row-2" style="background: #f0fdf4; padding: 6px; border-radius: 6px; border: 1px solid #bbf7d0; margin-bottom: 9px;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label style="color: #15803d;">Chiết Khấu / Giảm Giá</label>
+                            <div style="display: flex; gap: 3px;">
+                                <input type="number" id="quoteDiscountVal" value="0" min="0" oninput="renderQuotationTable()" placeholder="Nhập số..." style="font-size: 11.5px;">
+                                <select id="quoteDiscountType" onchange="renderQuotationTable()" style="width: 55px; padding: 4px; font-size: 11px;">
+                                    <option value="VND">đ</option>
+                                    <option value="PERCENT">%</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label style="color: #15803d;">Khách Đã Cọc (VNĐ)</label>
+                            <input type="number" id="quoteDepositVal" value="0" min="0" oninput="renderQuotationTable()" placeholder="Tiền cọc..." style="font-weight: bold; color: #166534; font-size: 11.5px;">
+                        </div>
+                    </div>
+
+                    <!-- Dòng 7: Trạng Thái Thanh Toán Của Đơn -->
+                    <div class="form-group" style="margin-bottom: 6px;">
+                        <label>Trạng Thái Thanh Toán Của Đơn</label>
+                        <select id="orderPaymentStatus" style="font-weight: 700; background: #fff1f2; border-color: #fca5a5; color: #b91c1c; font-size: 11.5px;">
                             <option value="Chưa thanh toán" selected style="color: #b91c1c; font-weight: bold;">🔴 Chưa thanh toán (Ghi nợ/Công nợ)</option>
                             <option value="Đã thanh toán" style="color: #15803d; font-weight: bold;">🟢 Đã thanh toán (Đủ 100%)</option>
                             <option value="Thanh toán 1 phần" style="color: #b45309; font-weight: bold;">🟡 Thanh toán 1 phần / Tạm ứng</option>
@@ -927,10 +1051,10 @@
                     </div>
                 </div>
 
-                <!-- Quick Add from Catalog (Placed Above Tier Selector) -->
+                <!-- Quick Add from Catalog -->
                 <div class="card">
                     <div class="card-header">
-                        <span class="card-title">⚡ Danh Mục Thiết Bị</span>
+                        <span class="card-title">⚡ Danh Mục Thiết Bị Kho</span>
                     </div>
                     <div class="form-group">
                         <input type="text" id="searchCatalog" placeholder="🔍 Tìm kiếm mã (FHG, YES1, EVP, DZ47, SPD, DC...)" oninput="filterCatalog()">
@@ -977,7 +1101,7 @@
                             <input type="text" id="newProdUnit" value="Cái">
                         </div>
                         <div class="form-group">
-                            <label>Số Lượng</label>
+                            <label>Số Lượng Bán</label>
                             <input type="number" id="newProdQty" value="1" min="1">
                         </div>
                     </div>
@@ -987,7 +1111,7 @@
                             <input type="number" id="newProdPriceWithVat" placeholder="Đơn giá bán...">
                         </div>
                         <div class="form-group">
-                            <label>Giá VỐN Nhập (VNĐ)</label>
+                            <label>Giá VỐN Nhập Kho (VNĐ)</label>
                             <input type="number" id="newProdCostPrice" placeholder="Giá vốn nhập...">
                         </div>
                     </div>
@@ -1068,15 +1192,14 @@
                 <div class="table-responsive-wrapper"><table class="quote-table" id="quoteTable">
                     <thead>
                         <tr>
-                            <th style="width: 32px;">STT</th>
-                            <th>TÊN THIẾT BỊ & QUY CÁCH KỸ THUẬT</th>
-                            <th style="width: 48px;">ĐVT</th>
-                            <th style="width: 52px;">SL</th>
-                            <th style="width: 135px;">ĐƠN GIÁ <br><span class="price-ex-vat-tag">CHƯA VAT</span> ✎</th>
-                            <th style="width: 140px;">ĐƠN GIÁ <br><span class="price-vat-tag">ĐÃ CÓ VAT</span> ✎</th>
-                            <th style="width: 125px;" class="no-print">GIÁ VỐN ✎<br><span style="font-size:9px; color:#fef08a;">(Nội bộ)</span></th>
-                            <th style="width: 135px;">THÀNH TIỀN <br><span class="price-vat-tag">ĐÃ CÓ VAT</span></th>
-                            <th style="width: 35px;" class="no-print">Xóa</th>
+                            <th style="width: 28px;">STT</th>
+                            <th style="min-width: 240px; font-size: 12.5px;">TÊN THIẾT BỊ & QUY CÁCH KỸ THUẬT</th>
+                            <th style="width: 42px;">ĐVT</th>
+                            <th style="width: 45px;">SL</th>
+                            <th style="width: 90px;">ĐƠN GIÁ <br><span class="price-ex-vat-tag">CHƯA VAT</span> ✎</th>
+                            <th style="width: 100px;">ĐƠN GIÁ <br><span class="price-vat-tag">ĐÃ CÓ VAT</span> ✎</th>
+                            <th style="width: 125px;">THÀNH TIỀN <br><span class="price-vat-tag">ĐÃ CÓ VAT</span></th>
+                            <th style="width: 32px;" class="no-print">Xóa</th>
                         </tr>
                     </thead>
                     <tbody id="quoteTableBody">
@@ -1106,9 +1229,21 @@
                                 <td class="text-right"><strong>Tiền thuế VAT (<span id="lblVatRatePercent">8</span>%):</strong></td>
                                 <td class="text-right font-bold" style="color: #0284c7;" id="lblVatAmount">0 đ</td>
                             </tr>
+                            <tr id="rowDiscountDisplay" style="display: none;">
+                                <td class="text-right" style="color: #b45309;"><strong>Chiết khấu / Giảm giá:</strong></td>
+                                <td class="text-right font-bold" style="color: #b45309;" id="lblDiscountAmount">-0 đ</td>
+                            </tr>
                             <tr class="total-row">
                                 <td class="text-right">TỔNG CỘNG THANH TOÁN (ĐÃ VAT):</td>
                                 <td class="text-right font-bold" id="lblGrandTotalWithVat">0 đ</td>
+                            </tr>
+                            <tr id="rowDepositDisplay" style="display: none;">
+                                <td class="text-right" style="color: #15803d;"><strong>Số tiền đã đặt cọc / tạm ứng:</strong></td>
+                                <td class="text-right font-bold" style="color: #15803d;" id="lblDepositAmount">0 đ</td>
+                            </tr>
+                            <tr id="rowRemainingDisplay" class="remaining-row" style="display: none;">
+                                <td class="text-right">CÒN LẠI PHẢI THANH TOÁN:</td>
+                                <td class="text-right font-bold" id="lblRemainingAmount">0 đ</td>
                             </tr>
                             <tr>
                                 <td colspan="2" style="font-size: 11px; font-style: italic; color: #475569; text-align: right; padding-top: 4px;">
@@ -1148,8 +1283,116 @@
         </div>
     </div>
 
+    <!-- TAB TÍNH NĂNG MỚI: QUẢN LÝ TỒN KHO & NHẬP XUẤT KHO -->
+    <div id="tab-inventory" class="tab-content">
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">📦 Quản Lý Tồn Kho & Nhập Xuất Thiết Bị Real-time</span>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-success" style="font-weight: 700;" onclick="openStockInModal()">➕ Tạo Phiếu Nhập Kho Mới</button>
+                    <button class="btn btn-primary" onclick="exportInventoryToExcel()">📥 Xuất Báo Cáo Tồn Kho Excel (.xlsx)</button>
+                </div>
+            </div>
 
-    <!-- TAB 4: HỢP ĐỒNG MUA BÁN THIẾT BỊ HOÀN CHỈNH -->
+            <!-- Dashboard KPIs Tồn Kho (Gọn 2 Dòng) -->
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 14px;">
+                <div style="background: #e0f2fe; padding: 10px 14px; border-radius: 8px; border-left: 4px solid #0284c7;">
+                    <span style="font-size: 11px; font-weight: bold; color: #0369a1; text-transform: uppercase;">📦 Tổng Thiết Bị Trong Kho</span>
+                    <h3 id="invTotalQty" style="font-size: 18px; color: #0f172a; margin-top: 2px;">0 cái</h3>
+                </div>
+                <div style="background: #f0fdf4; padding: 10px 14px; border-radius: 8px; border-left: 4px solid #16a34a;">
+                    <span style="font-size: 11px; font-weight: bold; color: #15803d; text-transform: uppercase;">💰 Giá Trị Vốn Tồn Kho</span>
+                    <h3 id="invTotalValue" style="font-size: 18px; color: #166534; margin-top: 2px;">0 đ</h3>
+                </div>
+                <div style="background: #fef3c7; padding: 10px 14px; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                    <span style="font-size: 11px; font-weight: bold; color: #b45309; text-transform: uppercase;">⚠️ Mã Sắp Hết Hàng (&lt;= 5 cái)</span>
+                    <h3 id="invLowStockCount" style="font-size: 18px; color: #78350f; margin-top: 2px;">0 mã</h3>
+                </div>
+                <div style="background: #fee2e2; padding: 10px 14px; border-radius: 8px; border-left: 4px solid #ef4444;">
+                    <span style="font-size: 11px; font-weight: bold; color: #b91c1c; text-transform: uppercase;">🔴 Mã Đã Hết Hàng (0 cái)</span>
+                    <h3 id="invOutStockCount" style="font-size: 18px; color: #991b1b; margin-top: 2px;">0 mã</h3>
+                </div>
+            </div>
+
+            <!-- Thanh tìm kiếm & lọc tồn kho (Gọn 2 Dòng) -->
+            <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px;">
+                <!-- Dòng 1: Tìm kiếm -->
+                <div>
+                    <input type="text" id="searchInventoryInput" placeholder="🔍 Tìm kiếm mã thiết bị, tên, hãng..." oninput="renderInventoryTable()" style="width: 100%; padding: 8px 12px; font-size: 12.5px;">
+                </div>
+                
+                <!-- Dòng 2: Lọc trạng thái & Thương hiệu (2 Cột) -->
+                <div class="row-2">
+                    <select id="filterStockStatus" onchange="renderInventoryTable()" style="font-weight: 700; font-size: 12px;">
+                        <option value="">-- Tất cả trạng thái tồn kho --</option>
+                        <option value="ok">🟢 Còn hàng dồi dào</option>
+                        <option value="low">🟡 Cảnh báo: Sắp hết hàng (&lt;=5)</option>
+                        <option value="out">🔴 Đã hết hàng (0 cái)</option>
+                    </select>
+
+                    <select id="filterInventoryBrand" onchange="renderInventoryTable()" style="font-size: 12px;">
+                        <option value="">-- Tất cả thương hiệu --</option>
+                        <option value="FANHEY">Hãng FANHEY</option>
+                        <option value="YuYe">Hãng YuYe</option>
+                        <option value="WEAG">Hãng WEAG</option>
+                        <option value="Khác">Khác / Tùy chỉnh</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Bảng Quản Lý Kho -->
+            <div style="overflow-x: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 35px; text-align: center;">STT</th>
+                            <th style="width: 90px;">Mã/Model</th>
+                            <th style="width: 90px;">Hãng</th>
+                            <th>Tên Thiết Bị & Quy Cách</th>
+                            <th style="width: 45px; text-align: center;">ĐVT</th>
+                            <th style="width: 110px; text-align: right; color: #fef08a;">Giá Vốn Nhập</th>
+                            <th style="width: 110px; text-align: right;">Giá Bán 1-4 T</th>
+                            <th style="width: 110px; text-align: right;">Giá Bán 5-9 T</th>
+                            <th style="width: 100px; text-align: center;">Tồn Kho</th>
+                            <th style="width: 130px; text-align: right;">Tổng Vốn Tồn</th>
+                            <th style="width: 110px; text-align: center;">Trạng Thái</th>
+                            <th style="width: 120px; text-align: center;">Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryTableBody">
+                        <!-- Populated via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Bảng Lịch Sử Nhật Ký Nhập / Xuất Kho -->
+        <div class="card" style="margin-top: 16px;">
+            <div class="card-header">
+                <span class="card-title">📜 Lịch Sử Nhật Ký Nhập Xuất Kho Chi Tiết</span>
+                <button class="btn btn-outline" style="padding: 2px 6px; font-size: 11px;" onclick="renderStockLogs()">🔄 Làm Mới Logs</button>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 130px;">Thời Gian</th>
+                            <th style="width: 90px; text-align: center;">Loại Giao Dịch</th>
+                            <th>Tên Thiết Bị</th>
+                            <th style="width: 70px; text-align: center;">Số Lượng</th>
+                            <th style="width: 120px; text-align: right;">Đơn Giá Vốn</th>
+                            <th style="width: 180px;">Nguồn / Mã Hóa Đơn</th>
+                        </tr>
+                    </thead>
+                    <tbody id="stockLogsTableBody">
+                        <!-- Populated via JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB 4: HỢP ĐỒNG MUA BÁN THIẾT BỊ -->
     <div id="tab-contract" class="tab-content">
         <div class="toolbar no-print">
             <button class="btn btn-purple" onclick="downloadContractPDF()">
@@ -1164,20 +1407,17 @@
         </div>
 
         <div class="quotation-paper" id="contractPrintableArea" style="max-width: 950px; margin: 0 auto; line-height: 1.6; color: #0f172a; font-size: 13.5px;">
-            <!-- Quốc hiệu tiêu ngữ -->
             <div style="text-align: center; margin-bottom: 20px;">
                 <p style="font-weight: 800; font-size: 14px; text-transform: uppercase;">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</p>
                 <p style="font-weight: 700; font-size: 13px; text-decoration: underline; margin-top: 2px;">Độc lập - Tự do - Hạnh phúc</p>
                 <p style="font-size: 11.5px; font-style: italic; color: #64748b; margin-top: 10px;">Bắc Ninh, ngày <span class="contract-day">...</span> tháng <span class="contract-month">...</span> năm <span class="contract-year">2026</span></p>
             </div>
 
-            <!-- Tiêu đề hợp đồng -->
             <div style="text-align: center; margin-bottom: 22px;">
                 <h2 style="font-size: 19px; font-weight: 800; color: #0369a1; text-transform: uppercase;">HỢP ĐỒNG MUA BÁN THIẾT BỊ</h2>
                 <p style="font-size: 13px; font-weight: bold; color: #475569; margin-top: 3px;">Số: <span id="contractNumberText" style="color: #b91c1c;">HĐMB-...</span></p>
             </div>
 
-            <!-- Căn cứ pháp lý -->
             <div style="font-style: italic; font-size: 12px; color: #475569; margin-bottom: 16px; padding-left: 8px; border-left: 3px solid #cbd5e1;">
                 <p>- Căn cứ Bộ luật Dân sự số 91/2015/QH13 và Luật Thương mại số 36/2005/QH11 của Quốc hội nước CHXHCN Việt Nam;</p>
                 <p>- Căn cứ vào nhu cầu và khả năng thực tế của hai bên.</p>
@@ -1185,7 +1425,6 @@
 
             <p style="margin-bottom: 12px;">Hôm nay, ngày <span class="contract-day">...</span> tháng <span class="contract-month">...</span> năm <span class="contract-year">2026</span>, chúng tôi gồm các bên dưới đây:</p>
 
-            <!-- BÊN BÁN (BÊN A) -->
             <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px 16px; margin-bottom: 14px;">
                 <p style="font-weight: 800; font-size: 14px; color: #0369a1; text-transform: uppercase; margin-bottom: 6px;">BÊN BÁN (BÊN A): CÔNG TY TNHH SOLAR BẮC NINH</p>
                 <p>📍 <strong>Trụ sở chính:</strong> Khu Phố Hương Mạc, Phường Phù Khê, TP. Từ Sơn, Tỉnh Bắc Ninh</p>
@@ -1195,7 +1434,6 @@
                 <p>👤 <strong>Đại diện pháp luật:</strong> Giám Đốc</p>
             </div>
 
-            <!-- BÊN MUA (BÊN B) -->
             <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px 16px; margin-bottom: 18px;">
                 <p style="font-weight: 800; font-size: 14px; color: #0369a1; text-transform: uppercase; margin-bottom: 6px;">BÊN MUA (BÊN B): <span id="contractPartyBName" style="color: #0f172a;">QUÝ KHÁCH HÀNG / CÔNG TY</span></p>
                 <p>📍 <strong>Địa chỉ / Trụ sở:</strong> <span id="contractPartyBAddr">Toàn quốc</span></p>
@@ -1206,7 +1444,6 @@
 
             <p style="margin-bottom: 12px;">Hai bên thống nhất ký kết Hợp đồng mua bán thiết bị với các điều khoản sau:</p>
 
-            <!-- ĐIỀU 1: HÀNG HÓA VÀ GIÁ TRỊ -->
             <div style="margin-bottom: 16px;">
                 <p style="font-weight: 700; color: #0369a1; margin-bottom: 6px;">ĐIỀU 1: ĐỐI TƯỢNG HÀNG HÓA VÀ GIÁ TRỊ HỢP ĐỒNG</p>
                 <p style="margin-bottom: 8px;">Bên A đồng ý bán và Bên B đồng ý mua các thiết bị điện, ATS, MCB, SPD và vật tư năng lượng mặt trời theo danh mục chi tiết sau:</p>
@@ -1233,7 +1470,6 @@
                 </div>
             </div>
 
-            <!-- ĐIỀU 2: PHƯƠNG THỨC THANH TOÁN -->
             <div style="margin-bottom: 16px;">
                 <p style="font-weight: 700; color: #0369a1; margin-bottom: 4px;">ĐIỀU 2: PHƯƠNG THỨC THANH TOÁN</p>
                 <ul style="padding-left: 20px; line-height: 1.5;">
@@ -1243,7 +1479,6 @@
                 </ul>
             </div>
 
-            <!-- ĐIỀU 3: GIAO HÀNG VÀ BẢO HÀNH -->
             <div style="margin-bottom: 16px;">
                 <p style="font-weight: 700; color: #0369a1; margin-bottom: 4px;">ĐIỀU 3: ĐỊA ĐIỂM GIAO HÀNG & TIÊU CHUẨN BẢO HÀNH</p>
                 <ul style="padding-left: 20px; line-height: 1.5;">
@@ -1253,7 +1488,6 @@
                 </ul>
             </div>
 
-            <!-- ĐIỀU 4: ĐIỀU KHOẢN CHUNG -->
             <div style="margin-bottom: 24px;">
                 <p style="font-weight: 700; color: #0369a1; margin-bottom: 4px;">ĐIỀU 4: ĐIỀU KHOẢN THI HÀNH</p>
                 <ul style="padding-left: 20px; line-height: 1.5;">
@@ -1262,7 +1496,6 @@
                 </ul>
             </div>
 
-            <!-- KÝ TÊN VÀ ĐÓNG DẤU -->
             <div style="display: grid; grid-template-columns: 1fr 1fr; text-align: center; margin-top: 30px; page-break-inside: avoid;">
                 <div>
                     <p style="font-weight: 800; font-size: 13.5px; text-transform: uppercase;">ĐẠI DIỆN BÊN MUA (BÊN B)</p>
@@ -1273,7 +1506,7 @@
                 <div>
                     <p style="font-weight: 800; font-size: 13.5px; text-transform: uppercase;">ĐẠI DIỆN BÊN BÁN (BÊN A)</p>
                     <p style="font-size: 11px; color: #64748b; font-style: italic;">(Ký tên & đóng dấu)</p>
-                    <div style="height: 85px; display: flex; align-items: center; justify-content: center; color: #0284c7; font-weight: 700; font-size: 13px;">
+                    <div style="height: 85px; display: flex; align-items: center; justify-content: center; color: #0284c7; font-weight: 700; font-size: 12px;">
                         CÔNG TY TNHH SOLAR BẮC NINH
                     </div>
                     <p style="font-weight: 700; font-size: 13px; color: #0f172a;">NGUYỄN VĂN LONG</p>
@@ -1282,7 +1515,7 @@
         </div>
     </div>
 
-    <!-- TAB 2: QUẢN LÝ KHÁCH HÀNG (CRM WITH CHECKBOXES & PDF DOWNLOAD) -->
+    <!-- TAB 2: QUẢN LÝ KHÁCH HÀNG -->
     <div id="tab-customers" class="tab-content">
         <div class="card">
             <div class="card-header">
@@ -1294,12 +1527,10 @@
                 </div>
             </div>
 
-            <!-- Search Customers -->
             <div style="margin-bottom: 14px;">
                 <input type="text" id="searchCustomerCRMInput" placeholder="🔍 Tìm kiếm theo Tên khách hàng, Số điện thoại hoặc Địa chỉ..." oninput="renderCustomerCRMList()" style="padding: 10px; font-size: 13px;">
             </div>
 
-            <!-- Customer Table with Checkboxes -->
             <div style="overflow-x: auto;">
                 <table class="data-table">
                     <thead>
@@ -1324,7 +1555,6 @@
         </div>
     </div>
 
-
     <!-- TAB 5: BÁO CÁO THỐNG KÊ SẢN PHẨM BÁN CHẠY & DOANH THU -->
     <div id="tab-stats" class="tab-content">
         <div class="card">
@@ -1336,7 +1566,6 @@
                 </div>
             </div>
 
-            <!-- Tổng quan KPIs Doanh Thu & Lợi Nhuận -->
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 16px;">
                 <div style="background: #f0fdf4; padding: 14px; border-radius: 8px; border-left: 4px solid #16a34a;">
                     <span style="font-size: 11px; font-weight: bold; color: #15803d; text-transform: uppercase;">📈 Tổng Lợi Nhuận Gộp</span>
@@ -1351,8 +1580,8 @@
                     <h3 id="statTotalCostAll" style="font-size: 22px; color: #991b1b; margin-top: 4px;">0 đ</h3>
                 </div>
                 <div style="background: #fef3c7; padding: 14px; border-radius: 8px; border-left: 4px solid #f59e0b;">
-                    <span style="font-size: 11px; font-weight: bold; color: #b45309; text-transform: uppercase;">🏆 Sản Phẩm Lãi Nhất</span>
-                    <h4 id="statTopProductProfit" style="font-size: 13.5px; color: #78350f; margin-top: 6px; font-weight: 800;">Chưa có dữ liệu</h4>
+                    <span style="font-size: 11px; font-weight: bold; color: #b45309; text-transform: uppercase;">🏆 Sản Phẩm Bán Nhiều Nhất</span>
+                    <h4 id="statTopProductQty" style="font-size: 13px; color: #78350f; margin-top: 6px; font-weight: 800;">Chưa có dữ liệu</h4>
                 </div>
                 <div style="background: #f1f5f9; padding: 14px; border-radius: 8px; border-left: 4px solid #64748b;">
                     <span style="font-size: 11px; font-weight: bold; color: #475569; text-transform: uppercase;">📦 Tổng Số Lượng Thiết Bị Bán</span>
@@ -1360,15 +1589,12 @@
                 </div>
             </div>
 
-            <!-- Bộ lọc & Tìm kiếm sản phẩm -->
             <div style="display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;">
-                <input type="text" id="searchProductStatsInput" placeholder="🔍 Tìm kiếm theo Tên sản phẩm, Thương hiệu (FANHEY, YuYe, WEAG...)..." oninput="renderProductStatistics()" style="flex: 1; min-width: 250px; padding: 9px 12px; font-size: 13px;">
+                <input type="text" id="searchProductStatsInput" placeholder="🔍 Tìm kiếm theo Tên sản phẩm, Thương hiệu..." oninput="renderProductStatistics()" style="flex: 1; min-width: 250px; padding: 9px 12px; font-size: 13px;">
                 
                 <select id="sortProductStatsBy" onchange="renderProductStatistics()" style="width: 260px; font-weight: 700;">
-                    <option value="profit_desc" selected>📈 Xếp theo: Lợi Nhuận Thu Về Cao Nhất</option>
+                    <option value="qty_desc" selected>🏆 Xếp theo: Số Lượng Bán Giảm Dần</option>
                     <option value="revenue_desc">💰 Xếp theo: Doanh Thu Cao Nhất</option>
-                    <option value="qty_desc">🏆 Xếp theo: Số Lượng Bán Giảm Dần</option>
-                    <option value="margin_desc">📊 Xếp theo: Tỷ Suất Lợi Nhuận (%)</option>
                     <option value="orders_desc">📦 Xếp theo: Số Lần Bán Hàng</option>
                     <option value="name_asc">🔤 Xếp theo: Tên Sản Phẩm (A-Z)</option>
                 </select>
@@ -1382,7 +1608,6 @@
                 </select>
             </div>
 
-            <!-- Bảng Thống Kê Sản Phẩm -->
             <div style="overflow-x: auto;">
                 <table class="data-table">
                     <thead>
@@ -1391,10 +1616,9 @@
                             <th style="width: 260px;">Tên Thiết Bị & Thương Hiệu</th>
                             <th style="width: 50px; text-align: center;">ĐVT</th>
                             <th style="width: 80px; text-align: center;">Tổng SL Bán</th>
+                            <th style="width: 80px; text-align: center;">Số Đơn</th>
                             <th style="width: 140px; text-align: right;">Tổng Doanh Thu</th>
-                            <th style="width: 130px; text-align: right; color:#fca5a5;">Tổng Giá Vốn</th>
-                            <th style="width: 140px; text-align: right; color:#86efac;">Lợi Nhuận Gộp</th>
-                            <th style="width: 110px; text-align: center;">Tỷ Suất LN (%)</th>
+                            <th style="width: 130px; text-align: right;">Đơn Giá TB</th>
                             <th style="width: 130px; text-align: center;">Tỷ Trọng DT (%)</th>
                         </tr>
                     </thead>
@@ -1418,7 +1642,6 @@
                 </div>
             </div>
 
-            <!-- Search & Filters for Payment Status -->
             <div style="display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;">
                 <input type="text" id="searchCustomerHistoryInput" placeholder="🔍 Tìm kiếm theo Tên khách hàng, Số điện thoại hoặc Số hóa đơn..." oninput="renderOrdersHistoryList()" style="flex: 1; min-width: 250px; padding: 10px; font-size: 13px;">
                 
@@ -1434,7 +1657,6 @@
                 </select>
             </div>
 
-            <!-- Orders Summary Stats -->
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 16px;">
                 <div style="background: #f0fdf4; padding: 12px; border-radius: 8px; border-left: 4px solid #10b981;">
                     <span style="font-size: 11px; font-weight: bold; color: #15803d; text-transform: uppercase;">📈 Tổng Lợi Nhuận Ước Tính</span>
@@ -1458,212 +1680,453 @@
                 </div>
             </div>
 
-            <!-- Orders List Container -->
             <div id="ordersHistoryContainer">
                 <!-- Populated dynamically via JS -->
             </div>
         </div>
     </div>
 
-</div>
-
-<!-- MODAL: XEM LẠI HÓA ĐƠN & TẢI PDF / IN TRỰC TIẾP -->
-<div id="invoiceModal" class="modal-overlay">
-    <div class="modal-container">
-        <div class="modal-toolbar no-print">
-            <div style="font-weight: 700; font-size: 14px; display: flex; align-items: center; gap: 8px;">
-                📄 HÓA ĐƠN & BÁO GIÁ
+    <!-- TAB 6: CÀI ĐẶT & SAO LƯU DỮ LIỆU -->
+    <div id="tab-settings" class="tab-content">
+        <!-- Card Quản Lý Tài Khoản & Mật Khẩu -->
+        <div class="card" style="border-left: 4px solid #0284c7;">
+            <div class="card-header">
+                <span class="card-title">🔐 Quản Lý Tài Khoản & Mật Khẩu Đăng Nhập</span>
             </div>
-            <div style="display: flex; gap: 8px;">
-                <button class="btn btn-purple" onclick="downloadModalInvoicePDF()">📥 Tải File PDF Về Máy</button>
-                <button class="btn btn-primary" onclick="printModalInvoice()">🖨️ In Hóa Đơn</button>
-                <button class="btn btn-danger" onclick="closeInvoiceModal()">✕ Đóng</button>
+            <div class="row-2" style="gap: 16px;">
+                <!-- Đổi Mật Khẩu -->
+                <div style="background: #f8fafc; padding: 14px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                    <h4 style="font-size: 13.5px; font-weight: 700; color: #0369a1; margin-bottom: 10px;">🔑 Đổi Mật Khẩu Tài Khoản Hiện Tại</h4>
+                    <div class="form-group">
+                        <label>Mật Khẩu Hiện Tại (*)</label>
+                        <input type="password" id="txtOldPassword" placeholder="Nhập mật khẩu cũ...">
+                    </div>
+                    <div class="form-group">
+                        <label>Mật Khẩu Mới (*)</label>
+                        <input type="password" id="txtNewPassword" placeholder="Tối thiểu 6 ký tự...">
+                    </div>
+                    <div class="form-group">
+                        <label>Xác Nhận Mật Khẩu Mới (*)</label>
+                        <input type="password" id="txtConfirmPassword" placeholder="Nhập lại mật khẩu mới...">
+                    </div>
+                    <div id="changePasswordStatus" style="font-size: 11.5px; margin-bottom: 8px;"></div>
+                    <button class="btn btn-primary" style="font-weight: 700; width: 100%;" onclick="handleChangePassword()">
+                        💾 Cập Nhật Mật Khẩu
+                    </button>
+                </div>
+
+                <!-- Thêm Thành Viên / Tài Khoản Mới -->
+                <div style="background: #f8fafc; padding: 14px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                    <h4 style="font-size: 13.5px; font-weight: 700; color: #166534; margin-bottom: 10px;">👤 Tạo Tài Khoản Thành Viên Mới</h4>
+                    <div class="form-group">
+                        <label>Tên Đăng Nhập (*)</label>
+                        <input type="text" id="txtNewUsername" placeholder="VD: nhanvien1, ketoan...">
+                    </div>
+                    <div class="form-group">
+                        <label>Mật Khẩu Cho Thành Viên (*)</label>
+                        <input type="password" id="txtUserPassword" placeholder="Nhập mật khẩu...">
+                    </div>
+                    <div class="form-group">
+                        <label>Vai Trò / Quyền Hạn</label>
+                        <select id="selUserRole" style="font-weight: 600;">
+                            <option value="Nhân viên">Nhân viên (Bán hàng & Báo giá)</option>
+                            <option value="Quản trị viên">Quản trị viên (Toàn quyền)</option>
+                        </select>
+                    </div>
+                    <div id="createAccountStatus" style="font-size: 11.5px; margin-bottom: 8px;"></div>
+                    <button class="btn btn-success" style="font-weight: 700; width: 100%;" onclick="handleCreateAccount()">
+                        ➕ Tạo Tài Khoản Mới
+                    </button>
+                </div>
+            </div>
+
+            <!-- Danh sách tài khoản trong hệ thống -->
+            <div style="margin-top: 16px;">
+                <h4 style="font-size: 13px; font-weight: 700; color: #475569; margin-bottom: 8px;">📋 Danh Sách Tài Khoản Đã Khởi Tạo:</h4>
+                <div style="overflow-x: auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 40px; text-align: center;">STT</th>
+                                <th>Tên Đăng Nhập</th>
+                                <th style="width: 140px; text-align: center;">Vai Trò</th>
+                                <th style="width: 150px; text-align: center;">Ngày Tạo</th>
+                                <th style="width: 100px; text-align: center;">Thao Tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="accountsTableBody">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-        <div class="modal-body-paper" id="modalPrintContent">
-            <!-- Modal Content Populated via JS -->
+
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">💾 Sao Lưu & Khôi Phục Dữ Liệu Phần Mềm</span>
+            </div>
+            <p style="margin-bottom: 12px; color: #475569;">
+                Tải file sao lưu toàn bộ danh sách khách hàng, công nợ, kho hàng và lịch sử đơn hàng để cất giữ an toàn hoặc chuyển sang máy tính/điện thoại khác.
+            </p>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;">
+                <button class="btn btn-success" style="padding: 10px 18px; font-size: 13px;" onclick="exportFullDataBackup()">
+                    📤 Tải File Sao Lưu (.JSON)
+                </button>
+                <label class="btn btn-primary" style="padding: 10px 18px; font-size: 13px; cursor: pointer;">
+                    📥 Nạp Dữ Liệu Khôi Phục (.JSON)
+                    <input type="file" id="importBackupFileInput" accept=".json" style="display:none;" onchange="importFullDataBackup(event)">
+                </label>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">📦 Tùy Chỉnh Thêm/Sửa Danh Mục Kho Cố Định</span>
+                <button class="btn btn-success" onclick="openAddCatalogItemModal()">➕ Thêm Mới Vào Kho</button>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 40px; text-align: center;">STT</th>
+                            <th style="width: 100px;">Thương Hiệu</th>
+                            <th style="width: 250px;">Tên Thiết Bị</th>
+                            <th>Mô Tả Kỹ Thuật</th>
+                            <th style="width: 50px;">ĐVT</th>
+                            <th style="width: 110px; text-align: right;">Giá 1-4 Thùng</th>
+                            <th style="width: 110px; text-align: right;">Giá 5-9 Thùng</th>
+                            <th style="width: 100px; text-align: right; color:#fca5a5;">Giá Vốn</th>
+                            <th style="width: 80px; text-align: center;">Tồn Kho</th>
+                            <th style="width: 80px; text-align: center;">Thao Tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="catalogAdminTableBody">
+                        <!-- Populated via JS -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+
 </div>
 
-<!-- MODAL: TẠO ĐƠN HÀNG VẬN CHUYỂN THEO MẪU EXCEL CHUẨN -->
-<div id="shippingOrderModal" class="modal-overlay">
-    <div class="modal-container" style="max-width: 850px;">
-        <div class="modal-toolbar no-print" style="background: #0369a1;">
+<!-- MODAL PHIẾU NHẬP KHO MỚI -->
+<div id="stockInModal" class="modal-overlay">
+    <div class="modal-container" style="max-width: 600px;">
+        <div class="modal-toolbar no-print" style="background: #16a34a;">
             <div style="font-weight: 700; font-size: 14.5px; display: flex; align-items: center; gap: 8px;">
-                📦 TẠO ĐƠN HÀNG GIAO VẬN (THEO MẪU EXCEL CHUẨN)
+                📥 TẠO PHIẾU NHẬP KHO BỔ SUNG
             </div>
-            <button class="btn btn-danger" onclick="closeShippingOrderModal()">✕ Đóng</button>
+            <button class="btn btn-danger" onclick="closeStockInModal()">✕ Đóng</button>
         </div>
         <div style="padding: 20px; background: #f8fafc;">
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
-                <div class="form-group">
-                    <label>Mã Đơn Khách Hàng</label>
-                    <input type="text" id="shipOrderCode" style="font-weight: bold; color: #0369a1;">
-                </div>
-                <div class="form-group">
-                    <label>Tên Người Nhận (*)</label>
-                    <input type="text" id="shipReceiverName" style="font-weight: bold;">
-                </div>
-            </div>
-
-            <div class="row-2" style="margin-bottom: 12px;">
-                <div class="form-group">
-                    <label>Số ĐT Người Nhận (*)</label>
-                    <input type="text" id="shipReceiverPhone" style="font-weight: bold; color: #b91c1c;">
-                </div>
-                <div class="form-group">
-                    <label>Địa Chỉ Người Nhận (*)</label>
-                    <input type="text" id="shipReceiverAddr">
-                </div>
-            </div>
-
             <div class="form-group" style="margin-bottom: 12px;">
-                <label>Tên Hàng Hóa (*) (Tự động tóm tắt sản phẩm & số lượng)</label>
-                <textarea id="shipItemNames" rows="2"></textarea>
+                <label>Chọn Thiết Bị Cần Nhập Kho (*)</label>
+                <select id="stockInProductSelect" onchange="onStockInProductSelectChange()" style="font-weight: bold; font-size: 13px;"></select>
             </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px;">
-                <div class="form-group">
-                    <label>Trọng Lượng (gram) (*)</label>
-                    <input type="number" id="shipWeight" value="1500" min="100">
-                </div>
-                <div class="form-group">
-                    <label>Tiền Hàng / Thu Hộ COD (*)</label>
-                    <input type="number" id="shipCodAmount" style="font-weight: bold; color: #166534;">
-                </div>
-                <div class="form-group">
-                    <label>Giá Trị Hàng (Khai Giá VND) (*)</label>
-                    <input type="number" id="shipInsuranceValue" style="font-weight: bold;">
-                </div>
-            </div>
-
             <div class="row-2" style="margin-bottom: 12px;">
                 <div class="form-group">
-                    <label>Cấu Hình Giao Hàng</label>
-                    <select id="shipDeliveryConfig" style="font-weight: 600;">
-                        <option value="1" selected>1 = Cho xem hàng nhưng không cho thử (Mặc định)</option>
-                        <option value="2">2 = Cho thử hàng</option>
-                        <option value="3">3 = Không cho xem hàng</option>
-                    </select>
+                    <label>Số Lượng Nhập Thêm (*)</label>
+                    <input type="number" id="stockInQty" value="10" min="1" style="font-weight: bold; color: #166534; font-size: 14px;">
                 </div>
                 <div class="form-group">
-                    <label>Cấu Hình Thu Hộ</label>
-                    <select id="shipCodConfig" style="font-weight: 600;">
-                        <option value="0" selected>0 = Thu hộ = Tiền hàng (Mặc định)</option>
-                        <option value="1">1 = Thu hộ = Tiền hàng + Phí</option>
-                    </select>
+                    <label>Đơn Giá Vốn Nhập Kho (VNĐ)</label>
+                    <input type="number" id="stockInCostPrice" placeholder="Giá vốn..." style="font-weight: bold; color: #b91c1c; font-size: 14px;">
                 </div>
             </div>
-
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 2fr; gap: 8px; margin-bottom: 14px;">
-                <div class="form-group">
-                    <label>Dài (cm)</label>
-                    <input type="number" id="shipDimL" value="25">
-                </div>
-                <div class="form-group">
-                    <label>Rộng (cm)</label>
-                    <input type="number" id="shipDimW" value="18">
-                </div>
-                <div class="form-group">
-                    <label>Cao (cm)</label>
-                    <input type="number" id="shipDimH" value="12">
-                </div>
-                <div class="form-group">
-                    <label>Ghi Chú Giao Hàng</label>
-                    <input type="text" id="shipNote" value="Hàng điện tử Solar & ATS dễ vỡ, xin nhẹ tay. Gọi trước khi giao.">
-                </div>
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label>Ghi Chú Nhập Kho / Nguồn Hàng</label>
+                <input type="text" id="stockInNote" placeholder="VD: Nhập lô hàng mới từ nhà máy FANHEY...">
             </div>
-
             <div style="display: flex; gap: 8px; justify-content: flex-end; border-top: 1px solid #e2e8f0; padding-top: 14px;">
-                <button class="btn btn-outline" onclick="copyShippingInfoText()">📋 Sao Chép Dạng Text (Zalo/App)</button>
-                <button class="btn btn-success" style="font-size: 13px; font-weight: 700;" onclick="exportSingleShippingOrderXLSX()">
-                    📥 Tải File Excel Đơn Hàng (.xlsx Chuẩn Mẫu)
+                <button class="btn btn-outline" onclick="closeStockInModal()">Hủy Bỏ</button>
+                <button class="btn btn-success" style="font-size: 13px; font-weight: 700;" onclick="saveStockInReceipt()">
+                    ✅ Xác Nhận Nhập Kho
                 </button>
             </div>
         </div>
     </div>
 </div>
 
+<!-- MODAL MÀN HÌNH ĐĂNG NHẬP BẢO MẬT -->
+<div id="loginOverlay" class="login-overlay">
+    <div class="login-card">
+        <div class="login-header">
+            <h2>☀️ SOLAR BẮC NINH</h2>
+            <p style="font-weight: 700; color: #0f172a; margin-top: 4px;">PHẦN MỀM BÁO GIÁ & QUẢN LÝ KHO</p>
+            <p style="margin-top: 2px;">Vui lòng đăng nhập tài khoản để tiếp tục</p>
+        </div>
+        <form onsubmit="handleLogin(event)">
+            <div class="form-group" style="margin-bottom: 14px;">
+                <label style="font-size: 11.5px;">Tài Khoản / Tên Đăng Nhập (*)</label>
+                <input type="text" id="loginUsername" placeholder="Nhập tên đăng nhập..." required style="padding: 10px; font-size: 13.5px; font-weight: 600;">
+            </div>
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label style="font-size: 11.5px;">Mật Khẩu (*)</label>
+                <div style="position: relative;">
+                    <input type="password" id="loginPassword" placeholder="Nhập mật khẩu..." required style="padding: 10px 40px 10px 10px; font-size: 13.5px; font-weight: 600;">
+                    <button type="button" onclick="toggleShowPassword()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 14px; color: #64748b;">👁️</button>
+                </div>
+            </div>
+            <div id="loginErrorAlert" style="display: none; background: #fee2e2; border: 1px solid #fca5a5; color: #b91c1c; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; margin-bottom: 14px; text-align: center;">
+                ⚠️ Tài khoản hoặc mật khẩu không chính xác!
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" style="padding: 11px; font-size: 14px; font-weight: 800; border-radius: 8px;">
+                🔑 ĐĂNG NHẬP HỆ THỐNG
+            </button>
+        </form>
+        <div style="margin-top: 20px; text-align: center; font-size: 11px; color: #94a3b8; border-top: 1px solid #f1f5f9; padding-top: 12px;">
+            <p>Mật khẩu mặc định ban đầu: <strong>admin</strong> / <strong>solarbacninh168</strong></p>
+            <p>© CÔNG TY TNHH SOLAR BẮC NINH - Hotline: 0829.86.3333</p>
+        </div>
+    </div>
+</div>
+
 <script>
-// Master Product Catalog
-var rawCatalog = [
-    { id: "FHG-100/4P", brand: "FANHEY", name: "ATS FANHEY FHG-100/4P (100A 400V)", desc: "Điện áp 400V AC, dòng 100A, Icu 6kA. ATS Chuyển Chậm (6 cái/thùng)", unit: "Cái", priceTier1: 550800, priceTier2: 529200, costPrice: 420000 },
-    { id: "FHG-125/46PC", brand: "FANHEY", name: "ATS FANHEY FHG-125/46PC (125A 400V)", desc: "Điện áp 400V AC, dòng 125A, Icu 6kA. ATS Chuyển Chậm (6 cái/thùng)", unit: "Cái", priceTier1: 637200, priceTier2: 610200, costPrice: 485000 },
-    { id: "FHG-250/46PC", brand: "FANHEY", name: "ATS FANHEY FHG-250/46PC (250A 400V)", desc: "Điện áp 400V AC, dòng 250A, Icu 6kA. ATS Chuyển Chậm (4 cái/thùng)", unit: "Cái", priceTier1: 1674000, priceTier2: 1620000, costPrice: 1300000 },
-    { id: "FHG-100/2P", brand: "FANHEY", name: "ATS FANHEY FHG-100/2P S6 (100A 220V)", desc: "Dòng định mức 100A, 220V AC. ATS Chuyển Chậm (18 cái/thùng)", unit: "Cái", priceTier1: 410400, priceTier2: 399600, costPrice: 310000 },
-    { id: "FHG1-125/2P", brand: "FANHEY", name: "ATS FANHEY FHG1-125/2P (125A 220V)", desc: "Dòng định mức 125A, 220V AC, Icu 10kA. ATS Chuyển Nhanh", unit: "Cái", priceTier1: 1512000, priceTier2: 1458000, costPrice: 1150000 },
-    { id: "FHG1-125/4P", brand: "FANHEY", name: "ATS FANHEY FHG1-125/4P (125A 400V)", desc: "Dòng định mức 125A, 400V AC, Icu 10kA. ATS Chuyển Nhanh", unit: "Cái", priceTier1: 2052000, priceTier2: 1998000, costPrice: 1580000 },
-    { id: "FHD1-63DC/2P", brand: "FANHEY", name: "MCB DC FANHEY FHD1-63DC/2P (500V DC 25A)", desc: "CB DC chuyên dụng hệ thống năng lượng mặt trời Solar", unit: "Cái", priceTier1: 63720, priceTier2: 60000, costPrice: 45000 },
-    { id: "DZ47-63-2P", brand: "FANHEY", name: "MCB AC FANHEY DZ47-63 2P (400V AC 63A)", desc: "Aptomat AC 2P 63A", unit: "Cái", priceTier1: 45360, priceTier2: 42000, costPrice: 32000 },
-    { id: "DZ47-63-4P", brand: "FANHEY", name: "MCB AC FANHEY DZ47-63 4P (400V AC 63A)", desc: "Aptomat AC 4P 63A", unit: "Cái", priceTier1: 91800, priceTier2: 86000, costPrice: 65000 },
-    { id: "SPD-DC-FANHEY", brand: "FANHEY", name: "Chống Sét Lan Truyền SPD DC 1000V DC", desc: "Cấp bảo vệ T2, Imax 40kA, In 20kA, 1000VDC", unit: "Cái", priceTier1: 96120, priceTier2: 90000, costPrice: 68000 },
-    { id: "SPD-AC-FANHEY", brand: "FANHEY", name: "Chống Sét Lan Truyền SPD AC 2P 385V AC", desc: "Cấp bảo vệ T2, Imax 40kA, In 20kA, 385VAC", unit: "Cái", priceTier1: 63720, priceTier2: 59000, costPrice: 45000 },
-    { id: "YES1-125NA/4P", brand: "YuYe", name: "ATS YuYe YES1-125NA/4P 125A (Có Dập Hồ Quang)", desc: "Bảo vệ thấp áp 165V, cao áp 270V, Delay 0-30s. Tiêu chuẩn IEC (6 cái/thùng)", unit: "Cái", priceTier1: 2376000, priceTier2: 2280000, costPrice: 1850000 },
-    { id: "YES1-125NA/2P", brand: "YuYe", name: "ATS YuYe YES1-125NA/2P 125A (Có Dập Hồ Quang)", desc: "Bảo vệ thấp áp 165V, cao áp 270V, Delay 0-30s. Trọng lượng 4kg (6 cái/thùng)", unit: "Cái", priceTier1: 2106000, priceTier2: 2020000, costPrice: 1650000 },
-    { id: "YES1-100GN/4P", brand: "YuYe", name: "ATS YuYe YES1-100GN/4P 100A", desc: "Bảo vệ thấp áp 165V, cao áp 270V, Thời gian chuyển mạch 2.5s (6 cái/thùng)", unit: "Cái", priceTier1: 2268000, priceTier2: 2180000, costPrice: 1750000 },
-    { id: "YES1-100GA1/4P", brand: "YuYe", name: "ATS YuYe YES1-100GA1/4P 100A", desc: "Tuổi thọ cơ 20.000 lần, điện 6000 lần, 3.4kg (6 cái/thùng)", unit: "Cái", priceTier1: 972000, priceTier2: 935000, costPrice: 750000 },
-    { id: "EVP63D", brand: "WEAG", name: "ATS Kỹ Thuật Số EVP63D (63A 220V)", desc: "Bảo vệ thấp áp, cao áp, quá tải, Delay chuyển nguồn 1-60s", unit: "Cái", priceTier1: 626400, priceTier2: 598000, costPrice: 460000 },
-    { id: "EVP100D", brand: "WEAG", name: "ATS Kỹ Thuật Số EVP100D (100A 220V)", desc: "Bảo vệ thấp áp, cao áp, quá tải, Delay chuyển nguồn 1-60s", unit: "Cái", priceTier1: 745200, priceTier2: 715000, costPrice: 560000 },
-    { id: "EA63H-DC", brand: "WEAG", name: "MCB DC WEAG EA63H 600VDC 25A", desc: "Khả năng ngắt mạch cao, bảo vệ quá tải Solar PV", unit: "Cái", priceTier1: 178200, priceTier2: 169000, costPrice: 130000 },
-    { id: "EA63-AC", brand: "WEAG", name: "MCB AC WEAG EA63 2P (63A 220V)", desc: "Tiêu chuẩn IEC60898-1, IEC60947-2, Icu 4.5kA-6kA", unit: "Cái", priceTier1: 85320, priceTier2: 80000, costPrice: 60000 },
-    { id: "EPD-Z40/T2", brand: "WEAG", name: "SPD DC WEAG EPD-Z40/T2 (1000VDC 2P 40kA)", desc: "Cấp T2, dòng tối đa 40kA, dòng danh định 20kA", unit: "Cái", priceTier1: 264600, priceTier2: 250000, costPrice: 190000 },
-    { id: "EPD-A40/T2", brand: "WEAG", name: "SPD AC WEAG EPD-A40/T2 (385VAC 2P 40kA)", desc: "Cấp T2, Imax 40kA, In 20kA, Up <= 1.5kV", unit: "Cái", priceTier1: 196560, priceTier2: 185000, costPrice: 140000 }
+// Authentication & Accounts State
+var DEFAULT_ACCOUNTS = [
+    { username: 'admin', password: 'solarbacninh168', role: 'Quản trị viên', dateCreated: '01/01/2026' }
 ];
 
-// Danh sách địa chỉ 2 phương án: Hành chính mới & Địa danh cũ
+var accountsList = [];
+var currentLoggedInUser = null;
+
+function loadAccountsData() {
+    try {
+        var rawAccs = localStorage.getItem('solar_bac_ninh_accounts_v1');
+        if (rawAccs) accountsList = JSON.parse(rawAccs) || [];
+        else accountsList = DEFAULT_ACCOUNTS.slice();
+    } catch(e) {
+        accountsList = DEFAULT_ACCOUNTS.slice();
+    }
+
+    if (accountsList.length === 0) {
+        accountsList = DEFAULT_ACCOUNTS.slice();
+    }
+    saveAccountsToStorage();
+}
+
+function saveAccountsToStorage() {
+    localStorage.setItem('solar_bac_ninh_accounts_v1', JSON.stringify(accountsList));
+}
+
+function checkAuthSession() {
+    loadAccountsData();
+    var activeUserJson = sessionStorage.getItem('solar_bac_ninh_active_user');
+    if (activeUserJson) {
+        try {
+            currentLoggedInUser = JSON.parse(activeUserJson);
+            document.getElementById('loginOverlay').style.display = 'none';
+            document.getElementById('lblLoggedInUser').innerText = currentLoggedInUser.username + ' (' + (currentLoggedInUser.role || 'Admin') + ')';
+        } catch(e) {
+            document.getElementById('loginOverlay').style.display = 'flex';
+        }
+    } else {
+        document.getElementById('loginOverlay').style.display = 'flex';
+    }
+}
+
+function handleLogin(e) {
+    if (e) e.preventDefault();
+    var userVal = document.getElementById('loginUsername').value.trim().toLowerCase();
+    var passVal = document.getElementById('loginPassword').value.trim();
+    var errAlert = document.getElementById('loginErrorAlert');
+
+    var matchedAcc = accountsList.find(function(acc) {
+        return acc.username.toLowerCase() === userVal && acc.password === passVal;
+    });
+
+    if (matchedAcc) {
+        currentLoggedInUser = matchedAcc;
+        sessionStorage.setItem('solar_bac_ninh_active_user', JSON.stringify(matchedAcc));
+        document.getElementById('loginOverlay').style.display = 'none';
+        document.getElementById('lblLoggedInUser').innerText = matchedAcc.username + ' (' + (matchedAcc.role || 'Admin') + ')';
+        if (errAlert) errAlert.style.display = 'none';
+    } else {
+        if (errAlert) {
+            errAlert.style.display = 'block';
+            errAlert.innerText = '⚠️ Tài khoản hoặc mật khẩu không đúng!';
+        }
+    }
+}
+
+function toggleShowPassword() {
+    var passInput = document.getElementById('loginPassword');
+    if (passInput) {
+        passInput.type = (passInput.type === 'password') ? 'text' : 'password';
+    }
+}
+
+function handleLogout() {
+    sessionStorage.removeItem('solar_bac_ninh_active_user');
+    currentLoggedInUser = null;
+    document.getElementById('loginUsername').value = '';
+    document.getElementById('loginPassword').value = '';
+    var errAlert = document.getElementById('loginErrorAlert');
+    if (errAlert) errAlert.style.display = 'none';
+    var overlay = document.getElementById('loginOverlay');
+    if (overlay) {
+        overlay.style.display = 'flex';
+    }
+}
+
+function handleChangePassword() {
+    var oldPass = document.getElementById('txtOldPassword').value.trim();
+    var newPass = document.getElementById('txtNewPassword').value.trim();
+    var confirmPass = document.getElementById('txtConfirmPassword').value.trim();
+    var statusEl = document.getElementById('changePasswordStatus');
+
+    if (!currentLoggedInUser) {
+        statusEl.innerHTML = '<span style="color:#ef4444;">⚠️ Bạn chưa đăng nhập!</span>';
+        return;
+    }
+
+    if (oldPass !== currentLoggedInUser.password) {
+        statusEl.innerHTML = '<span style="color:#ef4444;">❌ Mật khẩu hiện tại không đúng!</span>';
+        return;
+    }
+
+    if (!newPass || newPass.length < 4) {
+        statusEl.innerHTML = '<span style="color:#ef4444;">⚠️ Mật khẩu mới phải từ 4 ký tự trở lên!</span>';
+        return;
+    }
+
+    if (newPass !== confirmPass) {
+        statusEl.innerHTML = '<span style="color:#ef4444;">❌ Mật khẩu mới và nhập lại không khớp!</span>';
+        return;
+    }
+
+    // Update password
+    var targetAcc = accountsList.find(function(a) { return a.username.toLowerCase() === currentLoggedInUser.username.toLowerCase(); });
+    if (targetAcc) {
+        targetAcc.password = newPass;
+        currentLoggedInUser.password = newPass;
+        saveAccountsToStorage();
+        sessionStorage.setItem('solar_bac_ninh_active_user', JSON.stringify(currentLoggedInUser));
+
+        document.getElementById('txtOldPassword').value = '';
+        document.getElementById('txtNewPassword').value = '';
+        document.getElementById('txtConfirmPassword').value = '';
+        statusEl.innerHTML = '<span style="color:#15803d; font-weight:bold;">🎉 Đã đổi mật khẩu thành công!</span>';
+        renderAccountsTable();
+    }
+}
+
+function handleCreateAccount() {
+    var newUname = document.getElementById('txtNewUsername').value.trim();
+    var newPass = document.getElementById('txtUserPassword').value.trim();
+    var role = document.getElementById('selUserRole').value;
+    var statusEl = document.getElementById('createAccountStatus');
+
+    if (!newUname || !newPass) {
+        statusEl.innerHTML = '<span style="color:#ef4444;">⚠️ Vui lòng nhập Tên đăng nhập và Mật khẩu!</span>';
+        return;
+    }
+
+    var exists = accountsList.some(function(a) { return a.username.toLowerCase() === newUname.toLowerCase(); });
+    if (exists) {
+        statusEl.innerHTML = '<span style="color:#ef4444;">❌ Tên đăng nhập này đã tồn tại!</span>';
+        return;
+    }
+
+    var newAcc = {
+        username: newUname,
+        password: newPass,
+        role: role,
+        dateCreated: new Date().toLocaleDateString('vi-VN')
+    };
+
+    accountsList.push(newAcc);
+    saveAccountsToStorage();
+
+    document.getElementById('txtNewUsername').value = '';
+    document.getElementById('txtUserPassword').value = '';
+    statusEl.innerHTML = '<span style="color:#15803d; font-weight:bold;">🎉 Đã tạo tài khoản "' + newUname + '" thành công!</span>';
+    renderAccountsTable();
+}
+
+function deleteAccount(uname) {
+    if (uname.toLowerCase() === 'admin') {
+        alert("Không thể xóa tài khoản Admin mặc định!");
+        return;
+    }
+
+    if (confirm('Bạn có chắc chắn muốn xóa tài khoản "' + uname + '"?')) {
+        accountsList = accountsList.filter(function(a) { return a.username.toLowerCase() !== uname.toLowerCase(); });
+        saveAccountsToStorage();
+        renderAccountsTable();
+    }
+}
+
+function renderAccountsTable() {
+    var tbody = document.getElementById('accountsTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    accountsList.forEach(function(acc, idx) {
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<td class="text-center font-bold">' + (idx + 1) + '</td>' +
+            '<td><strong style="color:#0369a1;">' + acc.username + '</strong></td>' +
+            '<td class="text-center"><span class="badge badge-brand">' + acc.role + '</span></td>' +
+            '<td class="text-center" style="font-size:11px; color:#64748b;">' + (acc.dateCreated || '01/01/2026') + '</td>' +
+            '<td class="text-center">' +
+                (acc.username.toLowerCase() !== 'admin' ? 
+                '<button class="btn btn-danger" style="padding:2px 6px; font-size:10.5px;" onclick="deleteAccount(\'' + acc.username + '\')">🗑️ Xóa</button>' : 
+                '<span style="font-size:10px; color:#94a3b8;">Gốc</span>') +
+            '</td>';
+        tbody.appendChild(tr);
+    });
+}
+
+// Master Product Catalog Default (With Stock Quantity)
+var defaultCatalog = [
+    { id: "FHG-100/4P", brand: "FANHEY", name: "ATS FANHEY FHG-100/4P (100A 400V)", desc: "Điện áp 400V AC, dòng 100A, Icu 6kA. ATS Chuyển Chậm (6 cái/thùng)", unit: "Cái", priceTier1: 550800, priceTier2: 529200, costPrice: 420000, stockQty: 24 },
+    { id: "FHG-125/46PC", brand: "FANHEY", name: "ATS FANHEY FHG-125/46PC (125A 400V)", desc: "Điện áp 400V AC, dòng 125A, Icu 6kA. ATS Chuyển Chậm (6 cái/thùng)", unit: "Cái", priceTier1: 637200, priceTier2: 610200, costPrice: 485000, stockQty: 18 },
+    { id: "FHG-250/46PC", brand: "FANHEY", name: "ATS FANHEY FHG-250/46PC (250A 400V)", desc: "Điện áp 400V AC, dòng 250A, Icu 6kA. ATS Chuyển Chậm (4 cái/thùng)", unit: "Cái", priceTier1: 1674000, priceTier2: 1620000, costPrice: 1300000, stockQty: 12 },
+    { id: "FHG-100/2P", brand: "FANHEY", name: "ATS FANHEY FHG-100/2P S6 (100A 220V)", desc: "Dòng định mức 100A, 220V AC. ATS Chuyển Chậm (18 cái/thùng)", unit: "Cái", priceTier1: 410400, priceTier2: 399600, costPrice: 310000, stockQty: 35 },
+    { id: "FHG1-125/2P", brand: "FANHEY", name: "ATS FANHEY FHG1-125/2P (125A 220V)", desc: "Dòng định mức 125A, 220V AC, Icu 10kA. ATS Chuyển Nhanh", unit: "Cái", priceTier1: 1512000, priceTier2: 1458000, costPrice: 1150000, stockQty: 15 },
+    { id: "FHG1-125/4P", brand: "FANHEY", name: "ATS FANHEY FHG1-125/4P (125A 400V)", desc: "Dòng định mức 125A, 400V AC, Icu 10kA. ATS Chuyển Nhanh", unit: "Cái", priceTier1: 2052000, priceTier2: 1998000, costPrice: 1580000, stockQty: 8 },
+    { id: "FHD1-63DC/2P", brand: "FANHEY", name: "MCB DC FANHEY FHD1-63DC/2P (500V DC 25A)", desc: "CB DC chuyên dụng hệ thống năng lượng mặt trời Solar", unit: "Cái", priceTier1: 63720, priceTier2: 60000, costPrice: 45000, stockQty: 120 },
+    { id: "DZ47-63-2P", brand: "FANHEY", name: "MCB AC FANHEY DZ47-63 2P (400V AC 63A)", desc: "Aptomat AC 2P 63A", unit: "Cái", priceTier1: 45360, priceTier2: 42000, costPrice: 32000, stockQty: 80 },
+    { id: "DZ47-63-4P", brand: "FANHEY", name: "MCB AC FANHEY DZ47-63 4P (400V AC 63A)", desc: "Aptomat AC 4P 63A", unit: "Cái", priceTier1: 91800, priceTier2: 86000, costPrice: 65000, stockQty: 50 },
+    { id: "SPD-DC-FANHEY", brand: "FANHEY", name: "Chống Sét Lan Truyền SPD DC 1000V DC", desc: "Cấp bảo vệ T2, Imax 40kA, In 20kA, 1000VDC", unit: "Cái", priceTier1: 96120, priceTier2: 90000, costPrice: 68000, stockQty: 65 },
+    { id: "SPD-AC-FANHEY", brand: "FANHEY", name: "Chống Sét Lan Truyền SPD AC 2P 385V AC", desc: "Cấp bảo vệ T2, Imax 40kA, In 20kA, 385VAC", unit: "Cái", priceTier1: 63720, priceTier2: 59000, costPrice: 45000, stockQty: 40 },
+    { id: "YES1-125NA/4P", brand: "YuYe", name: "ATS YuYe YES1-125NA/4P 125A (Có Dập Hồ Quang)", desc: "Bảo vệ thấp áp 165V, cao áp 270V, Delay 0-30s. Tiêu chuẩn IEC (6 cái/thùng)", unit: "Cái", priceTier1: 2376000, priceTier2: 2280000, costPrice: 1850000, stockQty: 10 },
+    { id: "YES1-125NA/2P", brand: "YuYe", name: "ATS YuYe YES1-125NA/2P 125A (Có Dập Hồ Quang)", desc: "Bảo vệ thấp áp 165V, cao áp 270V, Delay 0-30s. Trọng lượng 4kg (6 cái/thùng)", unit: "Cái", priceTier1: 2106000, priceTier2: 2020000, costPrice: 1650000, stockQty: 14 },
+    { id: "YES1-100GN/4P", brand: "YuYe", name: "ATS YuYe YES1-100GN/4P 100A", desc: "Bảo vệ thấp áp 165V, cao áp 270V, Thời gian chuyển mạch 2.5s (6 cái/thùng)", unit: "Cái", priceTier1: 2268000, priceTier2: 2180000, costPrice: 1750000, stockQty: 7 },
+    { id: "YES1-100GA1/4P", brand: "YuYe", name: "ATS YuYe YES1-100GA1/4P 100A", desc: "Tuổi thọ cơ 20.000 lần, điện 6000 lần, 3.4kg (6 cái/thùng)", unit: "Cái", priceTier1: 972000, priceTier2: 935000, costPrice: 750000, stockQty: 16 },
+    { id: "EVP63D", brand: "WEAG", name: "ATS Kỹ Thuật Số EVP63D (63A 220V)", desc: "Bảo vệ thấp áp, cao áp, quá tải, Delay chuyển nguồn 1-60s", unit: "Cái", priceTier1: 626400, priceTier2: 598000, costPrice: 460000, stockQty: 22 },
+    { id: "EVP100D", brand: "WEAG", name: "ATS Kỹ Thuật Số EVP100D (100A 220V)", desc: "Bảo vệ thấp áp, cao áp, quá tải, Delay chuyển nguồn 1-60s", unit: "Cái", priceTier1: 745200, priceTier2: 715000, costPrice: 560000, stockQty: 15 },
+    { id: "EA63H-DC", brand: "WEAG", name: "MCB DC WEAG EA63H 600VDC 25A", desc: "Khả năng ngắt mạch cao, bảo vệ quá tải Solar PV", unit: "Cái", priceTier1: 178200, priceTier2: 169000, costPrice: 130000, stockQty: 45 },
+    { id: "EA63-AC", brand: "WEAG", name: "MCB AC WEAG EA63 2P (63A 220V)", desc: "Tiêu chuẩn IEC60898-1, IEC60947-2, Icu 4.5kA-6kA", unit: "Cái", priceTier1: 85320, priceTier2: 80000, costPrice: 60000, stockQty: 60 },
+    { id: "EPD-Z40/T2", brand: "WEAG", name: "SPD DC WEAG EPD-Z40/T2 (1000VDC 2P 40kA)", desc: "Cấp T2, dòng tối đa 40kA, dòng danh định 20kA", unit: "Cái", priceTier1: 264600, priceTier2: 250000, costPrice: 190000, stockQty: 30 },
+    { id: "EPD-A40/T2", brand: "WEAG", name: "SPD AC WEAG EPD-A40/T2 (385VAC 2P 40kA)", desc: "Cấp T2, Imax 40kA, In 20kA, Up <= 1.5kV", unit: "Cái", priceTier1: 196560, priceTier2: 185000, costPrice: 140000, stockQty: 25 }
+];
+
+var rawCatalog = [];
+var stockLogsHistory = [];
+
+// Address suggestions
 var addrSuggestions = {
     new: [
         "Khu Phố Hương Mạc, Phường Phù Khê, TP. Từ Sơn, Bắc Ninh",
-        "Phường Phù Khê, TP. Từ Sơn, Bắc Ninh (Hợp nhất Hương Mạc - Phù Khê - Châu Khê)",
-        "Phường Đồng Nguyên, TP. Từ Sơn, Bắc Ninh (Hợp nhất Đồng Kỵ - Trang Hạ - Đồng Nguyên)",
-        "Phường Từ Sơn, TP. Từ Sơn, Bắc Ninh (Hợp nhất Đông Ngàn - Tân Hồng - Đình Bảng - Phù Chẩn)",
-        "Phường Tam Sơn, TP. Từ Sơn, Bắc Ninh (Hợp nhất Tam Sơn - Tương Giang)",
-        "TP. Từ Sơn, Bắc Ninh",
-        "TP. Bắc Ninh, Bắc Ninh",
-        "Thị xã Quế Võ, Bắc Ninh",
-        "Thị xã Thuận Thành, Bắc Ninh",
-        "Huyện Yên Phong, Bắc Ninh",
-        "Huyện Tiên Du, Bắc Ninh",
-        "Huyện Gia Bình, Bắc Ninh",
-        "Huyện Lương Tài, Bắc Ninh",
-        "Thị xã Việt Yên, Bắc Giang",
-        "TP. Bắc Giang, Bắc Giang",
+        "Phường Phù Khê, TP. Từ Sơn, Bắc Ninh",
+        "Phường Đồng Nguyên, TP. Từ Sơn, Bắc Ninh",
+        "Phường Từ Sơn, TP. Từ Sơn, Bắc Ninh",
+        "Phường Tam Sơn, TP. Từ Sơn, Bắc Ninh",
+        "TP. Từ Sơn, Bắc Ninh", "TP. Bắc Ninh, Bắc Ninh",
+        "Thị xã Quế Võ, Bắc Ninh", "Thị xã Thuận Thành, Bắc Ninh",
+        "Huyện Yên Phong, Bắc Ninh", "Huyện Tiên Du, Bắc Ninh",
         "KCN VSIP Bắc Ninh, TP. Từ Sơn, Bắc Ninh",
         "KCN Yên Phong 1, Huyện Yên Phong, Bắc Ninh",
-        "KCN Yên Phong 2, Huyện Yên Phong, Bắc Ninh",
-        "KCN Tiên Sơn, Huyện Tiên Du, Bắc Ninh",
-        "KCN Quế Võ 1, TX. Quế Võ, Bắc Ninh",
-        "KCN Quế Võ 2, TX. Quế Võ, Bắc Ninh",
-        "KCN Đại Đồng - Hoàn Sơn, Huyện Tiên Du, Bắc Ninh",
-        "KCN Quang Châu, TX. Việt Yên, Bắc Giang",
-        "KCN Vân Trung, TX. Việt Yên, Bắc Giang",
-        "KCN Đình Trám, TX. Việt Yên, Bắc Giang",
-        "KCN Song Khê - Nội Hoàng, Bắc Giang",
-        "Quận Long Biên, TP. Hà Nội",
-        "Huyện Gia Lâm, TP. Hà Nội",
-        "Huyện Đông Anh, TP. Hà Nội",
-        "Hà Nội", "Hưng Yên", "Hải Dương", "Hải Phòng", "Thái Nguyên", "Vĩnh Phúc", "Phú Thọ", "Toàn quốc"
+        "Quận Long Biên, TP. Hà Nội", "Huyện Gia Lâm, TP. Hà Nội", "Toàn quốc"
     ],
     old: [
-        "Phường Hương Mạc, TP. Từ Sơn (Cũ)",
-        "Phường Phù Khê, TP. Từ Sơn (Cũ)",
-        "Phường Châu Khê, TP. Từ Sơn (Cũ)",
-        "Phường Đồng Kỵ, TP. Từ Sơn (Cũ)",
-        "Phường Trang Hạ, TP. Từ Sơn (Cũ)",
-        "Phường Đình Bảng, TP. Từ Sơn (Cũ)",
-        "Phường Đông Ngàn, TP. Từ Sơn (Cũ)",
-        "Phường Tân Hồng, TP. Từ Sơn (Cũ)",
-        "Phường Phù Chẩn, TP. Từ Sơn (Cũ)",
-        "Phường Tam Sơn, TP. Từ Sơn (Cũ)",
-        "Phường Tương Giang, TP. Từ Sơn (Cũ)",
+        "Phường Hương Mạc, TP. Từ Sơn (Cũ)", "Phường Phù Khê, TP. Từ Sơn (Cũ)",
         "Làng gỗ Hương Mạc, TX. Từ Sơn (Cũ), Bắc Ninh",
         "Làng nghề Đồ gỗ Đồng Kỵ, Từ Sơn, Bắc Ninh",
-        "Làng nghề Sắt thép Đa Hội, Châu Khê, Từ Sơn",
-        "Huyện Quế Võ (Cũ), Bắc Ninh",
-        "Huyện Thuận Thành (Cũ), Bắc Ninh",
-        "Huyện Việt Yên (Cũ), Bắc Giang",
-        "Hà Nội", "Bắc Ninh", "Bắc Giang", "Hải Hưng (Cũ)", "Toàn quốc"
+        "Hà Nội", "Bắc Ninh", "Bắc Giang", "Toàn quốc"
     ]
 };
 
@@ -1783,7 +2246,6 @@ function onCustPhoneInput() {
     }
 }
 
-// Tự động tìm kiếm thông tin doanh nghiệp theo Mã Số Thuế (MST)
 function lookupCompanyByTaxCode(autoVal) {
     var taxInput = document.getElementById('custTaxCode');
     var taxCode = (autoVal || taxInput.value).trim().replace(/[^0-9-]/g, '');
@@ -1838,17 +2300,16 @@ function lookupCompanyByTaxCode(autoVal) {
             
             if (statusEl) statusEl.innerHTML = '<span style="color:#15803d; line-height:1.4; display:block; margin-top:2px;">' + detailsText + '</span>';
         } else {
-            if (statusEl) statusEl.innerHTML = '<span style="color:#b45309;">⚠️ Không tìm thấy dữ liệu tự động cho MST này. Quý khách có thể tự nhập tay các trường.</span>';
+            if (statusEl) statusEl.innerHTML = '<span style="color:#b45309;">⚠️ Không tìm thấy dữ liệu tự động cho MST này. Quý khách có thể tự nhập tay.</span>';
         }
     }).catch(function(err) {
-        if (statusEl) statusEl.innerHTML = '<span style="color:#ef4444;">❌ Lỗi kết nối tra cứu dữ liệu. Vui lòng kiểm tra lại kết nối mạng.</span>';
+        if (statusEl) statusEl.innerHTML = '<span style="color:#ef4444;">❌ Lỗi kết nối tra cứu dữ liệu.</span>';
     });
 }
 
 function onCustTaxCodeInput() {
     var taxVal = document.getElementById('custTaxCode').value.trim();
     updateClientInfo();
-    
     var clean = taxVal.replace(/[^0-9]/g, '');
     if (clean.length === 10 || clean.length === 13) {
         lookupCompanyByTaxCode(taxVal);
@@ -1856,25 +2317,455 @@ function onCustTaxCodeInput() {
 }
 
 // -------------------------------------------------------------
-// TÍNH NĂNG TẠO ĐƠN HÀNG VẬN CHUYỂN (THEO MẪU EXCEL CHUẨN)
+// QUẢN LÝ KHO & LỊCH SỬ NHẬP XUẤT KHO REAL-TIME
+// -------------------------------------------------------------
+
+function saveStockLogsToStorage() {
+    localStorage.setItem('solar_bac_ninh_app_stock_logs_v14', JSON.stringify(stockLogsHistory));
+}
+
+function addStockLog(type, prodName, qty, costPrice, reason) {
+    var logItem = {
+        timestamp: new Date().toLocaleString('vi-VN'),
+        type: type, // 'IMPORT' or 'EXPORT'
+        prodName: prodName,
+        qty: qty,
+        costPrice: costPrice,
+        reason: reason || ''
+    };
+    stockLogsHistory.unshift(logItem);
+    saveStockLogsToStorage();
+    renderStockLogs();
+}
+
+function renderStockLogs() {
+    var tbody = document.getElementById('stockLogsTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    if (stockLogsHistory.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px; color:#64748b;">Chưa có nhật ký nhập/xuất kho.</td></tr>';
+        return;
+    }
+
+    stockLogsHistory.forEach(function(log) {
+        var isImport = log.type === 'IMPORT';
+        var badge = isImport ? 
+            '<span class="badge" style="background:#dcfce7; color:#15803d;">📥 Nhập kho</span>' : 
+            '<span class="badge" style="background:#fee2e2; color:#b91c1c;">📤 Xuất bán</span>';
+
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<td style="font-size:11.5px; color:#475569;">' + log.timestamp + '</td>' +
+            '<td class="text-center">' + badge + '</td>' +
+            '<td><strong>' + log.prodName + '</strong></td>' +
+            '<td class="text-center font-bold" style="color:' + (isImport ? '#166534' : '#b91c1c') + ';">' + (isImport ? '+' : '-') + log.qty + '</td>' +
+            '<td class="text-right">' + formatCurrency(log.costPrice || 0) + '</td>' +
+            '<td style="font-size:11.5px; color:#64748b;">' + log.reason + '</td>';
+        tbody.appendChild(tr);
+    });
+}
+
+function renderInventoryTable() {
+    var tbody = document.getElementById('inventoryTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    var searchVal = (document.getElementById('searchInventoryInput') ? document.getElementById('searchInventoryInput').value : '').toLowerCase().trim();
+    var statusFilter = document.getElementById('filterStockStatus') ? document.getElementById('filterStockStatus').value : '';
+    var brandFilter = document.getElementById('filterInventoryBrand') ? document.getElementById('filterInventoryBrand').value : '';
+
+    var totalQtySum = 0;
+    var totalCostValueSum = 0;
+    var lowStockCount = 0;
+    var outStockCount = 0;
+
+    rawCatalog.forEach(function(p) {
+        if (p.stockQty === undefined || p.stockQty === null) p.stockQty = 20;
+        var q = parseInt(p.stockQty, 10) || 0;
+        var cost = parseFloat(p.costPrice) || 0;
+        var totalVal = q * cost;
+
+        totalQtySum += q;
+        totalCostValueSum += totalVal;
+
+        if (q === 0) outStockCount++;
+        else if (q <= 5) lowStockCount++;
+    });
+
+    document.getElementById('invTotalQty').innerText = totalQtySum.toLocaleString('vi-VN') + ' cái';
+    document.getElementById('invTotalValue').innerText = formatCurrency(totalCostValueSum);
+    document.getElementById('invLowStockCount').innerText = lowStockCount + ' mã';
+    document.getElementById('invOutStockCount').innerText = outStockCount + ' mã';
+
+    var filtered = rawCatalog.filter(function(p) {
+        var matchText = p.name.toLowerCase().indexOf(searchVal) !== -1 || 
+                         p.id.toLowerCase().indexOf(searchVal) !== -1 || 
+                         p.brand.toLowerCase().indexOf(searchVal) !== -1;
+        
+        var matchBrand = brandFilter ? (p.brand === brandFilter) : true;
+        var q = parseInt(p.stockQty, 10) || 0;
+        var matchStatus = true;
+        
+        if (statusFilter === 'ok') matchStatus = (q > 5);
+        else if (statusFilter === 'low') matchStatus = (q > 0 && q <= 5);
+        else if (statusFilter === 'out') matchStatus = (q === 0);
+
+        return matchText && matchBrand && matchStatus;
+    });
+
+    if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="12" style="text-align:center; padding:30px; color:#64748b;">Không tìm thấy thiết bị nào phù hợp trong kho.</td></tr>';
+        return;
+    }
+
+    filtered.forEach(function(item, idx) {
+        var q = parseInt(item.stockQty, 10) || 0;
+        var cost = parseFloat(item.costPrice) || 0;
+        var lineVal = q * cost;
+
+        var stockBadgeHtml = '<span class="stock-badge stock-ok">🟢 Tồn ' + q + ' cái</span>';
+        if (q === 0) stockBadgeHtml = '<span class="stock-badge stock-out">🔴 Hết hàng (0)</span>';
+        else if (q <= 5) stockBadgeHtml = '<span class="stock-badge stock-low">🟡 Sắp hết (' + q + ')</span>';
+
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<td class="text-center font-bold">' + (idx + 1) + '</td>' +
+            '<td><strong style="color:#0369a1;">' + item.id + '</strong></td>' +
+            '<td><span class="badge badge-brand">' + item.brand + '</span></td>' +
+            '<td><strong>' + item.name + '</strong>' + (item.desc ? '<div style="font-size:10.5px; color:#64748b;">' + item.desc + '</div>' : '') + '</td>' +
+            '<td class="text-center">' + item.unit + '</td>' +
+            '<td class="text-right font-bold" style="color:#b91c1c;">' + formatCurrency(cost) + '</td>' +
+            '<td class="text-right" style="color:#0284c7;">' + formatCurrency(item.priceTier1) + '</td>' +
+            '<td class="text-right" style="color:#0369a1; font-weight:600;">' + formatCurrency(item.priceTier2) + '</td>' +
+            '<td class="text-center">' +
+                '<input type="number" class="editable-input text-center font-bold" value="' + q + '" min="0" onchange="updateStockQtyDirect(' + idx + ', this.value)" style="width: 60px; color:#166534;">' +
+            '</td>' +
+            '<td class="text-right font-bold" style="color:#166534;">' + formatCurrency(lineVal) + '</td>' +
+            '<td class="text-center">' + stockBadgeHtml + '</td>' +
+            '<td class="text-center">' +
+                '<button class="btn btn-success" style="padding:2px 6px; font-size:10.5px;" onclick="openStockInModalForProduct(\'' + item.id + '\')">➕ Nhập Kho</button>' +
+            '</td>';
+        tbody.appendChild(tr);
+    });
+}
+
+function updateStockQtyDirect(filteredIndex, newQty) {
+    var val = parseInt(newQty, 10);
+    if (!isNaN(val) && val >= 0) {
+        rawCatalog[filteredIndex].stockQty = val;
+        localStorage.setItem('solar_bac_ninh_app_catalog_v13', JSON.stringify(rawCatalog));
+        renderInventoryTable();
+        renderCatalogList(rawCatalog);
+        renderCatalogAdminTable();
+    }
+}
+
+function openStockInModal() {
+    var select = document.getElementById('stockInProductSelect');
+    if (!select) return;
+    select.innerHTML = '';
+
+    rawCatalog.forEach(function(p) {
+        var opt = document.createElement('option');
+        opt.value = p.id;
+        opt.innerText = '[' + p.brand + '] ' + p.name + ' (Tồn: ' + (p.stockQty || 0) + ' ' + p.unit + ')';
+        select.appendChild(opt);
+    });
+
+    onStockInProductSelectChange();
+    document.getElementById('stockInModal').classList.add('active');
+}
+
+function openStockInModalForProduct(prodId) {
+    openStockInModal();
+    document.getElementById('stockInProductSelect').value = prodId;
+    onStockInProductSelectChange();
+}
+
+function closeStockInModal() {
+    document.getElementById('stockInModal').classList.remove('active');
+}
+
+function onStockInProductSelectChange() {
+    var prodId = document.getElementById('stockInProductSelect').value;
+    var prod = rawCatalog.find(function(p) { return p.id === prodId; });
+    if (prod) {
+        document.getElementById('stockInCostPrice').value = prod.costPrice || 0;
+    }
+}
+
+function saveStockInReceipt() {
+    var prodId = document.getElementById('stockInProductSelect').value;
+    var addQty = parseInt(document.getElementById('stockInQty').value, 10) || 0;
+    var newCostPrice = parseFloat(document.getElementById('stockInCostPrice').value) || 0;
+    var note = document.getElementById('stockInNote').value.trim() || 'Nhập kho bổ sung';
+
+    if (!prodId || addQty <= 0) {
+        alert("Vui lòng nhập số lượng hợp lệ!");
+        return;
+    }
+
+    var prod = rawCatalog.find(function(p) { return p.id === prodId; });
+    if (prod) {
+        if (prod.stockQty === undefined || prod.stockQty === null) prod.stockQty = 0;
+        prod.stockQty += addQty;
+        if (newCostPrice > 0) prod.costPrice = newCostPrice;
+
+        localStorage.setItem('solar_bac_ninh_app_catalog_v13', JSON.stringify(rawCatalog));
+        addStockLog('IMPORT', prod.name, addQty, newCostPrice || prod.costPrice, note);
+
+        renderInventoryTable();
+        renderCatalogList(rawCatalog);
+        renderCatalogAdminTable();
+        closeStockInModal();
+        alert('🎉 Đã nhập kho thành công +' + addQty + ' ' + prod.unit + ' cho thiết bị "' + prod.name + '"!');
+    }
+}
+
+function exportInventoryToExcel() {
+    var wsData = [
+        ['BÁO CÁO CÂN ĐỐI TỒN KHO THIẾT BỊ - SOLAR BẮC NINH'],
+        ['Ngày kiểm kê: ' + new Date().toLocaleDateString('vi-VN')],
+        [],
+        ['STT', 'Mã Model', 'Thương Hiệu', 'Tên Thiết Bị', 'ĐVT', 'Giá Vốn Nhập (VNĐ)', 'Giá Bán Sỉ (VNĐ)', 'Số Lượng Tồn Kho', 'Tổng Giá Trị Vốn Tồn (VNĐ)', 'Trạng Thái Kho']
+    ];
+
+    var totalCostSum = 0;
+    var totalQtySum = 0;
+
+    rawCatalog.forEach(function(p, i) {
+        var q = parseInt(p.stockQty, 10) || 0;
+        var cost = parseFloat(p.costPrice) || 0;
+        var lineVal = q * cost;
+
+        totalQtySum += q;
+        totalCostSum += lineVal;
+
+        var status = 'Còn hàng';
+        if (q === 0) status = 'Hết hàng';
+        else if (q <= 5) status = 'Sắp hết hàng';
+
+        wsData.push([
+            i + 1,
+            p.id,
+            p.brand,
+            p.name,
+            p.unit,
+            cost,
+            p.priceTier2,
+            q,
+            lineVal,
+            status
+        ]);
+    });
+
+    wsData.push([]);
+    wsData.push(['TỔNG CỘNG', '', '', '', '', '', '', totalQtySum + ' cái', totalCostSum, '']);
+
+    var ws = XLSX.utils.aoa_to_sheet(wsData);
+    ws['!cols'] = [
+        { wch: 6 }, { wch: 18 }, { wch: 15 }, { wch: 40 }, { wch: 8 },
+        { wch: 18 }, { wch: 18 }, { wch: 16 }, { wch: 22 }, { wch: 16 }
+    ];
+
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Báo Cáo Tồn Kho");
+
+    var filename = "Bao_Cao_Ton_Kho_Solar_Bac_Ninh_" + (new Date().toISOString().slice(0, 10)) + ".xlsx";
+    XLSX.writeFile(wb, filename);
+
+    alert("🎉 Đã xuất file Excel kiểm kê tồn kho thành công!\nFile: " + filename);
+}
+
+// -------------------------------------------------------------
+// COPY BÁO GIÁ CHO ZALO
+// -------------------------------------------------------------
+
+function copyQuoteForZalo() {
+    if (quoteItems.length === 0) {
+        alert("Bảng báo giá trống! Vui lòng chọn ít nhất 1 sản phẩm.");
+        return;
+    }
+
+    var quoteNo = document.getElementById('quoteNo').value || 'BG';
+    var custName = document.getElementById('custName').value.trim() || 'Quý khách hàng';
+    var custPhone = document.getElementById('custPhone').value.trim() || '';
+    
+    var grandTotal = parseFloat(document.getElementById('lblGrandTotalWithVat').innerText.replace(/[^0-9]/g, '')) || 0;
+    var deposit = parseFloat(document.getElementById('quoteDepositVal').value) || 0;
+    var remaining = Math.max(0, grandTotal - deposit);
+
+    var txt = "☀️ BÁO GIÁ THIẾT BỊ - CÔNG TY TNHH SOLAR BẮC NINH\n";
+    txt += "🔖 Mã báo giá: " + quoteNo + "\n";
+    txt += "👤 Kính gửi: " + custName + (custPhone ? " (" + custPhone + ")" : "") + "\n";
+    txt += "-----------------------------------\n";
+
+    quoteItems.forEach(function(it, i) {
+        var lineTotal = it.priceWithVat * it.qty;
+        txt += (i + 1) + ". " + it.name + "\n";
+        txt += "   └ SL: " + it.qty + " " + (it.unit || "Cái") + " x " + formatCurrency(it.priceWithVat) + " = " + formatCurrency(lineTotal) + "\n";
+    });
+
+    txt += "-----------------------------------\n";
+    txt += "💰 TỔNG CỘNG THANH TOÁN: " + formatCurrency(grandTotal) + "\n";
+    if (deposit > 0) {
+        txt += "💵 Đã đặt cọc/Tạm ứng: " + formatCurrency(deposit) + "\n";
+        txt += "🔴 Còn lại phải thanh toán: " + formatCurrency(remaining) + "\n";
+    }
+    txt += "\n🏦 THÔNG TIN CHUYỂN KHỎAN:\n";
+    txt += "- Ngân hàng: MB Bank (Ngân Hàng Quân Đội)\n";
+    txt += "- STK: 7983889999\n";
+    txt += "- Chủ TK: CONG TY TNHH SOLAR BAC NINH\n";
+    txt += "📞 Hotline/Zalo: 0829.86.3333\n";
+    txt += "Trân trọng cảm ơn Quý khách!";
+
+    navigator.clipboard.writeText(txt).then(function() {
+        alert("🎉 Đã sao chép nội dung Báo Giá vào bộ nhớ tạm!\nBạn có thể dán (Ctrl + V) ngay vào Zalo gửi cho khách hàng.");
+    }).catch(function() {
+        alert("Báo giá Zalo:\n\n" + txt);
+    });
+}
+
+// -------------------------------------------------------------
+// SAO LƯU VÀ KHÔI PHỤC DỮ LIỆU (JSON)
+// -------------------------------------------------------------
+
+function exportFullDataBackup() {
+    var backupData = {
+        version: "v14",
+        exportDate: new Date().toISOString(),
+        savedCustomers: savedCustomers,
+        soldOrdersHistory: soldOrdersHistory,
+        stockLogsHistory: stockLogsHistory,
+        invoiceCounter: invoiceCounter,
+        customCatalog: rawCatalog
+    };
+
+    var dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupData, null, 2));
+    var dlAnchor = document.createElement('a');
+    dlAnchor.setAttribute("href", dataStr);
+    dlAnchor.setAttribute("download", "Backup_SolarBacNinh_" + (new Date().toISOString().slice(0, 10)) + ".json");
+    document.body.appendChild(dlAnchor);
+    dlAnchor.click();
+    dlAnchor.remove();
+
+    alert("✅ Đã xuất file sao lưu dữ liệu toàn bộ hệ thống thành công!");
+}
+
+function importFullDataBackup(event) {
+    var file = event.target.files[0];
+    if (!file) return;
+
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            var data = JSON.parse(e.target.result);
+            if (data && data.savedCustomers) {
+                savedCustomers = data.savedCustomers || {};
+                soldOrdersHistory = data.soldOrdersHistory || [];
+                stockLogsHistory = data.stockLogsHistory || [];
+                invoiceCounter = data.invoiceCounter || 1;
+                if (data.customCatalog && Array.isArray(data.customCatalog)) {
+                    rawCatalog = data.customCatalog;
+                    localStorage.setItem('solar_bac_ninh_app_catalog_v13', JSON.stringify(rawCatalog));
+                }
+
+                saveCustomersToStorage();
+                saveOrdersToStorage();
+                saveStockLogsToStorage();
+                loadAllData();
+                renderCatalogAdminTable();
+                renderInventoryTable();
+                alert("🎉 Đã khôi phục dữ liệu từ file sao lưu thành công!");
+            } else {
+                alert("❌ File không hợp lệ hoặc sai định dạng sao lưu của phần mềm!");
+            }
+        } catch (err) {
+            alert("❌ Lỗi khi đọc file khôi phục JSON: " + err.message);
+        }
+    };
+    reader.readAsText(file);
+}
+
+// Admin Product Catalog Modal
+function renderCatalogAdminTable() {
+    var tbody = document.getElementById('catalogAdminTableBody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    rawCatalog.forEach(function(item, idx) {
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<td class="text-center font-bold">' + (idx + 1) + '</td>' +
+            '<td><span class="badge badge-brand">' + item.brand + '</span></td>' +
+            '<td><strong>' + item.name + '</strong></td>' +
+            '<td style="font-size:11px; color:#64748b;">' + item.desc + '</td>' +
+            '<td class="text-center">' + item.unit + '</td>' +
+            '<td class="text-right font-bold" style="color:#0284c7;">' + formatCurrency(item.priceTier1) + '</td>' +
+            '<td class="text-right font-bold" style="color:#0369a1;">' + formatCurrency(item.priceTier2) + '</td>' +
+            '<td class="text-right font-bold" style="color:#b91c1c;">' + formatCurrency(item.costPrice || 0) + '</td>' +
+            '<td class="text-center font-bold" style="color:#166534;">' + (item.stockQty || 0) + '</td>' +
+            '<td class="text-center">' +
+                '<button class="btn btn-danger" style="padding:2px 6px; font-size:10.5px;" onclick="deleteCatalogItemAdmin(' + idx + ')">🗑️ Xóa</button>' +
+            '</td>';
+        tbody.appendChild(tr);
+    });
+}
+
+function openAddCatalogItemModal() {
+    var brand = prompt("Nhập thương hiệu (VD: FANHEY, YuYe, WEAG):", "FANHEY");
+    if (!brand) return;
+    var name = prompt("Nhập Tên sản phẩm / Model:");
+    if (!name) return;
+    var desc = prompt("Nhập quy cách / mô tả kỹ thuật:", "");
+    var unit = prompt("Đơn vị tính:", "Cái") || "Cái";
+    var p1 = parseFloat(prompt("Đơn giá bán 1 - 4 thùng (Có VAT):", "500000")) || 0;
+    var p2 = parseFloat(prompt("Đơn giá bán 5 - 9 thùng (Có VAT):", "480000")) || p1;
+    var cost = parseFloat(prompt("Giá vốn nhập kho (VNĐ):", "380000")) || Math.round(p2 * 0.78);
+    var initStock = parseInt(prompt("Số lượng tồn kho ban đầu:", "20"), 10) || 20;
+
+    var newItem = {
+        id: "CUSTOM-" + Date.now(),
+        brand: brand.trim(),
+        name: name.trim(),
+        desc: desc ? desc.trim() : "",
+        unit: unit.trim(),
+        priceTier1: p1,
+        priceTier2: p2,
+        costPrice: cost,
+        stockQty: initStock
+    };
+
+    rawCatalog.push(newItem);
+    localStorage.setItem('solar_bac_ninh_app_catalog_v13', JSON.stringify(rawCatalog));
+    addStockLog('IMPORT', newItem.name, initStock, cost, 'Khởi tạo mã sản phẩm mới');
+
+    renderCatalogList(rawCatalog);
+    renderCatalogAdminTable();
+    renderInventoryTable();
+    populateProductFilterDropdown();
+    alert('✅ Đã thêm thiết bị "' + name + '" vào danh mục kho thành công!');
+}
+
+function deleteCatalogItemAdmin(idx) {
+    if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này khỏi danh mục kho cố định?")) {
+        rawCatalog.splice(idx, 1);
+        localStorage.setItem('solar_bac_ninh_app_catalog_v13', JSON.stringify(rawCatalog));
+        renderCatalogList(rawCatalog);
+        renderCatalogAdminTable();
+        renderInventoryTable();
+        populateProductFilterDropdown();
+    }
+}
+
+// -------------------------------------------------------------
+// TẠO ĐƠN HÀNG VẬN CHUYỂN
 // -------------------------------------------------------------
 
 var SHIPPING_EXCEL_HEADERS = [
-    'STT',
-    'Mã Đơn Khách Hàng',
-    'Tên Người Nhận (*)',
-    'Số ĐT Người Nhận (*)',
-    'Địa Chỉ Người Nhận (*)',
-    'Tên Hàng Hóa (*)',
-    'Trọng lượng (gram)  (*)',
-    'Tiền hàng (*)',
-    'Giá trị hàng (VND) (*)',
-    'Ghi Chú Giao Hàng',
+    'STT', 'Mã Đơn Khách Hàng', 'Tên Người Nhận (*)', 'Số ĐT Người Nhận (*)', 'Địa Chỉ Người Nhận (*)',
+    'Tên Hàng Hóa (*)', 'Trọng lượng (gram)  (*)', 'Tiền hàng (*)', 'Giá trị hàng (VND) (*)', 'Ghi Chú Giao Hàng',
     '           Cấu hình giao hàng\n1 = Cho xem hàng nhưng không cho thử\n2 = Cho thử hàng\n3 = Không cho xem hàng\nMặc định là 1',
     '           Cấu hình thu hộ\n0 -  Thu hộ = Tiền hàng\n1 - Thu hộ = Tiền hàng + Phí\nMặc định là 0',
-    'Dài \n(Cm)',
-    'Rộng\n(Cm)',
-    'Cao\n(Cm)'
+    'Dài \n(Cm)', 'Rộng\n(Cm)', 'Cao\n(Cm)'
 ];
 
 function summarizeQuoteItems(items) {
@@ -1886,7 +2777,7 @@ function summarizeQuoteItems(items) {
 
 function openShippingOrderModalFromCurrentQuote() {
     if (quoteItems.length === 0) {
-        alert("Bảng báo giá hiện đang trống! Vui lòng chọn ít nhất 1 sản phẩm trước khi tạo đơn hàng.");
+        alert("Bảng báo giá hiện đang trống! Vui lòng chọn ít nhất 1 sản phẩm.");
         return;
     }
     
@@ -1896,8 +2787,9 @@ function openShippingOrderModalFromCurrentQuote() {
     var custAddr = document.getElementById('custAddr').value.trim() || '';
     var status = document.getElementById('orderPaymentStatus').value;
     
-    var grandTotal = quoteItems.reduce(function(s, it) { return s + (it.priceWithVat * it.qty); }, 0);
-    var cod = (status === 'Đã thanh toán') ? 0 : Math.round(grandTotal);
+    var grandTotal = parseFloat(document.getElementById('lblGrandTotalWithVat').innerText.replace(/[^0-9]/g, '')) || 0;
+    var deposit = parseFloat(document.getElementById('quoteDepositVal').value) || 0;
+    var cod = (status === 'Đã thanh toán') ? 0 : Math.max(0, Math.round(grandTotal - deposit));
     
     var totalQty = quoteItems.reduce(function(s, it) { return s + it.qty; }, 0);
     var estWeight = Math.max(500, totalQty * 600);
@@ -1924,7 +2816,7 @@ function openShippingOrderModalFromOrderIndex(orderIdx) {
     var order = soldOrdersHistory[orderIdx];
     if (!order) return;
 
-    var cod = (order.paymentStatus === 'Đã thanh toán') ? 0 : Math.round(order.grandTotalWithVat || 0);
+    var cod = (order.paymentStatus === 'Đã thanh toán') ? 0 : Math.max(0, Math.round((order.grandTotalWithVat || 0) - (order.depositVal || 0)));
     var totalQty = order.items.reduce(function(s, it) { return s + it.qty; }, 0);
     var estWeight = Math.max(500, totalQty * 600);
 
@@ -1992,19 +2884,14 @@ function exportSingleShippingOrderXLSX() {
     var wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Danh sách");
 
-    var wsDataRef = [
-        ["Cấu Hình Đổi Trả", "Cấu Hình Giao Hàng"],
-        [1, 1],
-        [0, 2],
-        [null, 3]
-    ];
+    var wsDataRef = [["Cấu Hình Đổi Trả", "Cấu Hình Giao Hàng"], [1, 1], [0, 2], [null, 3]];
     var ws2 = XLSX.utils.aoa_to_sheet(wsDataRef);
     XLSX.utils.book_append_sheet(wb, ws2, "DATA");
 
     var filename = "Don_Hang_Van_Chuyen_" + receiver.replace(/\s+/g, '_') + "_" + orderCode + ".xlsx";
     XLSX.writeFile(wb, filename);
 
-    alert("🎉 Đã xuất file Excel đơn hàng vận chuyển theo đúng mẫu chuẩn thành công!\nFile: " + filename);
+    alert("🎉 Đã xuất file Excel đơn hàng giao vận thành công!\nFile: " + filename);
     closeShippingOrderModal();
 }
 
@@ -2017,7 +2904,7 @@ function exportBatchShippingOrdersXLSX() {
     var wsData = [SHIPPING_EXCEL_HEADERS];
 
     soldOrdersHistory.forEach(function(order, idx) {
-        var cod = (order.paymentStatus === 'Đã thanh toán') ? 0 : Math.round(order.grandTotalWithVat || 0);
+        var cod = (order.paymentStatus === 'Đã thanh toán') ? 0 : Math.max(0, Math.round((order.grandTotalWithVat || 0) - (order.depositVal || 0)));
         var totalQty = order.items.reduce(function(s, it) { return s + it.qty; }, 0);
         var estWeight = Math.max(500, totalQty * 600);
 
@@ -2032,11 +2919,7 @@ function exportBatchShippingOrdersXLSX() {
             cod,
             Math.round(order.grandTotalWithVat || 0),
             "Hàng thiết bị điện Solar & ATS dễ vỡ, xin nhẹ tay. Gọi trước khi giao.",
-            1,
-            0,
-            25,
-            18,
-            12
+            1, 0, 25, 18, 12
         ];
         wsData.push(row);
     });
@@ -2051,19 +2934,14 @@ function exportBatchShippingOrdersXLSX() {
     var wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Danh sách");
 
-    var wsDataRef = [
-        ["Cấu Hình Đổi Trả", "Cấu Hình Giao Hàng"],
-        [1, 1],
-        [0, 2],
-        [null, 3]
-    ];
+    var wsDataRef = [["Cấu Hình Đổi Trả", "Cấu Hình Giao Hàng"], [1, 1], [0, 2], [null, 3]];
     var ws2 = XLSX.utils.aoa_to_sheet(wsDataRef);
     XLSX.utils.book_append_sheet(wb, ws2, "DATA");
 
     var filename = "Danh_Sach_Tao_Don_Hang_Hang_Loat_Solar_Bac_Ninh_" + (new Date().toISOString().slice(0,10)) + ".xlsx";
     XLSX.writeFile(wb, filename);
 
-    alert("🎉 Đã xuất toàn bộ " + soldOrdersHistory.length + " đơn hàng ra file Excel tạo đơn giao vận chuẩn mẫu thành công!");
+    alert("🎉 Đã xuất " + soldOrdersHistory.length + " đơn hàng ra file Excel thành công!");
 }
 
 function copyShippingInfoText() {
@@ -2077,15 +2955,14 @@ function copyShippingInfoText() {
         "- Ghi chú: " + document.getElementById('shipNote').value;
 
     navigator.clipboard.writeText(text).then(function() {
-        alert("✅ Đã sao chép thông tin đơn hàng vào bộ nhớ tạm! Bạn có thể dán vào Zalo hoặc App giao hàng.");
+        alert("✅ Đã sao chép thông tin đơn hàng!");
     }).catch(function() {
         alert("Thông tin đơn hàng:\n\n" + text);
     });
 }
 
-
 // -------------------------------------------------------------
-// TÍNH NĂNG HỢP ĐỒNG MUA BÁN THIẾT BỊ
+// HỢP ĐỒNG MUA BÁN THIẾT BỊ
 // -------------------------------------------------------------
 
 function syncFromQuoteToContract() {
@@ -2133,7 +3010,6 @@ function syncFromQuoteToContract() {
         if (emailSpan) emailSpan.style.display = 'none';
     }
 
-    // Render Contract items table
     var tbody = document.getElementById('contractTableBody');
     if (!tbody) return;
     tbody.innerHTML = '';
@@ -2154,17 +3030,15 @@ function syncFromQuoteToContract() {
         tbody.appendChild(tr);
     });
 
-    if (quoteItems.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding: 15px; color:#64748b;">Chưa có sản phẩm nào trong bảng báo giá. Hãy thêm thiết bị ở Tab Báo giá trước!</td></tr>';
-    }
+    var finalContractTotal = parseFloat(document.getElementById('lblGrandTotalWithVat').innerText.replace(/[^0-9]/g, '')) || grandTotal;
 
-    document.getElementById('contractGrandTotal').innerText = formatCurrency(grandTotal);
-    document.getElementById('contractAmountWords').innerText = readVietnameseNumber(Math.round(grandTotal));
+    document.getElementById('contractGrandTotal').innerText = formatCurrency(finalContractTotal);
+    document.getElementById('contractAmountWords').innerText = readVietnameseNumber(Math.round(finalContractTotal));
 }
 
 function loadCurrentQuoteToContract() {
     if (quoteItems.length === 0) {
-        alert("Bảng báo giá hiện đang trống! Vui lòng chọn ít nhất 1 sản phẩm để tạo hợp đồng.");
+        alert("Bảng báo giá hiện đang trống! Vui lòng chọn ít nhất 1 sản phẩm.");
         return;
     }
     syncFromQuoteToContract();
@@ -2174,7 +3048,6 @@ function loadCurrentQuoteToContract() {
 function printContract() {
     var element = document.getElementById('contractPrintableArea');
     var custName = (document.getElementById('custName') ? document.getElementById('custName').value.trim() : '') || 'Khach_Hang';
-    var quoteNo = (document.getElementById('quoteNo') ? document.getElementById('quoteNo').value : '') || 'HD';
 
     var printWin = window.open('', '', 'width=900,height=700');
     printWin.document.write('<html><head><title>Hop_Dong_Mua_Ban_' + custName + '</title>');
@@ -2210,14 +3083,14 @@ function downloadContractPDF() {
     html2pdf().set(opt).from(element).save();
 }
 
-
 // -------------------------------------------------------------
-// TÍNH NĂNG THỐNG KÊ SẢN PHẨM BÁN CHẠY & TỔNG HỢP DOANH THU
+// THỐNG KÊ SẢN PHẨM & TỔNG HỢP DOANH THU
 // -------------------------------------------------------------
 
 function calculateProductStatsData() {
     var statsMap = {};
     var totalRevenueAll = 0;
+    var totalCostAll = 0;
     var totalQtyAll = 0;
 
     soldOrdersHistory.forEach(function(order) {
@@ -2235,8 +3108,10 @@ function calculateProductStatsData() {
                 var key = cleanName;
                 var qty = parseInt(item.qty, 10) || 1;
                 var lineRev = (parseFloat(item.priceWithVat) || 0) * qty;
+                var lineCost = (parseFloat(item.costPrice) || Math.round((parseFloat(item.priceWithVat) || 0) * 0.78)) * qty;
 
                 totalRevenueAll += lineRev;
+                totalCostAll += lineCost;
                 totalQtyAll += qty;
 
                 if (!statsMap[key]) {
@@ -2268,6 +3143,8 @@ function calculateProductStatsData() {
     return {
         list: statsArray,
         totalRevenue: totalRevenueAll,
+        totalCost: totalCostAll,
+        totalProfit: (totalRevenueAll - totalCostAll),
         totalQty: totalQtyAll
     };
 }
@@ -2276,14 +3153,18 @@ function renderProductStatistics() {
     var data = calculateProductStatsData();
     var list = data.list;
 
-    // Update KPI metrics
     var elTotalRev = document.getElementById('statTotalRevenueAll');
     if (elTotalRev) elTotalRev.innerText = formatCurrency(data.totalRevenue);
+
+    var elTotalCost = document.getElementById('statTotalCostAll');
+    if (elTotalCost) elTotalCost.innerText = formatCurrency(data.totalCost);
+
+    var elTotalProfit = document.getElementById('statTotalProfitAll');
+    if (elTotalProfit) elTotalProfit.innerText = formatCurrency(data.totalProfit);
 
     var elTotalQty = document.getElementById('statTotalQtySold');
     if (elTotalQty) elTotalQty.innerText = data.totalQty.toLocaleString('vi-VN') + ' cái';
 
-    // Filters & Sorting
     var searchVal = (document.getElementById('searchProductStatsInput') ? document.getElementById('searchProductStatsInput').value : '').toLowerCase().trim();
     var sortBy = document.getElementById('sortProductStatsBy') ? document.getElementById('sortProductStatsBy').value : 'qty_desc';
     var brandFilter = document.getElementById('filterBrandStats') ? document.getElementById('filterBrandStats').value : '';
@@ -2297,7 +3178,6 @@ function renderProductStatistics() {
         return matchName && matchBrand;
     });
 
-    // Sort logic
     filtered.sort(function(a, b) {
         if (sortBy === 'qty_desc') return b.totalQty - a.totalQty;
         if (sortBy === 'revenue_desc') return b.totalRevenue - a.totalRevenue;
@@ -2306,18 +3186,10 @@ function renderProductStatistics() {
         return b.totalQty - a.totalQty;
     });
 
-    // Top products by Qty & Revenue
     var topQtyProd = list.slice().sort(function(a, b) { return b.totalQty - a.totalQty; })[0];
-    var topRevProd = list.slice().sort(function(a, b) { return b.totalRevenue - a.totalRevenue; })[0];
-
     var elTopQty = document.getElementById('statTopProductQty');
     if (elTopQty) {
         elTopQty.innerHTML = topQtyProd ? (topQtyProd.name + ' <br><span style="color:#b45309; font-size:13px; font-weight:bold;">(' + topQtyProd.totalQty + ' ' + topQtyProd.unit + ')</span>') : 'Chưa có dữ liệu';
-    }
-
-    var elTopRev = document.getElementById('statTopProductRevenue');
-    if (elTopRev) {
-        elTopRev.innerHTML = topRevProd ? (topRevProd.name + ' <br><span style="color:#991b1b; font-size:13px; font-weight:bold;">(' + formatCurrency(topRevProd.totalRevenue) + ')</span>') : 'Chưa có dữ liệu';
     }
 
     var tbody = document.getElementById('productStatsTableBody');
@@ -2325,7 +3197,7 @@ function renderProductStatistics() {
     tbody.innerHTML = '';
 
     if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px; color:#64748b;">Chưa có dữ liệu bán hàng hoặc không tìm thấy sản phẩm phù hợp. Hãy lưu đơn hàng ở Tab Báo Giá trước!</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:30px; color:#64748b;">Chưa có dữ liệu bán hàng. Hãy lưu đơn hàng ở Tab Báo Giá trước!</td></tr>';
         return;
     }
 
@@ -2371,7 +3243,7 @@ function exportProductStatsToExcel() {
     var wsData = [
         ['BÁO CÁO THỐNG KÊ DOANH THU & SẢN PHẨM BÁN CHẠY - SOLAR BẮC NINH'],
         ['Ngày xuất báo cáo: ' + new Date().toLocaleDateString('vi-VN')],
-        ['Tổng doanh thu: ' + formatCurrency(data.totalRevenue), 'Tổng số lượng bán: ' + data.totalQty + ' cái'],
+        ['Tổng doanh thu: ' + formatCurrency(data.totalRevenue), 'Tổng lợi nhuận gộp: ' + formatCurrency(data.totalProfit)],
         [],
         ['Hạng', 'Tên Sản Phẩm', 'Hãng / Thương Hiệu', 'ĐVT', 'Tổng Số Lượng Bán', 'Số Đơn Hàng', 'Đơn Giá Trung Bình (VNĐ)', 'Tổng Doanh Thu (VNĐ)', 'Tỷ Trọng Doanh Thu (%)']
     ];
@@ -2401,10 +3273,10 @@ function exportProductStatsToExcel() {
     var wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Báo Cáo Sản Phẩm");
 
-    var filename = "Bao_Cao_Doanh_Thu_San_Pham_Solar_Bac_Ninh_" + (new Date().toISOString().slice(0, 10)) + ".xlsx";
+    var filename = "Bao_Cao_Doanh_Thu_Solar_Bac_Ninh_" + (new Date().toISOString().slice(0, 10)) + ".xlsx";
     XLSX.writeFile(wb, filename);
 
-    alert("🎉 Đã xuất file Excel thống kê doanh thu & sản phẩm bán chạy thành công!\nFile: " + filename);
+    alert("🎉 Đã xuất file Excel thống kê doanh thu thành công!\nFile: " + filename);
 }
 
 // App State
@@ -2424,10 +3296,26 @@ function normalizeCustomerKey(phone, name) {
     return (name || 'khach_hang').trim().toLowerCase().replace(/\s+/g, '_');
 }
 
-// Load from LocalStorage
+// Load LocalStorage Data
 function loadAllData() {
     try {
-        var rawCust = localStorage.getItem('solar_bac_ninh_app_customers_v12');
+        var savedCatalog = localStorage.getItem('solar_bac_ninh_app_catalog_v13');
+        if (savedCatalog) rawCatalog = JSON.parse(savedCatalog);
+        else rawCatalog = defaultCatalog.slice();
+    } catch (e) {
+        rawCatalog = defaultCatalog.slice();
+    }
+
+    try {
+        var rawLogs = localStorage.getItem('solar_bac_ninh_app_stock_logs_v14');
+        if (rawLogs) stockLogsHistory = JSON.parse(rawLogs) || [];
+        else stockLogsHistory = [];
+    } catch (e) {
+        stockLogsHistory = [];
+    }
+
+    try {
+        var rawCust = localStorage.getItem('solar_bac_ninh_app_customers_v13') || localStorage.getItem('solar_bac_ninh_app_customers_v12');
         if (rawCust) savedCustomers = JSON.parse(rawCust) || {};
         else savedCustomers = {};
     } catch (e) {
@@ -2435,7 +3323,7 @@ function loadAllData() {
     }
 
     try {
-        var rawOrders = localStorage.getItem('solar_bac_ninh_app_orders_v12');
+        var rawOrders = localStorage.getItem('solar_bac_ninh_app_orders_v13') || localStorage.getItem('solar_bac_ninh_app_orders_v12');
         if (rawOrders) soldOrdersHistory = JSON.parse(rawOrders) || [];
         else soldOrdersHistory = [];
     } catch (e) {
@@ -2443,7 +3331,7 @@ function loadAllData() {
     }
 
     try {
-        var savedCounter = localStorage.getItem('solar_bac_ninh_app_counter_v12');
+        var savedCounter = localStorage.getItem('solar_bac_ninh_app_counter_v13') || localStorage.getItem('solar_bac_ninh_app_counter_v12');
         invoiceCounter = savedCounter ? parseInt(savedCounter, 10) : (soldOrdersHistory.length + 1);
     } catch (e) {
         invoiceCounter = 1;
@@ -2455,14 +3343,14 @@ function loadAllData() {
 }
 
 function saveCustomersToStorage() {
-    localStorage.setItem('solar_bac_ninh_app_customers_v12', JSON.stringify(savedCustomers));
+    localStorage.setItem('solar_bac_ninh_app_customers_v13', JSON.stringify(savedCustomers));
     updateSavedCustomerDropdown();
     updateCustomerDatalistSuggestions();
 }
 
 function saveOrdersToStorage() {
-    localStorage.setItem('solar_bac_ninh_app_orders_v12', JSON.stringify(soldOrdersHistory));
-    localStorage.setItem('solar_bac_ninh_app_counter_v12', invoiceCounter.toString());
+    localStorage.setItem('solar_bac_ninh_app_orders_v13', JSON.stringify(soldOrdersHistory));
+    localStorage.setItem('solar_bac_ninh_app_counter_v13', invoiceCounter.toString());
 }
 
 function generateNewInvoiceNumber() {
@@ -2493,11 +3381,14 @@ function createNewQuoteForNewCustomer() {
     if (document.getElementById('custEmail')) document.getElementById('custEmail').value = '';
     document.getElementById('custPhone').value = '';
     document.getElementById('custAddr').value = '';
+    if (document.getElementById('searchSavedCustomerInput')) document.getElementById('searchSavedCustomerInput').value = '';
     document.getElementById('savedCustomersSelect').value = '';
     
-    // MẶC ĐỊNH LUÔN LÀ CHƯA THANH TOÁN & ƯU TIÊN GIÁ 5-9 THÙNG
     document.getElementById('orderPaymentStatus').value = 'Chưa thanh toán';
+    document.getElementById('quoteDiscountVal').value = 0;
+    document.getElementById('quoteDepositVal').value = 0;
     document.getElementById('customerHistoryAlert').style.display = 'none';
+
     currentTier = 'tier2';
     document.getElementById('btnTier1').classList.remove('active');
     document.getElementById('btnTier2').classList.add('active');
@@ -2528,12 +3419,17 @@ function switchTab(tabId) {
 
     if (tabId === 'tab-contract') {
         syncFromQuoteToContract();
+    } else if (tabId === 'tab-inventory') {
+        renderInventoryTable();
+        renderStockLogs();
     } else if (tabId === 'tab-customers') {
         renderCustomerCRMList();
     } else if (tabId === 'tab-history') {
         renderOrdersHistoryList();
     } else if (tabId === 'tab-stats') {
         renderProductStatistics();
+    } else if (tabId === 'tab-settings') {
+        renderCatalogAdminTable();
     }
 }
 
@@ -2544,7 +3440,9 @@ window.onload = function() {
     var lblDate = document.getElementById('lblDate');
     if (lblDate) lblDate.innerText = dateStr;
     
+    checkAuthSession();
     loadAllData();
+    renderAccountsTable();
     renderAddressSuggestions();
     generateNewInvoiceNumber();
     renderCatalogList(rawCatalog);
@@ -2592,6 +3490,11 @@ function renderCatalogList(items) {
             hasCustom = true;
         }
 
+        var stockQty = item.stockQty !== undefined ? item.stockQty : 20;
+        var stockPill = '<span class="stock-badge stock-ok" style="margin-left:4px;">Tồn ' + stockQty + '</span>';
+        if (stockQty === 0) stockPill = '<span class="stock-badge stock-out" style="margin-left:4px;">Hết hàng</span>';
+        else if (stockQty <= 5) stockPill = '<span class="stock-badge stock-low" style="margin-left:4px;">Sắp hết (' + stockQty + ')</span>';
+
         var div = document.createElement('div');
         div.className = 'catalog-item';
         div.onclick = function() { addCatalogItemToQuote(item, finalPrice, hasCustom); };
@@ -2599,6 +3502,7 @@ function renderCatalogList(items) {
                 '<strong>' +
                     '<span class="badge badge-brand">' + item.brand + '</span> ' +
                     item.name +
+                    stockPill +
                     (hasCustom ? '<span class="custom-price-badge">Giá từng mua</span>' : '') +
                 '</strong>' +
                 '<span>' + item.desc.substring(0, 48) + '...</span>' +
@@ -2625,6 +3529,11 @@ function filterCatalog() {
 function addCatalogItemToQuote(catItem, price, isCustom, cost) {
     var currentPrice = price || ((currentTier === 'tier1') ? catItem.priceTier1 : catItem.priceTier2);
     var currentCost = (cost !== undefined && cost !== null) ? cost : (catItem.costPrice || Math.round(currentPrice * 0.78));
+    
+    if (catItem.stockQty === 0) {
+        if (!confirm('⚠️ Thiết bị này đang HẾT HÀNG trong kho (0 cái). Bạn vẫn muốn thêm vào báo giá?')) return;
+    }
+
     quoteItems.push({
         catalogId: catItem.id,
         brand: catItem.brand,
@@ -2675,11 +3584,6 @@ function addCustomProduct() {
     renderQuotationTable();
 }
 
-// -------------------------------------------------------------
-// BI-DIRECTIONAL PRICE EDITING
-// -------------------------------------------------------------
-
-
 function onUpdateItemCostPrice(index, newCostVal) {
     var c = parseFloat(newCostVal);
     if (!isNaN(c) && c >= 0) {
@@ -2716,13 +3620,8 @@ function onUpdateItemQty(index, newQtyVal) {
     }
 }
 
-function onUpdateItemName(index, newName) {
-    quoteItems[index].name = newName;
-}
-
-function onUpdateItemDesc(index, newDesc) {
-    quoteItems[index].desc = newDesc;
-}
+function onUpdateItemName(index, newName) { quoteItems[index].name = newName; }
+function onUpdateItemDesc(index, newDesc) { quoteItems[index].desc = newDesc; }
 
 function deleteItem(index) {
     quoteItems.splice(index, 1);
@@ -2738,7 +3637,7 @@ function renderQuotationTable() {
     var vatFactor = 1 + (vatRatePercent / 100);
     document.getElementById('lblVatRatePercent').innerText = vatRatePercent;
 
-    var grandTotalWithVat = 0;
+    var grandTotalBeforeDiscount = 0;
     var totalSubTotalExVat = 0;
     var totalCostAll = 0;
 
@@ -2746,38 +3645,39 @@ function renderQuotationTable() {
         var priceExVat = vatRatePercent > 0 ? (item.priceWithVat / vatFactor) : item.priceWithVat;
         var lineTotalWithVat = item.priceWithVat * item.qty;
         var lineTotalExVat = priceExVat * item.qty;
+        var vatPerUnit = item.priceWithVat - priceExVat;
+        var lineVatAmount = lineTotalWithVat - lineTotalExVat;
 
         if (item.costPrice === undefined || item.costPrice === null) {
             item.costPrice = Math.round(item.priceWithVat * 0.78);
         }
         var lineCost = (parseFloat(item.costPrice) || 0) * item.qty;
 
-        grandTotalWithVat += lineTotalWithVat;
+        grandTotalBeforeDiscount += lineTotalWithVat;
         totalSubTotalExVat += lineTotalExVat;
         totalCostAll += lineCost;
 
         var row = document.createElement('tr');
         row.innerHTML = '<td class="text-center font-bold">' + (idx + 1) + '</td>' +
             '<td>' +
-                '<input type="text" class="editable-input font-bold" value="' + (item.name || '').replace(/"/g, '&quot;') + '" onchange="onUpdateItemName(' + idx + ', this.value)" style="color: #0f172a; margin-bottom: 2px;">' +
-                '<textarea class="editable-input" rows="1" onchange="onUpdateItemDesc(' + idx + ', this.value)" style="font-size: 11px; color: #64748b;">' + (item.desc || '') + '</textarea>' +
+                '<input type="text" class="editable-input font-bold" value="' + (item.name || '').replace(/"/g, '&quot;') + '" onchange="onUpdateItemName(' + idx + ', this.value)" style="color: #0f172a; margin-bottom: 2px; font-size: 13px;">' +
+                '<textarea class="editable-input" rows="1" onchange="onUpdateItemDesc(' + idx + ', this.value)" style="font-size: 11.5px; color: #64748b;">' + (item.desc || '') + '</textarea>' +
             '</td>' +
-            '<td class="text-center">' + item.unit + '</td>' +
+            '<td class="text-center" style="font-size: 11.5px;">' + item.unit + '</td>' +
             '<td class="text-center">' +
-                '<input type="number" class="editable-input text-center" value="' + item.qty + '" min="1" onchange="onUpdateItemQty(' + idx + ', this.value)" style="width: 48px; font-weight: bold;">' +
+                '<input type="number" class="editable-input text-center" value="' + item.qty + '" min="1" onchange="onUpdateItemQty(' + idx + ', this.value)" style="width: 42px; font-weight: bold; padding: 2px;">' +
             '</td>' +
             '<td class="text-right">' +
-                '<input type="number" class="editable-input text-right" value="' + Math.round(priceExVat) + '" onchange="onUpdateItemPriceExVat(' + idx + ', this.value)" style="width: 95px; color: #0369a1; font-weight: 600;">' +
+                '<input type="number" class="editable-input text-right" value="' + Math.round(priceExVat) + '" onchange="onUpdateItemPriceExVat(' + idx + ', this.value)" style="width: 78px; color: #0369a1; font-weight: 600; padding: 2px 4px; font-size: 11px;">' +
             '</td>' +
             '<td class="text-right font-bold" style="color: #0f172a;">' +
-                '<input type="number" class="editable-input text-right font-bold" value="' + Math.round(item.priceWithVat) + '" onchange="onUpdateItemPriceWithVat(' + idx + ', this.value)" style="width: 100px; color: #0f172a;">' +
+                '<input type="number" class="editable-input text-right font-bold" value="' + Math.round(item.priceWithVat) + '" onchange="onUpdateItemPriceWithVat(' + idx + ', this.value)" style="width: 82px; color: #0f172a; padding: 2px 4px; font-size: 11px;">' +
+                '<div style="font-size: 9.5px; color: #0284c7; font-weight: 600; margin-top: 1px;">+VAT: ' + formatCurrency(vatPerUnit) + '</div>' +
                 (item.isCustomPrice ? '<span class="custom-price-badge">Đã sửa giá</span>' : '') +
-            '</td>' +
-            '<td class="text-right no-print">' +
-                '<input type="number" class="editable-input text-right" value="' + Math.round(item.costPrice) + '" onchange="onUpdateItemCostPrice(' + idx + ', this.value)" style="width: 95px; color: #b91c1c; font-weight: 600;" title="Nhập giá vốn nhập vào của thiết bị">' +
             '</td>' +
             '<td class="text-right font-bold" style="color: #15803d; font-size: 12px;">' +
                 formatCurrency(lineTotalWithVat) +
+                '<div style="font-size: 9.5px; color: #0284c7; font-weight: 600; margin-top: 1px;">Tiền VAT: ' + formatCurrency(lineVatAmount) + '</div>' +
             '</td>' +
             '<td class="text-center no-print">' +
                 '<button class="btn btn-danger" style="padding: 2px 5px; font-size: 10px;" onclick="deleteItem(' + idx + ')">✕</button>' +
@@ -2785,14 +3685,53 @@ function renderQuotationTable() {
         tbody.appendChild(row);
     });
 
-    var totalVatAmount = grandTotalWithVat - totalSubTotalExVat;
+    // Discount & Deposit Calculations
+    var discountVal = parseFloat(document.getElementById('quoteDiscountVal').value) || 0;
+    var discountType = document.getElementById('quoteDiscountType').value;
+    var discountAmount = 0;
+
+    if (discountVal > 0) {
+        if (discountType === 'PERCENT') {
+            discountAmount = (grandTotalBeforeDiscount * discountVal) / 100;
+        } else {
+            discountAmount = discountVal;
+        }
+    }
+
+    var grandTotalWithVat = Math.max(0, grandTotalBeforeDiscount - discountAmount);
+    var depositVal = parseFloat(document.getElementById('quoteDepositVal').value) || 0;
+    var remainingVal = Math.max(0, grandTotalWithVat - depositVal);
+
+    var totalVatAmount = grandTotalBeforeDiscount - totalSubTotalExVat;
 
     document.getElementById('lblSubTotalExVat').innerText = formatCurrency(totalSubTotalExVat);
     document.getElementById('lblVatAmount').innerText = formatCurrency(totalVatAmount);
+    
+    var rowDiscount = document.getElementById('rowDiscountDisplay');
+    if (discountAmount > 0) {
+        rowDiscount.style.display = 'table-row';
+        document.getElementById('lblDiscountAmount').innerText = '-' + formatCurrency(discountAmount);
+    } else {
+        rowDiscount.style.display = 'none';
+    }
+
     document.getElementById('lblGrandTotalWithVat').innerText = formatCurrency(grandTotalWithVat);
+
+    var rowDeposit = document.getElementById('rowDepositDisplay');
+    var rowRemaining = document.getElementById('rowRemainingDisplay');
+    if (depositVal > 0) {
+        rowDeposit.style.display = 'table-row';
+        rowRemaining.style.display = 'table-row';
+        document.getElementById('lblDepositAmount').innerText = formatCurrency(depositVal);
+        document.getElementById('lblRemainingAmount').innerText = formatCurrency(remainingVal);
+    } else {
+        rowDeposit.style.display = 'none';
+        rowRemaining.style.display = 'none';
+    }
+
     document.getElementById('lblAmountInWords').innerText = readVietnameseNumber(Math.round(grandTotalWithVat));
 
-    // Update Sidebar Internal Profit Box
+    // Internal Profit Calculation
     var profit = grandTotalWithVat - totalCostAll;
     var margin = grandTotalWithVat > 0 ? ((profit / grandTotalWithVat) * 100).toFixed(1) : 0;
 
@@ -2808,21 +3747,20 @@ function renderQuotationTable() {
     var elSideMargin = document.getElementById('sideQuoteMargin');
     if (elSideMargin) elSideMargin.innerText = margin + '%';
 
-    updateVietQR(Math.round(grandTotalWithVat));
+    updateVietQR(Math.round(depositVal > 0 ? remainingVal : grandTotalWithVat));
 }
 
 function updateVietQR(amount) {
     if (amount === undefined) {
         amount = quoteItems.reduce(function(s, it) { return s + (it.priceWithVat * it.qty); }, 0);
     }
-    var quoteNo = document.getElementById('quoteNo').value || 'SOLAR';
     var qrUrl = 'https://img.vietqr.io/image/MB-7983889999-compact2.png?amount=' + Math.round(amount) + '&accountName=CONG%20TY%20TNHH%20SOLAR%20BAC%20NINH';
     var qrImg = document.getElementById('qrPaymentImg');
     if (qrImg) qrImg.src = qrUrl;
 }
 
 // -------------------------------------------------------------
-// SAVE CUSTOMER RECORD
+// SAVE CUSTOMER RECORD & SAVE ORDER WITH AUTO STOCK DEDUCTION
 // -------------------------------------------------------------
 
 function saveCustomerRecord(name, phone, addr) {
@@ -2906,18 +3844,31 @@ function saveOrderAsSold() {
     var quoteNo = document.getElementById('quoteNo').value.trim() || generateNewInvoiceNumber();
     var vatRate = parseFloat(document.getElementById('vatRate').value) || 0;
     var paymentStatus = document.getElementById('orderPaymentStatus').value;
+    var depositVal = parseFloat(document.getElementById('quoteDepositVal').value) || 0;
+    var discountVal = parseFloat(document.getElementById('quoteDiscountVal').value) || 0;
 
     if (!name) {
         alert("Vui lòng nhập tên khách hàng!");
         return;
     }
 
-    var totalWithVat = 0;
+    var totalWithVatBeforeDiscount = 0;
     var totalCost = 0;
     var itemsSnapshot = quoteItems.map(function(item) {
         var cost = (item.costPrice !== undefined && item.costPrice !== null) ? item.costPrice : Math.round(item.priceWithVat * 0.78);
-        totalWithVat += (item.priceWithVat * item.qty);
+        totalWithVatBeforeDiscount += (item.priceWithVat * item.qty);
         totalCost += (cost * item.qty);
+
+        // TỰ ĐỘNG TRỪ TỒN KHO & GHI NHẬT KÝ
+        if (item.catalogId) {
+            var catProduct = rawCatalog.find(function(c) { return c.id === item.catalogId; });
+            if (catProduct) {
+                if (catProduct.stockQty === undefined || catProduct.stockQty === null) catProduct.stockQty = 20;
+                catProduct.stockQty = Math.max(0, catProduct.stockQty - item.qty);
+                addStockLog('EXPORT', catProduct.name, item.qty, catProduct.costPrice || cost, 'Xuất bán HĐ ' + quoteNo + ' (' + name + ')');
+            }
+        }
+
         return {
             catalogId: item.catalogId,
             name: item.name,
@@ -2929,7 +3880,10 @@ function saveOrderAsSold() {
         };
     });
 
-    var profit = totalWithVat - totalCost;
+    localStorage.setItem('solar_bac_ninh_app_catalog_v13', JSON.stringify(rawCatalog));
+
+    var grandTotal = parseFloat(document.getElementById('lblGrandTotalWithVat').innerText.replace(/[^0-9]/g, '')) || totalWithVatBeforeDiscount;
+    var profit = grandTotal - totalCost;
 
     var newOrder = {
         orderId: quoteNo,
@@ -2939,8 +3893,10 @@ function saveOrderAsSold() {
         orderDate: new Date().toLocaleDateString('vi-VN'),
         vatRate: vatRate,
         paymentStatus: paymentStatus,
+        depositVal: depositVal,
+        discountVal: discountVal,
         items: itemsSnapshot,
-        grandTotalWithVat: totalWithVat,
+        grandTotalWithVat: grandTotal,
         totalCost: totalCost,
         profit: profit
     };
@@ -2950,13 +3906,13 @@ function saveOrderAsSold() {
     saveOrdersToStorage();
 
     saveCustomerRecord(name, phone, addr);
+    renderInventoryTable();
+    renderCatalogList(rawCatalog);
 
-    alert("🎉 ĐÃ LƯU ĐƠN HÀNG VÀ TỰ ĐỘNG LƯU KHÁCH HÀNG THÀNH CÔNG!\n" +
+    alert("🎉 ĐÃ LƯU ĐƠN HÀNG THÀNH CÔNG!\n" +
           "- Số Hóa Đơn: " + newOrder.orderId + "\n" +
-          "- Khách Hàng: " + name + " (" + (phone || 'Chưa lưu SĐT') + ")\n" +
-          "- Trạng Thái TT: " + paymentStatus + "\n" +
-          "- Tổng Tiền: " + formatCurrency(totalWithVat) + "\n" +
-          "- Thông tin đã tự động lưu vào Danh Bạ Khách Hàng và Lịch Sử Đơn.");
+          "- Khách Hàng: " + name + "\n" +
+          "- Tự động trừ số lượng tồn kho & ghi nhận nhật ký xuất kho thành công.");
 }
 
 // -------------------------------------------------------------
@@ -2988,7 +3944,10 @@ function renderCustomerCRMList() {
             return o.paymentStatus === 'Chưa thanh toán' || o.paymentStatus === 'Thanh toán 1 phần'; 
         });
         var totalSpent = custOrders.reduce(function(sum, ord) { return sum + (ord.grandTotalWithVat || 0); }, 0);
-        var totalDebt = unpaidOrders.reduce(function(sum, ord) { return sum + (ord.grandTotalWithVat || 0); }, 0);
+        var totalDebt = unpaidOrders.reduce(function(sum, ord) { 
+            var netOrd = (ord.grandTotalWithVat || 0) - (ord.depositVal || 0);
+            return sum + Math.max(0, netOrd); 
+        }, 0);
 
         customerList.push({
             key: key,
@@ -3000,7 +3959,6 @@ function renderCustomerCRMList() {
         });
     }
 
-    // Sort: Có nợ lên đầu (ưu tiên chưa thanh toán)
     customerList.sort(function(a, b) { 
         return (b.unpaidCount - a.unpaidCount) || (b.totalDebt - a.totalDebt); 
     });
@@ -3040,7 +3998,7 @@ function renderCustomerCRMList() {
     });
 
     if (count === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 25px; color: #64748b;">Chưa có khách hàng nào trong danh bạ. Khách hàng sẽ tự động lưu khi bạn tạo báo giá hoặc lưu đơn hàng.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 25px; color: #64748b;">Chưa có khách hàng nào trong danh bạ.</td></tr>';
     }
     updateSelectedDeleteButton();
 }
@@ -3080,7 +4038,7 @@ function deleteSelectedCustomers() {
         selectedCustomerKeys.clear();
         saveCustomersToStorage();
         renderCustomerCRMList();
-        alert("✅ Đã xóa các khách hàng được chọn thành công!");
+        alert("✅ Đã xóa các khách hàng được chọn!");
     }
 }
 
@@ -3092,12 +4050,15 @@ function openAddCustomerModal() {
 
     saveCustomerRecord(name, phone, addr);
     renderCustomerCRMList();
-    alert('Đã thêm khách hàng "' + name + '" vào danh bạ thành công!');
+    alert('Đã thêm khách hàng "' + name + '" vào danh bạ!');
 }
 
 function loadCustomerToQuote(key) {
     var cust = savedCustomers[key];
     if (!cust) return;
+
+    if (document.getElementById('searchSavedCustomerInput')) document.getElementById('searchSavedCustomerInput').value = '';
+    filterSavedCustomerSelect();
 
     document.getElementById('custName').value = cust.name;
     if (document.getElementById('custTaxCode')) document.getElementById('custTaxCode').value = cust.taxCode || '';
@@ -3129,7 +4090,7 @@ function downloadCustomerLatestPDF(key) {
     });
 
     if (custOrders.length === 0) {
-        alert("Khách hàng này chưa có đơn hàng nào đã lưu!");
+        alert("Khách hàng này chưa có đơn hàng nào!");
         return;
     }
     var latestIdx = soldOrdersHistory.indexOf(custOrders[0]);
@@ -3180,16 +4141,45 @@ function exportCustomersToCSV() {
 }
 
 function updateSavedCustomerDropdown() {
+    filterSavedCustomerSelect();
+}
+
+function filterSavedCustomerSelect() {
     var select = document.getElementById('savedCustomersSelect');
     if (!select) return;
-    select.innerHTML = '<option value="">-- Chọn khách quen (hoặc nhập mới bên dưới) --</option>';
+
+    var searchInput = document.getElementById('searchSavedCustomerInput');
+    var query = (searchInput ? searchInput.value : '').toLowerCase().trim();
+
+    select.innerHTML = '<option value="">-- Chọn khách quen (' + (query ? 'kết quả lọc' : 'hoặc nhập mới bên dưới') + ') --</option>';
+
+    var count = 0;
+    var firstKey = '';
+
     for (var key in savedCustomers) {
         var c = savedCustomers[key];
-        var opt = document.createElement('option');
-        opt.value = key;
-        opt.innerText = c.name + ' (' + (c.phone || 'Không SĐT') + ')';
-        select.appendChild(opt);
+        var textToSearch = (c.name + ' ' + (c.phone || '') + ' ' + (c.taxCode || '') + ' ' + (c.addr || '')).toLowerCase();
+
+        if (!query || textToSearch.indexOf(query) !== -1) {
+            var opt = document.createElement('option');
+            opt.value = key;
+            opt.innerText = c.name + ' (' + (c.phone || 'Không SĐT') + ')' + (c.taxCode ? ' - MST: ' + c.taxCode : '');
+            select.appendChild(opt);
+            count++;
+            if (!firstKey) firstKey = key;
+        }
     }
+
+    if (count === 1 && query) {
+        select.value = firstKey;
+        onSelectSavedCustomer();
+    }
+}
+
+function clearSavedCustomerSearch() {
+    var searchInput = document.getElementById('searchSavedCustomerInput');
+    if (searchInput) searchInput.value = '';
+    filterSavedCustomerSelect();
 }
 
 function onSelectSavedCustomer() {
@@ -3319,7 +4309,6 @@ function renderOrdersHistoryList() {
         return matchText && matchStatus && matchProd;
     });
 
-    // Sắp xếp ưu tiên: Chưa thanh toán lên trước
     filtered.sort(function(a, b) {
         if (a.paymentStatus === 'Chưa thanh toán' && b.paymentStatus !== 'Chưa thanh toán') return -1;
         if (a.paymentStatus !== 'Chưa thanh toán' && b.paymentStatus === 'Chưa thanh toán') return 1;
@@ -3337,7 +4326,10 @@ function renderOrdersHistoryList() {
 
     var unpaidRev = soldOrdersHistory
         .filter(function(o) { return o.paymentStatus === 'Chưa thanh toán' || o.paymentStatus === 'Thanh toán 1 phần'; })
-        .reduce(function(sum, ord) { return sum + (ord.grandTotalWithVat || 0); }, 0);
+        .reduce(function(sum, ord) { 
+            var netDebt = (ord.grandTotalWithVat || 0) - (ord.depositVal || 0);
+            return sum + Math.max(0, netDebt); 
+        }, 0);
     var statUnpaid = document.getElementById('statTotalUnpaidRevenue');
     if (statUnpaid) statUnpaid.innerText = formatCurrency(unpaidRev);
 
@@ -3350,7 +4342,6 @@ function renderOrdersHistoryList() {
     if (filtered.length === 0) {
         container.innerHTML = '<div style="text-align: center; padding: 40px 20px; color: #64748b; background: #f8fafc; border-radius: 8px; border: 1px dashed #cbd5e1;">' +
                 '<p style="font-size: 15px; font-weight: 600;">Không tìm thấy đơn hàng nào phù hợp</p>' +
-                '<p style="font-size: 12px; margin-top: 4px;">Hãy thử tìm kiếm với bộ lọc trạng thái thanh toán hoặc tên khách hàng khác.</p>' +
             '</div>';
         return;
     }
@@ -3377,6 +4368,8 @@ function renderOrdersHistoryList() {
         if (order.paymentStatus === 'Đã thanh toán') statusClass = 'status-paid';
         else if (order.paymentStatus === 'Thanh toán 1 phần') statusClass = 'status-partial';
 
+        var remainingDebt = Math.max(0, (order.grandTotalWithVat || 0) - (order.depositVal || 0));
+
         card.innerHTML = '<div class="order-card-header">' +
                 '<div>' +
                     '<strong style="font-size: 14.5px; color: #0369a1;">🔖 Số HĐ: ' + order.orderId + '</strong>' +
@@ -3384,13 +4377,13 @@ function renderOrdersHistoryList() {
                     '<span class="badge ' + statusClass + '" style="margin-left: 8px; font-size: 11px;">' + (order.paymentStatus || 'Chưa thanh toán') + '</span>' +
                 '</div>' +
                 '<div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">' +
-                    '<label style="margin: 0; font-size: 11px;">Đổi trạng thái TT:</label>' +
+                    '<label style="margin: 0; font-size: 11px;">Trạng thái TT:</label>' +
                     '<select style="width: 145px; padding: 3px 6px; font-size: 11.5px; font-weight: bold;" onchange="updateOrderStatusDirectly(' + orderIdx + ', this.value)">' +
                         '<option value="Chưa thanh toán" ' + (order.paymentStatus === 'Chưa thanh toán' ? 'selected' : '') + '>🔴 Chưa thanh toán</option>' +
                         '<option value="Thanh toán 1 phần" ' + (order.paymentStatus === 'Thanh toán 1 phần' ? 'selected' : '') + '>🟡 Thanh toán 1 phần</option>' +
                         '<option value="Đã thanh toán" ' + (order.paymentStatus === 'Đã thanh toán' ? 'selected' : '') + '>🟢 Đã thanh toán</option>' +
                     '</select>' +
-                    '<button class="btn btn-outline" style="padding: 4px 8px; border-color: #0284c7; color: #0284c7; font-weight: 700;" title="Tạo đơn vận chuyển theo mẫu Excel" onclick="openShippingOrderModalFromOrderIndex(' + orderIdx + ')">📦 Tạo Đơn Giao</button>' +
+                    '<button class="btn btn-outline" style="padding: 4px 8px; border-color: #0284c7; color: #0284c7; font-weight: 700;" onclick="openShippingOrderModalFromOrderIndex(' + orderIdx + ')">📦 Tạo Đơn Giao</button>' +
                     '<button class="btn btn-primary" style="padding: 4px 9px;" onclick="openInvoicePreviewModal(' + orderIdx + ')">👁️ Xem & In</button>' +
                     '<button class="btn btn-purple" style="padding: 4px 8px;" onclick="reloadOrderToQuotation(' + orderIdx + ')">🔄 Nạp Lại</button>' +
                     '<button class="btn btn-danger" style="padding: 4px 8px;" onclick="deleteSoldOrder(' + orderIdx + ')">✕</button>' +
@@ -3403,7 +4396,8 @@ function renderOrdersHistoryList() {
                 '</div>' +
                 '<div>' +
                     '<p>📞 <strong>SĐT/Zalo:</strong> <span style="font-weight: 600; color: #0284c7;">' + (order.customerPhone || 'Chưa lưu') + '</span></p>' +
-                    '<p>💰 <strong>Tổng thanh toán:</strong> <span style="font-weight: 800; color: #166534; font-size: 14px;">' + formatCurrency(order.grandTotalWithVat) + '</span></p>' +
+                    '<p>💰 <strong>Tổng thanh toán:</strong> <span style="font-weight: 800; color: #166534; font-size: 13.5px;">' + formatCurrency(order.grandTotalWithVat) + '</span></p>' +
+                    (order.depositVal > 0 ? '<p style="color:#b91c1c;">🔴 <strong>Đã cọc:</strong> ' + formatCurrency(order.depositVal) + ' (Còn nợ: <strong>' + formatCurrency(remainingDebt) + '</strong>)</p>' : '') +
                 '</div>' +
             '</div>' +
             '<table class="order-items-table">' +
@@ -3413,7 +4407,7 @@ function renderOrdersHistoryList() {
                         '<th>Tên Thiết Bị Đã Mua</th>' +
                         '<th style="text-align: center;">ĐVT</th>' +
                         '<th style="text-align: center;">SL</th>' +
-                        '<th style="text-align: right;">Đơn Giá Đã Bán (Có VAT)</th>' +
+                        '<th style="text-align: right;">Đơn Giá Đã Bán</th>' +
                         '<th style="text-align: right;">Thành Tiền</th>' +
                     '</tr>' +
                 '</thead>' +
@@ -3432,9 +4426,7 @@ function updateOrderStatusDirectly(orderIndex, newStatus) {
     }
 }
 
-// -------------------------------------------------------------
-// MODAL: VIEW INVOICE & PRINT / DOWNLOAD PDF
-// -------------------------------------------------------------
+// Modal View Invoice
 function openInvoicePreviewModal(orderIndex) {
     var order = soldOrdersHistory[orderIndex];
     if (!order) return;
@@ -3476,7 +4468,8 @@ function openInvoicePreviewModal(orderIndex) {
         statusBadge = '<span class="badge status-unpaid" style="font-size: 12px; padding: 4px 8px;">🔴 CHƯA THANH TOÁN (CÔNG NỢ)</span>';
     }
 
-    var qrUrl = 'https://img.vietqr.io/image/MB-7983889999-compact2.png?amount=' + Math.round(order.grandTotalWithVat) + '&accountName=CONG%20TY%20TNHH%20SOLAR%20BAC%20NINH';
+    var remainingPay = Math.max(0, (order.grandTotalWithVat || 0) - (order.depositVal || 0));
+    var qrUrl = 'https://img.vietqr.io/image/MB-7983889999-compact2.png?amount=' + Math.round(remainingPay > 0 ? remainingPay : order.grandTotalWithVat) + '&accountName=CONG%20TY%20TNHH%20SOLAR%20BAC%20NINH';
 
     var html = '<div class="quote-header">' +
             '<div class="company-info">' +
@@ -3544,6 +4537,9 @@ function openInvoicePreviewModal(orderIndex) {
                         '<td class="text-right">TỔNG CỘNG THANH TOÁN (ĐÃ VAT):</td>' +
                         '<td class="text-right font-bold">' + formatCurrency(order.grandTotalWithVat) + '</td>' +
                     '</tr>' +
+                    (order.depositVal > 0 ? 
+                    '<tr><td class="text-right" style="color:#15803d;"><strong>Số tiền đã đặt cọc:</strong></td><td class="text-right font-bold" style="color:#15803d;">' + formatCurrency(order.depositVal) + '</td></tr>' +
+                    '<tr class="remaining-row"><td class="text-right">CÒN LẠI PHẢI THANH TOÁN:</td><td class="text-right font-bold">' + formatCurrency(remainingPay) + '</td></tr>' : '') +
                     '<tr>' +
                         '<td colspan="2" style="font-size: 11px; font-style: italic; color: #475569; text-align: right; padding-top: 4px;">' +
                             '(Bằng chữ: <span style="font-weight: 600; color: #0f172a;">' + readVietnameseNumber(Math.round(order.grandTotalWithVat)) + '</span>)' +
@@ -3555,9 +4551,8 @@ function openInvoicePreviewModal(orderIndex) {
         '<div style="margin-top: 14px; font-size: 11.5px; color: #475569; border-top: 1px dashed #cbd5e1; padding-top: 8px;">' +
             '<p><strong>Ghi chú & Điều khoản:</strong></p>' +
             '<ul style="padding-left: 18px; line-height: 1.45; margin-top: 3px;">' +
-                '<li>Giá trên đã bao gồm thuế Giá Trị Gia Tăng (VAT) và bảo hành chính hãng từ nhà sản xuất.</li>' +
-                '<li>Sản phẩm mới 100%.</li>' +
-                '<li>Giao hàng toàn quốc.</li>' +
+                '<li>Giá trên đã bao gồm thuế VAT và bảo hành chính hãng.</li>' +
+                '<li>Sản phẩm mới 100%. Giao hàng toàn quốc.</li>' +
             '</ul>' +
         '</div>' +
         '<div class="quote-footer">' +
@@ -3606,13 +4601,15 @@ function reloadOrderToQuotation(orderIndex) {
     var order = soldOrdersHistory[orderIndex];
     if (!order) return;
 
-    if (confirm('Bạn muốn nạp lại đơn hàng "' + order.orderId + '" của "' + order.customerName + '" vào bảng báo giá hiện tại?')) {
+    if (confirm('Nạp lại đơn hàng "' + order.orderId + '" của "' + order.customerName + '" vào bảng báo giá?')) {
         document.getElementById('custName').value = order.customerName;
         document.getElementById('custPhone').value = order.customerPhone;
         document.getElementById('custAddr').value = order.customerAddr;
         document.getElementById('quoteNo').value = order.orderId;
         document.getElementById('vatRate').value = order.vatRate || 8;
         document.getElementById('orderPaymentStatus').value = order.paymentStatus || 'Chưa thanh toán';
+        document.getElementById('quoteDepositVal').value = order.depositVal || 0;
+        document.getElementById('quoteDiscountVal').value = order.discountVal || 0;
 
         quoteItems = order.items.map(function(it) {
             return {
@@ -3635,7 +4632,7 @@ function reloadOrderToQuotation(orderIndex) {
 }
 
 function deleteSoldOrder(orderIndex) {
-    if (confirm("Bạn có chắc chắn muốn xóa đơn hàng này khỏi lịch sử lưu trữ?")) {
+    if (confirm("Xóa đơn hàng này khỏi lịch sử lưu trữ?")) {
         soldOrdersHistory.splice(orderIndex, 1);
         saveOrdersToStorage();
         renderOrdersHistoryList();
@@ -3643,7 +4640,7 @@ function deleteSoldOrder(orderIndex) {
 }
 
 function clearOrderHistory() {
-    if (confirm("CẢNH BÁO: Bạn có chắc muốn xóa TOÀN BỘ lịch sử đơn hàng đã bán trên máy?")) {
+    if (confirm("CẢNH BÁO: Bạn có chắc muốn xóa TOÀN BỘ lịch sử đơn hàng?")) {
         soldOrdersHistory = [];
         saveOrdersToStorage();
         renderOrdersHistoryList();
@@ -3653,26 +4650,26 @@ function clearOrderHistory() {
 
 function exportOrdersToCSV() {
     if (soldOrdersHistory.length === 0) {
-        alert("Chưa có đơn hàng nào trong lịch sử!");
+        alert("Chưa có đơn hàng nào!");
         return;
     }
 
     var csv = "\uFEFF";
     csv += "QUẢN LÝ ĐƠN HÀNG VÀ THANH TOÁN - SOLAR BẮC NINH\n";
     csv += "Ngày xuất báo cáo: " + (new Date().toLocaleDateString('vi-VN')) + "\n\n";
-    csv += "Số Hóa Đơn,Ngày Bán,Tên Khách Hàng,Số Điện Thoại,Địa Chỉ,Trạng Thái Thanh Toán,Tên Thiết Bị,ĐVT,Số Lượng,Đơn Giá Có VAT,Thành Tiền,Tổng Đơn Hàng\n";
+    csv += "Số Hóa Đơn,Ngày Bán,Tên Khách Hàng,Số Điện Thoại,Địa Chỉ,Trạng Thái Thanh Toán,Đã Cọc,Tên Thiết Bị,ĐVT,Số Lượng,Đơn Giá Có VAT,Thành Tiền,Tổng Đơn Hàng\n";
 
     soldOrdersHistory.forEach(function(order) {
         order.items.forEach(function(it) {
             var lineTotal = it.priceWithVat * it.qty;
-            csv += '"' + order.orderId + '","' + order.orderDate + '","' + order.customerName.replace(/"/g, '""') + '","' + order.customerPhone + '","' + (order.customerAddr || '').replace(/"/g, '""') + '","' + (order.paymentStatus || 'Chưa thanh toán') + '","' + it.name.replace(/"/g, '""') + '","' + it.unit + '",' + it.qty + ',' + it.priceWithVat + ',' + lineTotal + ',' + order.grandTotalWithVat + '\n';
+            csv += '"' + order.orderId + '","' + order.orderDate + '","' + order.customerName.replace(/"/g, '""') + '","' + order.customerPhone + '","' + (order.customerAddr || '').replace(/"/g, '""') + '","' + (order.paymentStatus || 'Chưa thanh toán') + '",' + (order.depositVal || 0) + ',"' + it.name.replace(/"/g, '""') + '","' + it.unit + '",' + it.qty + ',' + it.priceWithVat + ',' + lineTotal + ',' + order.grandTotalWithVat + '\n';
         });
     });
 
     var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     var link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "Quan_Ly_Don_Hang_Thanh_Toan_Solar_Bac_Ninh_" + (new Date().toISOString().slice(0,10)) + ".csv";
+    link.download = "Quan_Ly_Don_Hang_Solar_Bac_Ninh_" + (new Date().toISOString().slice(0,10)) + ".csv";
     link.click();
 }
 

@@ -51,7 +51,6 @@
 </head>
 <body class="font-sans antialiased min-h-screen flex flex-col bg-slate-950 text-slate-100">
 
-    <!-- Top Emergency Announcement Bar -->
     <div id="emergencyBar" class="bg-red-600 text-white text-xs sm:text-sm font-semibold px-4 py-2.5 flex items-center justify-between shadow-lg relative z-50">
         <div class="flex items-center gap-3 max-w-7xl mx-auto w-full">
             <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] sm:text-xs font-extrabold bg-white text-red-700 animate-pulse shrink-0">
@@ -66,7 +65,6 @@
         </button>
     </div>
 
-    <!-- Main Header -->
     <header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3">
@@ -160,7 +158,6 @@
             </div>
         </div>
 
-        <!-- STORM & HEAVY RAINFALL RADAR MONITOR -->
         <section class="bg-slate-900 border border-indigo-500/30 rounded-2xl p-5 shadow-lg space-y-4 relative overflow-hidden">
             <div class="absolute -right-10 -top-10 w-40 h-40 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none"></div>
             
@@ -243,7 +240,6 @@
             </div>
         </section>
 
-        <!-- SECTION 1: LIVE RIVER MONITOR & GAUGES -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <!-- Left Panel: River List with Gauge Progress -->
             <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-sm space-y-4">
@@ -264,7 +260,7 @@
                     </div>
                 </div>
 
-                <!-- River Gauge Cards Container (Dynamically rendered via JS) -->
+                <!-- River Gauge Cards Container -->
                 <div id="riverGaugeContainer" class="space-y-3.5 max-h-[580px] overflow-y-auto pr-1">
                     <div class="text-center py-10 text-slate-500 text-xs">Đang tải dữ liệu quan đo sông...</div>
                 </div>
@@ -436,7 +432,7 @@
             </div>
         </div>
 
-        <!-- SECTION 4: COMMUNE/WARD EMERGENCY CONTACT DIRECTORY (NEW ADMINISTRATIVE BOUNDARIES) -->
+        <!-- SECTION 4: COMMUNE/WARD EMERGENCY CONTACT DIRECTORY -->
         <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm space-y-5">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 border-b border-slate-800 pb-4">
                 <div>
@@ -518,20 +514,51 @@
     </main>
 
     <!-- Floating SOS Button -->
-    <button onclick="openSOSModal()" class="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-red-600 hover:bg-red-500 text-white rounded-full shadow-lg shadow-red-600/40 pulse-red transition-transform transform hover:scale-110 border-2 border-red-400">
+    <button onclick="openWarningModal()" class="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-red-600 hover:bg-red-500 text-white rounded-full shadow-lg shadow-red-600/40 pulse-red transition-transform transform hover:scale-110 border-2 border-red-400">
         <i class="fa-solid fa-location-crosshairs text-2xl sm:text-3xl"></i>
     </button>
 
-    <!-- SOS Modal Overlay -->
+    <!-- Legal Warning Modal (New) -->
+    <div id="warningModal" class="fixed inset-0 z-[110] hidden items-center justify-center bg-slate-950/90 backdrop-blur-sm px-4">
+        <div class="bg-slate-900 border border-red-500/50 rounded-2xl p-6 w-full max-w-md shadow-2xl relative">
+            <div class="text-center mb-5">
+                <div class="w-16 h-16 bg-red-500/20 text-red-500 rounded-full flex items-center justify-center text-3xl mx-auto mb-4 border border-red-500/30">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                </div>
+                <h2 class="font-heading font-bold text-xl text-slate-100 text-red-500">CẢNH BÁO TRÁCH NHIỆM PHÁP LÝ</h2>
+            </div>
+            
+            <div class="bg-red-950/30 rounded-xl p-4 border border-red-900/50 text-sm mb-6 space-y-3 text-slate-300 text-justify leading-relaxed">
+                <p>Hệ thống này thu thập vị trí GPS định vị chính xác của bạn để gửi trực tiếp cho lực lượng cứu hộ và cơ quan chức năng phục vụ mục đích <strong>cấp cứu khẩn cấp</strong>.</p>
+                
+                <p class="font-semibold text-red-400 bg-red-900/20 p-2 rounded border-l-2 border-red-500">
+                    <i class="fa-solid fa-triangle-exclamation mr-1"></i> LƯU Ý: Bạn sẽ chịu HOÀN TOÀN TRÁCH NHIỆM TRƯỚC PHÁP LUẬT nếu thông tin cấp cứu đưa ra không đúng sự thật, cố tình quấy rối hoặc báo tin giả làm lãng phí nguồn lực nhà nước.
+                </p>
+                
+                <p class="text-xs text-slate-400 italic text-center mt-2">Hành vi báo tin giả có thể bị phạt hành chính nghiêm trọng hoặc truy cứu trách nhiệm hình sự.</p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button onclick="closeWarningModal()" class="w-full sm:w-1/3 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-sm transition-all border border-slate-700">
+                    Hủy bỏ
+                </button>
+                <button onclick="acceptWarningAndOpenSOS()" class="w-full sm:w-2/3 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white shadow-lg shadow-red-500/30 font-bold text-sm transition-all border border-red-500">
+                    TÔI ĐỒNG Ý & CHỊU TRÁCH NHIỆM
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SOS Modal Overlay (Existing, opened after warning) -->
     <div id="sosModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-950/80 backdrop-blur-sm px-4">
         <div class="bg-slate-900 border border-red-500/30 rounded-2xl p-6 w-full max-w-md shadow-2xl relative">
             <button onclick="closeSOSModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-200 p-2"><i class="fa-solid fa-xmark text-xl"></i></button>
             <div class="text-center mb-5">
                 <div class="w-14 h-14 bg-red-500/20 text-red-500 rounded-full flex items-center justify-center text-2xl mx-auto mb-3">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
+                    <i class="fa-solid fa-tower-cell"></i>
                 </div>
-                <h2 class="font-heading font-bold text-lg sm:text-xl text-slate-100">Gửi Yêu Cầu Cứu Hộ Khẩn Cấp</h2>
-                <p class="text-[11px] sm:text-xs text-slate-400 mt-1">Hệ thống sẽ lấy vị trí định vị (GPS) của bạn để gửi cho lực lượng cứu hộ gần nhất.</p>
+                <h2 class="font-heading font-bold text-lg sm:text-xl text-slate-100">Xác Định Tọa Độ Cứu Hộ</h2>
+                <p class="text-[11px] sm:text-xs text-slate-400 mt-1">Hệ thống đang sẵn sàng lấy vị trí định vị (GPS) của bạn.</p>
             </div>
             
             <div id="locationStatus" class="bg-slate-950 rounded-xl p-4 border border-slate-800 text-sm mb-4 text-center min-h-[80px] flex items-center justify-center">
@@ -557,7 +584,6 @@
         </div>
     </footer>
 
-    <!-- JavaScript App Logic -->
     <script>
         const communeDatabase = [
             // LẠNG SƠN
@@ -854,6 +880,96 @@
                 rain24h: 195,
                 impact: 'TP Bắc Giang, Lạng Giang, Tân Yên',
                 history: [4.80, 5.20, 5.70, 6.10, 6.30, 6.45]
+            },
+            {
+                id: 'calo_manhtan',
+                name: 'Sông Cà Lồ',
+                station: 'Trạm Mạnh Tân',
+                province: 'Vĩnh Phúc / Hà Nội',
+                current: 7.25,
+                bd1: 5.00,
+                bd2: 6.00,
+                bd3: 7.00,
+                trend: 'up',
+                trendText: 'Vượt BĐ3 +0.25m',
+                rain24h: 185,
+                impact: 'Bình Xuyên, Phúc Yên (Vĩnh Phúc), Sóc Sơn, Đông Anh (Hà Nội)',
+                history: [5.80, 6.20, 6.70, 6.95, 7.10, 7.25]
+            },
+            {
+                id: 'thaibinh_phalai',
+                name: 'Sông Thái Bình',
+                station: 'Trạm Phả Lại',
+                province: 'Hải Dương',
+                current: 4.85,
+                bd1: 4.00,
+                bd2: 5.00,
+                bd3: 6.00,
+                trend: 'up',
+                trendText: 'Đang lên nhanh',
+                rain24h: 120,
+                impact: 'Chí Linh, Nam Sách, TX Kinh Môn',
+                history: [3.50, 3.80, 4.10, 4.40, 4.65, 4.85]
+            },
+            {
+                id: 'duong_thuongcat',
+                name: 'Sông Đuống',
+                station: 'Trạm Thượng Cát',
+                province: 'Hà Nội',
+                current: 9.35,
+                bd1: 9.00,
+                bd2: 10.00,
+                bd3: 11.00,
+                trend: 'up',
+                trendText: 'Tăng 0.1m/h',
+                rain24h: 90,
+                impact: 'Long Biên, Gia Lâm, Thuận Thành (Bắc Ninh)',
+                history: [8.10, 8.40, 8.70, 9.00, 9.20, 9.35]
+            },
+            {
+                id: 'day_phuly',
+                name: 'Sông Đáy',
+                station: 'Trạm Phủ Lý',
+                province: 'Hà Nam',
+                current: 3.65,
+                bd1: 3.00,
+                bd2: 3.50,
+                bd3: 4.00,
+                trend: 'up',
+                trendText: 'Vượt BĐ2 0.15m',
+                rain24h: 155,
+                impact: 'TP Phủ Lý, Thanh Liêm, Bình Lục',
+                history: [2.80, 3.10, 3.30, 3.45, 3.55, 3.65]
+            },
+            {
+                id: 'hoanglong_bende',
+                name: 'Sông Hoàng Long',
+                station: 'Trạm Bến Đế',
+                province: 'Ninh Bình',
+                current: 4.25,
+                bd1: 3.00,
+                bd2: 3.50,
+                bd3: 4.00,
+                trend: 'up',
+                trendText: 'Vượt BĐ3 khẩn cấp',
+                rain24h: 210,
+                impact: 'Gia Viễn, Nho Quan, Kế hoạch xả tràn Lạc Khoái',
+                history: [3.40, 3.70, 3.90, 4.05, 4.15, 4.25]
+            },
+            {
+                id: 'da_hoabinh',
+                name: 'Sông Đà',
+                station: 'Hạ lưu Trạm Hòa Bình',
+                province: 'Hòa Bình',
+                current: 19.50,
+                bd1: 21.00,
+                bd2: 22.00,
+                bd3: 23.00,
+                trend: 'stable',
+                trendText: 'Ổn định (Thủy điện xả 1 cửa)',
+                rain24h: 85,
+                impact: 'TP Hòa Bình, Thanh Thủy (Phú Thọ)',
+                history: [18.50, 18.80, 19.10, 19.30, 19.45, 19.50]
             }
         ];
 
@@ -1311,7 +1427,20 @@
         let currentLat = null;
         let currentLon = null;
 
-        function openSOSModal() {
+        // Step 1: Open Warning Modal instead of SOS Modal directly
+        function openWarningModal() {
+            document.getElementById('warningModal').classList.remove('hidden');
+            document.getElementById('warningModal').classList.add('flex');
+        }
+
+        function closeWarningModal() {
+            document.getElementById('warningModal').classList.add('hidden');
+            document.getElementById('warningModal').classList.remove('flex');
+        }
+
+        // Step 2: Accept warning and proceed to SOS Modal
+        function acceptWarningAndOpenSOS() {
+            closeWarningModal();
             document.getElementById('sosModal').classList.remove('hidden');
             document.getElementById('sosModal').classList.add('flex');
         }

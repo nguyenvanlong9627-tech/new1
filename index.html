@@ -82,6 +82,7 @@
                 <div class="hidden md:flex items-center gap-2 bg-slate-800/80 px-3 py-1.5 rounded-lg border border-slate-700/60 text-xs">
                     <span id="liveStatusDot" class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
                     <span class="text-slate-300">Live Stream: <strong id="lastUpdatedTime" class="text-emerald-400">Vừa xong</strong></span>
+                    <span id="currentDate" class="ml-2 font-mono bg-blue-900/40 text-blue-300 px-2 py-0.5 rounded border border-blue-500/20 text-[10px]"></span>
                     <span id="countdownBadge" class="ml-1.5 font-mono bg-blue-900/60 text-blue-300 px-1.5 py-0.5 rounded border border-blue-500/30 text-[10px]">5s</span>
                 </div>
 
@@ -177,7 +178,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 <!-- Storm Status Box -->
                 <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
                     <div class="flex justify-between items-center">
@@ -196,25 +197,72 @@
                 <!-- Live Rainfall Stats -->
                 <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2.5">
                     <div class="flex justify-between items-center">
-                        <span class="text-xs font-bold text-cyan-300 uppercase tracking-wider"><i class="fa-solid fa-cloud-showers-heavy mr-1"></i> Lượng Mưa Đã Đo Được</span>
-                        <span class="text-[10px] text-amber-400 font-semibold">24 Giờ Qua</span>
+                        <span class="text-xs font-bold text-cyan-300 uppercase tracking-wider"><i class="fa-solid fa-cloud-showers-heavy mr-1"></i> Thực Đo (24h)</span>
+                        <span class="text-[10px] bg-cyan-500/20 text-cyan-300 px-2 py-0.5 rounded animate-pulse">Cập nhật liên tục</span>
                     </div>
-                    <div class="space-y-1.5 text-xs">
-                        <div class="flex justify-between items-center">
-                            <span class="text-slate-400">Trạm Mẫu Sơn (Lạng Sơn):</span>
-                            <span class="font-mono font-bold text-cyan-400">452 mm</span>
+                    <div class="space-y-2 text-[11px] h-[105px] overflow-y-auto pr-1">
+                        <div class="flex justify-between items-center border-b border-slate-800/60 pb-1.5">
+                            <span class="text-slate-300">Mẫu Sơn (Lạng Sơn)</span>
+                            <span class="font-mono font-bold text-purple-400">452 mm</span>
                         </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-slate-400">Trạm Bản Chắt (Lạng Sơn):</span>
-                            <span class="font-mono font-bold text-cyan-400">399 mm</span>
+                        <div class="flex justify-between items-center border-b border-slate-800/60 pb-1.5">
+                            <span class="text-slate-300">Hòn Gai (Quảng Ninh)</span>
+                            <span class="font-mono font-bold text-purple-400">334 mm</span>
                         </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-slate-400">Than Hòn Gai / Cửa Ông (Quảng Ninh):</span>
-                            <span class="font-mono font-bold text-cyan-400">331 - 334 mm</span>
+                        <div class="flex justify-between items-center border-b border-slate-800/60 pb-1.5">
+                            <span class="text-slate-300">Trấn Yên (Yên Bái)</span>
+                            <span class="font-mono font-bold text-cyan-400">215 mm</span>
                         </div>
-                        <div class="flex justify-between items-center">
-                            <span class="text-slate-400">Đảo Cát Bà (Hải Phòng):</span>
-                            <span class="font-mono font-bold text-cyan-400">144.8 mm</span>
+                        <div class="flex justify-between items-center border-b border-slate-800/60 pb-1.5">
+                            <span class="text-slate-300">Phổ Yên (Thái Nguyên)</span>
+                            <span class="font-mono font-bold text-cyan-400">188 mm</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-slate-800/60 pb-1.5">
+                            <span class="text-slate-300">Cát Bà (Hải Phòng)</span>
+                            <span class="font-mono font-bold text-cyan-400">145 mm</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-slate-800/60 pb-1.5">
+                            <span class="text-slate-300">Ba Vì (Hà Nội)</span>
+                            <span class="font-mono font-bold text-blue-400">112 mm</span>
+                        </div>
+                        <div class="flex justify-between items-center border-b border-slate-800/60 pb-1.5">
+                            <span class="text-slate-300">Kim Bôi (Hòa Bình)</span>
+                            <span class="font-mono font-bold text-blue-400">95 mm</span>
+                        </div>
+                        <div class="flex justify-between items-center pb-1">
+                            <span class="text-slate-300">Bắc Yên (Sơn La)</span>
+                            <span class="font-mono font-bold text-blue-400">82 mm</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rain Forecast Box -->
+                <div class="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-2.5">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-bold text-blue-300 uppercase tracking-wider"><i class="fa-solid fa-cloud-showers-water mr-1"></i> Dự Báo Mưa (24h)</span>
+                        <span class="text-[10px] bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded animate-pulse">Rất to</span>
+                    </div>
+                    <div class="space-y-2.5 text-xs mt-2">
+                        <div class="flex flex-col gap-1">
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-300">Đông Bắc Bộ & Hải Phòng</span>
+                                <span class="font-mono font-bold text-red-400">150-300 mm+</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-1"><div class="bg-red-500 h-1 rounded-full" style="width: 90%"></div></div>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-300">Đồng Bằng Sông Hồng</span>
+                                <span class="font-mono font-bold text-orange-400">100-200 mm</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-1"><div class="bg-orange-500 h-1 rounded-full" style="width: 65%"></div></div>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-300">Tây Bắc Bộ & Thanh Hóa</span>
+                                <span class="font-mono font-bold text-amber-400">50-150 mm</span>
+                            </div>
+                            <div class="w-full bg-slate-800 rounded-full h-1"><div class="bg-amber-400 h-1 rounded-full" style="width: 45%"></div></div>
                         </div>
                     </div>
                 </div>
@@ -990,6 +1038,14 @@
         let isSoundEnabled = false;
         let audioCtx = null;
 
+        // Cập nhật ngày tháng năm hiện tại
+        function updateCurrentDate() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('vi-VN', { weekday: 'short', day: '2-digit', month: '2-digit', year: 'numeric' });
+            const dateEl = document.getElementById('currentDate');
+            if (dateEl) dateEl.innerText = dateStr;
+        }
+
         function playAlertSound() {
             if (!isSoundEnabled) return;
             try {
@@ -1538,6 +1594,7 @@
         }
 
         window.onload = function() {
+            updateCurrentDate();
             renderRiverGauges();
             renderReservoirs();
             updateChartAndDetails();

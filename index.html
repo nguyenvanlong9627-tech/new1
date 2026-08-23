@@ -54,15 +54,15 @@
     <!-- Top Emergency Announcement Bar -->
     <div id="emergencyBar" class="bg-red-600 text-white text-xs sm:text-sm font-semibold px-4 py-2.5 flex items-center justify-between shadow-lg relative z-50">
         <div class="flex items-center gap-3 max-w-7xl mx-auto w-full">
-            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-extrabold bg-white text-red-700 animate-pulse">
-                <i class="fa-solid fa-triangle-exclamation mr-1"></i> CẢNH BÁO MƯA LỚN & LŨ QUÉT
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] sm:text-xs font-extrabold bg-white text-red-700 animate-pulse shrink-0">
+                <i class="fa-solid fa-triangle-exclamation mr-1"></i> CẢNH BÁO LŨ
             </span>
-            <p class="truncate text-red-100">
-                Hoàn lưu Bão số 4 gây mưa rất to tại Bắc Bộ (150-450mm+). Sông Kỳ Cùng, Trung, Lục Nam, Cầu vượt <strong class="text-amber-300">BÁO ĐỘNG III</strong>. Đề phòng sạt lở đất khẩn cấp!
+            <p class="text-red-100 text-[11px] sm:text-sm leading-tight line-clamp-2 sm:line-clamp-1">
+                Hoàn lưu Bão số 4 gây mưa rất to (150-450mm+). Sông Kỳ Cùng, Trung, Lục Nam vượt <strong class="text-amber-300">BĐ III</strong>. Đề phòng sạt lở!
             </p>
         </div>
-        <button onclick="document.getElementById('emergencyBar').style.display='none'" class="text-white hover:text-slate-200 ml-2">
-            <i class="fa-solid fa-xmark"></i>
+        <button onclick="document.getElementById('emergencyBar').style.display='none'" class="text-white hover:text-slate-200 ml-2 shrink-0 p-1">
+            <i class="fa-solid fa-xmark text-lg"></i>
         </button>
     </div>
 
@@ -91,7 +91,7 @@
                 <div class="flex items-center gap-2">
                     <button id="toggleAutoSyncBtn" onclick="toggleAutoSync()" class="bg-slate-800 hover:bg-slate-700 text-xs px-2.5 py-1.5 rounded-xl border border-slate-700 text-emerald-400 font-medium flex items-center gap-1.5 transition-colors" title="Bật/Tắt tự động cập nhật liên tục">
                         <i id="syncSpinIcon" class="fa-solid fa-arrows-rotate animate-spin" style="animation-duration: 4s;"></i>
-                        <span id="autoSyncText">Tự động (5s)</span>
+                        <span id="autoSyncText" class="hidden sm:inline">Tự động (5s)</span>
                     </button>
                     <button id="toggleSoundBtn" onclick="toggleAudioAlarm()" class="bg-slate-800 hover:bg-slate-700 text-xs px-2.5 py-1.5 rounded-xl border border-slate-700 text-slate-400 hover:text-amber-400 transition-colors" title="Bật/Tắt còi cảnh báo âm thanh BĐ3">
                         <i id="soundIcon" class="fa-solid fa-bell-slash"></i>
@@ -377,76 +377,7 @@
             </div>
         </section>
 
-        <!-- SECTION 3: DOWNSTREAM IMPACT SIMULATOR -->
-        <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm space-y-6">
-            <div class="border-b border-slate-800 pb-3">
-                <h2 class="font-heading font-bold text-lg text-slate-100 flex items-center gap-2">
-                    <i class="fa-solid fa-sliders text-cyan-400"></i> Mô Phỏng Ảnh Hưởng Xả Lũ Thủy Điện Đến Mực Nước Hạ Du
-                </h2>
-                <p class="text-xs text-slate-400 mt-1">Điều chỉnh số lượng cửa xả và lượng mưa dự kiến để dự báo độ dâng nước sông Hồng tại Hà Nội / Việt Trì</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-                <!-- Controls -->
-                <div class="md:col-span-5 bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-4 text-xs">
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <label for="simHoaBinh" class="text-slate-300 font-medium">Cửa xả đáy Thủy Điện Hòa Bình</label>
-                            <span id="simHoaBinhVal" class="text-cyan-400 font-bold">1 cửa</span>
-                        </div>
-                        <input type="range" id="simHoaBinh" min="0" max="6" step="1" value="1" oninput="runFloodSimulation()" class="w-full accent-cyan-500 bg-slate-800 h-2 rounded cursor-pointer">
-                    </div>
-
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <label for="simTuyenQuang" class="text-slate-300 font-medium">Cửa xả đáy Thủy Điện Tuyên Quang</label>
-                            <span id="simTuyenQuangVal" class="text-cyan-400 font-bold">2 cửa</span>
-                        </div>
-                        <input type="range" id="simTuyenQuang" min="0" max="8" step="1" value="2" oninput="runFloodSimulation()" class="w-full accent-cyan-500 bg-slate-800 h-2 rounded cursor-pointer">
-                    </div>
-
-                    <div>
-                        <div class="flex justify-between mb-1">
-                            <label for="simRain" class="text-slate-300 font-medium">Lượng mưa diện rộng hạ du (24h)</label>
-                            <span id="simRainVal" class="text-amber-400 font-bold">120 mm</span>
-                        </div>
-                        <input type="range" id="simRain" min="10" max="350" step="10" value="120" oninput="runFloodSimulation()" class="w-full accent-amber-500 bg-slate-800 h-2 rounded cursor-pointer">
-                    </div>
-                </div>
-
-                <!-- Simulation Output Panel -->
-                <div class="md:col-span-7 bg-slate-800/50 p-5 rounded-xl border border-slate-700/60 space-y-4">
-                    <h3 class="text-xs uppercase font-bold text-slate-400 tracking-wider">Kết Quả Mô Phỏng Mực Nước Sông Hồng Tại Hà Nội (Trạm Long Biên)</h3>
-                    
-                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 text-center">
-                        <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
-                            <div class="text-[11px] text-slate-400">Mực nước dự kiến</div>
-                            <div id="simResultLevel" class="text-2xl font-bold font-heading text-amber-400 mt-0.5">10.25 m</div>
-                            <div class="text-[10px] text-slate-500">Mực nước báo động I: 9.50m</div>
-                        </div>
-
-                        <div class="bg-slate-900 p-3 rounded-lg border border-slate-700">
-                            <div class="text-[11px] text-slate-400">Tốc độ nước chảy</div>
-                            <div id="simResultSpeed" class="text-2xl font-bold font-heading text-cyan-400 mt-0.5">2.8 m/s</div>
-                            <div class="text-[10px] text-slate-500">Dòng chảy xiết nguy hiểm</div>
-                        </div>
-
-                        <div class="col-span-2 sm:col-span-1 bg-slate-900 p-3 rounded-lg border border-slate-700 flex flex-col justify-center">
-                            <div class="text-[11px] text-slate-400">Trạng thái hạ du</div>
-                            <div id="simResultBadge" class="text-xs font-bold px-2 py-1 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 mt-1">
-                                Cảnh báo BÁO ĐỘNG I
-                            </div>
-                        </div>
-                    </div>
-
-                    <p id="simAdviceText" class="text-xs text-slate-300 bg-slate-900/80 p-3 rounded-lg border border-slate-800">
-                        Nước sông Hồng dâng lên mức Báo động I. Bãi giữa sông Hồng, Phúc Xá, Bồ Đề (Hà Nội) cần thu dọn tài sản và cảnh giác ngập bãi bồi ven sông.
-                    </p>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION 4: EMERGENCY HELPLINE & EVACUATION SAFETY CHECKLIST -->
+        <!-- SECTION 3: EMERGENCY HELPLINE & EVACUATION SAFETY CHECKLIST -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <!-- Hotline Contacts -->
             <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm space-y-4">
@@ -505,7 +436,7 @@
             </div>
         </div>
 
-        <!-- SECTION 5: COMMUNE/WARD EMERGENCY CONTACT DIRECTORY (NEW ADMINISTRATIVE BOUNDARIES) -->
+        <!-- SECTION 4: COMMUNE/WARD EMERGENCY CONTACT DIRECTORY (NEW ADMINISTRATIVE BOUNDARIES) -->
         <section class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm space-y-5">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 border-b border-slate-800 pb-4">
                 <div>
@@ -585,6 +516,38 @@
         </section>
 
     </main>
+
+    <!-- Floating SOS Button -->
+    <button onclick="openSOSModal()" class="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 bg-red-600 hover:bg-red-500 text-white rounded-full shadow-lg shadow-red-600/40 pulse-red transition-transform transform hover:scale-110 border-2 border-red-400">
+        <i class="fa-solid fa-location-crosshairs text-2xl sm:text-3xl"></i>
+    </button>
+
+    <!-- SOS Modal Overlay -->
+    <div id="sosModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-950/80 backdrop-blur-sm px-4">
+        <div class="bg-slate-900 border border-red-500/30 rounded-2xl p-6 w-full max-w-md shadow-2xl relative">
+            <button onclick="closeSOSModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-200 p-2"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <div class="text-center mb-5">
+                <div class="w-14 h-14 bg-red-500/20 text-red-500 rounded-full flex items-center justify-center text-2xl mx-auto mb-3">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h2 class="font-heading font-bold text-lg sm:text-xl text-slate-100">Gửi Yêu Cầu Cứu Hộ Khẩn Cấp</h2>
+                <p class="text-[11px] sm:text-xs text-slate-400 mt-1">Hệ thống sẽ lấy vị trí định vị (GPS) của bạn để gửi cho lực lượng cứu hộ gần nhất.</p>
+            </div>
+            
+            <div id="locationStatus" class="bg-slate-950 rounded-xl p-4 border border-slate-800 text-sm mb-4 text-center min-h-[80px] flex items-center justify-center">
+                <span class="text-slate-500 text-xs sm:text-sm">Chưa có dữ liệu vị trí.</span>
+            </div>
+
+            <div class="space-y-3">
+                <button onclick="getLocation()" id="btnGetLocation" class="w-full py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-blue-400 border border-blue-500/30 font-semibold text-sm transition-all flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-location-dot"></i> 1. Lấy vị trí hiện tại
+                </button>
+                <button onclick="sendRescueRequest()" id="btnSendSOS" disabled class="w-full py-3 rounded-xl bg-red-900/40 text-red-400/50 border border-red-900/50 font-bold text-sm cursor-not-allowed transition-all flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-paper-plane"></i> 2. Gửi tín hiệu SOS
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer class="bg-slate-950 border-t border-slate-800 text-slate-500 text-xs py-6 mt-10">
@@ -988,7 +951,6 @@
 
             renderRiverGauges();
             updateChartAndDetails();
-            runFloodSimulation();
         }
 
         function startAutoSyncEngine() {
@@ -1273,45 +1235,6 @@
             });
         }
 
-        function runFloodSimulation() {
-            const hbGates = parseInt(document.getElementById('simHoaBinh').value || 1);
-            const tqGates = parseInt(document.getElementById('simTuyenQuang').value || 2);
-            const rain = parseInt(document.getElementById('simRain').value || 120);
-
-            document.getElementById('simHoaBinhVal').innerText = `${hbGates} cửa`;
-            document.getElementById('simTuyenQuangVal').innerText = `${tqGates} cửa`;
-            document.getElementById('simRainVal').innerText = `${rain} mm`;
-
-            let calcLevel = 7.20 + (hbGates * 0.75) + (tqGates * 0.40) + (rain * 0.012);
-            calcLevel = Math.min(Math.max(calcLevel, 7.20), 13.50);
-
-            let calcSpeed = 1.8 + (hbGates * 0.3) + (tqGates * 0.2);
-
-            document.getElementById('simResultLevel').innerText = `${calcLevel.toFixed(2)} m`;
-            document.getElementById('simResultSpeed').innerText = `${calcSpeed.toFixed(1)} m/s`;
-
-            const badge = document.getElementById('simResultBadge');
-            const advice = document.getElementById('simAdviceText');
-
-            if (calcLevel >= 11.50) {
-                badge.innerText = 'Cảnh báo BÁO ĐỘNG III (Rất Nguy Hiểm)';
-                badge.className = 'text-xs font-bold px-2 py-1 rounded bg-red-500/20 text-red-300 border border-red-500/30 mt-1';
-                advice.innerText = 'NGUY CƠ NGẬP SÂU TOÀN BỘ BÃI GIỮA VÀ VEN SÔNG HỒNG. Đề nghị sẵn sàng phương án di dời người và tài sản khu vực ngoài đê các quận Hoàn Kiếm, Ba Đình, Tây Hồ, Long Biên!';
-            } else if (calcLevel >= 10.50) {
-                badge.innerText = 'Cảnh báo BÁO ĐỘNG II';
-                badge.className = 'text-xs font-bold px-2 py-1 rounded bg-orange-500/20 text-orange-300 border border-orange-500/30 mt-1';
-                advice.innerText = 'Mực nước dâng cao gây ngập các bãi bồi, xưởng sản xuất ngoài đê. Cấm thuyền bè du lịch và vận tải hoạt động trên sông Hồng khu vực Hà Nội.';
-            } else if (calcLevel >= 9.50) {
-                badge.innerText = 'Cảnh báo BÁO ĐỘNG I';
-                badge.className = 'text-xs font-bold px-2 py-1 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 mt-1';
-                advice.innerText = 'Chủ động gia cố kè, đê bao xung yếu. Ngưng các hoạt động cắm trại, thể thao trên bãi bồi ven sông.';
-            } else {
-                badge.innerText = 'An toàn trong lòng sông';
-                badge.className = 'text-xs font-bold px-2 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 mt-1';
-                advice.innerText = 'Mực nước dưới mức Báo động I. Hệ thống thoát nước và đê điều hoạt động an toàn.';
-            }
-        }
-
         async function fetchLiveHydroNews() {
             const query = document.getElementById('newsSearchQuery').value.trim();
             const loadingBox = document.getElementById('aiNewsLoading');
@@ -1385,11 +1308,110 @@
             }
         }
 
+        let currentLat = null;
+        let currentLon = null;
+
+        function openSOSModal() {
+            document.getElementById('sosModal').classList.remove('hidden');
+            document.getElementById('sosModal').classList.add('flex');
+        }
+
+        function closeSOSModal() {
+            document.getElementById('sosModal').classList.add('hidden');
+            document.getElementById('sosModal').classList.remove('flex');
+            
+            // Reset state when closed
+            currentLat = null;
+            currentLon = null;
+            document.getElementById('locationStatus').innerHTML = '<span class="text-slate-500 text-xs sm:text-sm">Chưa có dữ liệu vị trí.</span>';
+            document.getElementById('btnGetLocation').classList.remove('hidden');
+            
+            const btnSend = document.getElementById('btnSendSOS');
+            btnSend.disabled = true;
+            btnSend.className = "w-full py-3 rounded-xl bg-red-900/40 text-red-400/50 border border-red-900/50 font-bold text-sm cursor-not-allowed transition-all flex justify-center items-center gap-2";
+            btnSend.innerHTML = '<i class="fa-solid fa-paper-plane"></i> 2. Gửi tín hiệu SOS';
+            btnSend.style.display = 'flex';
+        }
+
+        function getLocation() {
+            const statusDiv = document.getElementById('locationStatus');
+            const btnGet = document.getElementById('btnGetLocation');
+            
+            if (!navigator.geolocation) {
+                statusDiv.innerHTML = '<span class="text-red-400"><i class="fa-solid fa-circle-xmark mr-1"></i> Trình duyệt không hỗ trợ định vị.</span>';
+                return;
+            }
+
+            statusDiv.innerHTML = '<span class="text-blue-400 animate-pulse text-xs sm:text-sm"><i class="fa-solid fa-spinner fa-spin mr-1"></i> Đang tìm tín hiệu GPS...</span>';
+            
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    currentLat = position.coords.latitude;
+                    currentLon = position.coords.longitude;
+                    
+                    statusDiv.innerHTML = `
+                        <div class="text-left w-full space-y-1.5">
+                            <div class="text-emerald-400 font-bold text-[11px] sm:text-xs mb-2 flex items-center gap-1">
+                                <i class="fa-solid fa-circle-check"></i> Đã lấy được tọa độ GPS
+                            </div>
+                            <div class="flex justify-between text-xs border-b border-slate-800 pb-1.5">
+                                <span class="text-slate-400">Vĩ độ (Lat):</span> 
+                                <strong class="text-slate-200 font-mono">${currentLat.toFixed(6)}</strong>
+                            </div>
+                            <div class="flex justify-between text-xs pt-1">
+                                <span class="text-slate-400">Kinh độ (Lon):</span> 
+                                <strong class="text-slate-200 font-mono">${currentLon.toFixed(6)}</strong>
+                            </div>
+                        </div>
+                    `;
+                    
+                    btnGet.classList.add('hidden');
+                    
+                    const btnSend = document.getElementById('btnSendSOS');
+                    btnSend.disabled = false;
+                    btnSend.className = "w-full py-3 rounded-xl bg-red-600 hover:bg-red-500 text-white shadow-lg shadow-red-500/30 font-bold text-sm transition-all flex justify-center items-center gap-2 pulse-red";
+                },
+                (error) => {
+                    let msg = "Không thể lấy vị trí.";
+                    if (error.code == error.PERMISSION_DENIED) msg = "Bạn đã từ chối quyền truy cập vị trí. Hãy cấp quyền trong cài đặt trình duyệt.";
+                    else if (error.code == error.POSITION_UNAVAILABLE) msg = "Thông tin vị trí không khả dụng lúc này.";
+                    else if (error.code == error.TIMEOUT) msg = "Quá thời gian yêu cầu vị trí.";
+                    
+                    statusDiv.innerHTML = `<span class="text-red-400 text-xs sm:text-sm"><i class="fa-solid fa-triangle-exclamation mr-1"></i> ${msg}</span>`;
+                },
+                { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+            );
+        }
+
+        function sendRescueRequest() {
+            if (!currentLat || !currentLon) return;
+            const statusDiv = document.getElementById('locationStatus');
+            const btnSend = document.getElementById('btnSendSOS');
+            
+            // Simulate sending to server
+            btnSend.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang gửi tín hiệu...';
+            btnSend.disabled = true;
+            btnSend.classList.remove('pulse-red');
+            
+            setTimeout(() => {
+                statusDiv.innerHTML = `
+                    <div class="text-emerald-400 text-center py-2 w-full">
+                        <i class="fa-solid fa-circle-check text-4xl sm:text-5xl mb-3"></i>
+                        <div class="font-bold text-sm sm:text-base uppercase tracking-wide">Đã Gửi Thành Công!</div>
+                        <div class="text-[11px] sm:text-xs text-slate-300 mt-2 leading-relaxed">
+                            Tọa độ của bạn đã được chuyển tới hệ thống trực ban PCTT địa phương.<br>
+                            Vui lòng giữ an toàn và chờ điện thoại liên lạc!
+                        </div>
+                    </div>
+                `;
+                btnSend.style.display = 'none';
+            }, 1500);
+        }
+
         window.onload = function() {
             renderRiverGauges();
             renderReservoirs();
             updateChartAndDetails();
-            runFloodSimulation();
             filterCommunes();
             startAutoSyncEngine();
         };

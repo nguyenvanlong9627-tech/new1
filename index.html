@@ -65,6 +65,7 @@
             flex: 1 1 calc(25% - 8px);
             min-width: 150px;
             text-align: center;
+            position: relative;
         }
 
         .tab-btn:hover {
@@ -77,6 +78,32 @@
             color: #ffffff !important;
             border-color: #0284c7 !important;
             box-shadow: 0 2px 4px rgba(2, 132, 199, 0.25);
+        }
+
+        .notif-badge {
+            position: absolute;
+            top: -7px;
+            right: -7px;
+            min-width: 19px;
+            height: 19px;
+            padding: 0 4px;
+            border-radius: 999px;
+            background: #ef4444;
+            color: #fff;
+            font-size: 10.5px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #fff;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+            animation: notifPulse 1.6s infinite;
+        }
+
+        @keyframes notifPulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.55); }
+            70% { box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
 
         .tab-content {
@@ -437,7 +464,7 @@
             gap: 12px;
             align-items: center;
             padding: 10px 14px;
-            border: none;
+            border: 2px dashed #0284c7;
             border-radius: 10px;
             background: #f0f9ff;
         }
@@ -673,7 +700,7 @@
             }
             .no-print, .modal-toolbar { display: none !important; }
             .editable-input { border: none !important; padding: 0 !important; }
-            .qr-bank-card { border: none !important; background: #fff !important; }
+            .qr-bank-card { border: 1px solid #cbd5e1 !important; background: #fff !important; }
         }
     
         /* Mobile-First Responsive Styles */
@@ -874,13 +901,15 @@
     
     <!-- Top Navigation Tabs -->
     <div class="nav-tabs no-print" style="align-items: center;">
-        <button class="tab-btn active" id="btn-tab-quote" onclick="switchTab('tab-quote')">📝 Lập Báo Giá Thiết Bị</button>
-        <button class="tab-btn" id="btn-tab-inventory" onclick="switchTab('tab-inventory')">📦 Quản Lý Tồn Kho & Nhập Xuất</button>
-        <button class="tab-btn" id="btn-tab-contract" onclick="switchTab('tab-contract')">📜 Hợp Đồng Mua Bán</button>
-        <button class="tab-btn" id="btn-tab-customers" onclick="switchTab('tab-customers')">👥 Quản Lý Khách Hàng</button>
-        <button class="tab-btn" id="btn-tab-history" onclick="switchTab('tab-history')">💳 Quản Lý Đơn Hàng & Công Nợ</button>
-        <button class="tab-btn" id="btn-tab-stats" onclick="switchTab('tab-stats')">📊 Thống Kê Sản Phẩm & Doanh Thu</button>
-        <button class="tab-btn" id="btn-tab-settings" onclick="switchTab('tab-settings')">⚙️ Cài Đặt Kho & Sao Lưu</button>
+        <button class="tab-btn active tab-role-staff" id="btn-tab-quote" onclick="switchTab('tab-quote')">📝 Lập Báo Giá Thiết Bị</button>
+        <button class="tab-btn tab-role-staff" id="btn-tab-inventory" onclick="switchTab('tab-inventory')">📦 Quản Lý Tồn Kho & Nhập Xuất</button>
+        <button class="tab-btn tab-role-staff" id="btn-tab-contract" onclick="switchTab('tab-contract')">📜 Hợp Đồng Mua Bán</button>
+        <button class="tab-btn tab-role-staff" id="btn-tab-customers" onclick="switchTab('tab-customers')">👥 Quản Lý Khách Hàng</button>
+        <button class="tab-btn tab-role-staff" id="btn-tab-history" onclick="switchTab('tab-history')">💳 Quản Lý Đơn Hàng & Công Nợ<span id="lblNewOrdersBadge" class="notif-badge" style="display:none;">0</span></button>
+        <button class="tab-btn tab-role-staff" id="btn-tab-stats" onclick="switchTab('tab-stats')">📊 Thống Kê Sản Phẩm & Doanh Thu</button>
+        <button class="tab-btn tab-role-staff" id="btn-tab-settings" onclick="switchTab('tab-settings')">⚙️ Cài Đặt Kho & Sao Lưu</button>
+        <button class="tab-btn tab-role-customer" id="btn-tab-store" onclick="switchTab('tab-store')" style="display:none;">🛒 Cửa Hàng Online</button>
+        <button class="tab-btn tab-role-customer" id="btn-tab-my-orders" onclick="switchTab('tab-my-orders')" style="display:none;">📦 Đơn Hàng Của Tôi</button>
         
         <!-- Account Badge & Logout Button -->
         <div class="user-info-pill no-print">
@@ -1192,14 +1221,14 @@
                 <div class="table-responsive-wrapper"><table class="quote-table" id="quoteTable">
                     <thead>
                         <tr>
-                            <th style="width: 28px;">STT</th>
-                            <th style="min-width: 240px; font-size: 12.5px;">TÊN THIẾT BỊ & QUY CÁCH KỸ THUẬT</th>
-                            <th style="width: 42px;">ĐVT</th>
-                            <th style="width: 45px;">SL</th>
-                            <th style="width: 90px;">ĐƠN GIÁ <br><span class="price-ex-vat-tag">CHƯA VAT</span> ✎</th>
-                            <th style="width: 100px;">ĐƠN GIÁ <br><span class="price-vat-tag">ĐÃ CÓ VAT</span> ✎</th>
-                            <th style="width: 125px;">THÀNH TIỀN <br><span class="price-vat-tag">ĐÃ CÓ VAT</span></th>
-                            <th style="width: 32px;" class="no-print">Xóa</th>
+                            <th style="width: 32px;">STT</th>
+                            <th>TÊN THIẾT BỊ & QUY CÁCH KỸ THUẬT</th>
+                            <th style="width: 48px;">ĐVT</th>
+                            <th style="width: 52px;">SL</th>
+                            <th style="width: 135px;">ĐƠN GIÁ <br><span class="price-ex-vat-tag">CHƯA VAT</span> ✎</th>
+                            <th style="width: 140px;">ĐƠN GIÁ <br><span class="price-vat-tag">ĐÃ CÓ VAT</span> ✎</th>
+                            <th style="width: 135px;">THÀNH TIỀN <br><span class="price-vat-tag">ĐÃ CÓ VAT</span></th>
+                            <th style="width: 35px;" class="no-print">Xóa</th>
                         </tr>
                     </thead>
                     <tbody id="quoteTableBody">
@@ -1809,6 +1838,89 @@
         </div>
     </div>
 
+    <!-- TAB KHÁCH HÀNG: CỬA HÀNG ONLINE -->
+    <div id="tab-store" class="tab-content">
+        <div class="app-grid">
+            <!-- Sidebar: Giỏ Hàng -->
+            <div class="sidebar no-print">
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">🛒 Giỏ Hàng Của Bạn</span>
+                        <span class="badge badge-brand" id="lblStoreCartCount">0 SP</span>
+                    </div>
+                    <div id="storeCartContainer" style="max-height: 420px; overflow-y: auto;">
+                        <p style="text-align:center; color:#94a3b8; font-size: 12px; padding: 16px 0;">Giỏ hàng đang trống. Hãy chọn thiết bị bên cạnh để thêm vào giỏ.</p>
+                    </div>
+                    <div style="border-top: 2px solid var(--primary-light); margin-top: 10px; padding-top: 10px;">
+                        <div style="display:flex; justify-content:space-between; font-weight:800; font-size: 14px; color: #0f172a; margin-bottom: 10px;">
+                            <span>TỔNG CỘNG:</span>
+                            <span id="lblStoreCartTotal" style="color: #166534;">0 đ</span>
+                        </div>
+                        <button class="btn btn-success btn-block" style="font-size: 13.5px; font-weight: 800; padding: 11px;" onclick="submitOnlineOrder()">
+                            🛒 GỬI ĐƠN ĐẶT HÀNG TRỰC TUYẾN
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Danh Sách Sản Phẩm -->
+            <div>
+                <div class="card">
+                    <div class="card-header">
+                        <span class="card-title">☀️ Danh Mục Thiết Bị Solar - SOLAR BẮC NINH</span>
+                    </div>
+                    <div class="row-2" style="margin-bottom: 12px;">
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label>🔍 Tìm Kiếm Sản Phẩm</label>
+                            <input type="text" id="searchStoreInput" placeholder="Tên sản phẩm, mã, mô tả..." oninput="renderStoreProducts()">
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label>Lọc Theo Thương Hiệu</label>
+                            <select id="filterStoreBrand" onchange="renderStoreProducts()">
+                                <option value="">-- Tất cả thương hiệu --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="catalog-list" id="storeCatalogContainer" style="max-height: 640px;">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TAB KHÁCH HÀNG: ĐƠN HÀNG CỦA TÔI -->
+    <div id="tab-my-orders" class="tab-content">
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">📦 Đơn Hàng Của Tôi</span>
+                <button class="btn btn-outline" onclick="renderMyOrders()">🔄 Làm Mới</button>
+            </div>
+            <div id="myOrdersContainer">
+                <!-- Populated via JS -->
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- MODAL XEM HÓA ĐƠN & MÃ QR THANH TOÁN -->
+<div id="invoiceModal" class="modal-overlay">
+    <div class="modal-container" style="max-width: 900px;">
+        <div class="modal-toolbar no-print">
+            <div style="font-weight: 700; font-size: 14.5px; display: flex; align-items: center; gap: 8px;">
+                🧾 XEM HÓA ĐƠN & THANH TOÁN
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn btn-primary" onclick="printModalInvoice()">🖨️ In Hóa Đơn</button>
+                <button class="btn btn-purple" onclick="downloadModalInvoicePDF()">📥 Tải PDF</button>
+                <button class="btn btn-danger" onclick="closeInvoiceModal()">✕ Đóng</button>
+            </div>
+        </div>
+        <div class="modal-body-paper" id="modalPrintContent">
+            <!-- Populated via JS (openInvoicePreviewModal) -->
+        </div>
+    </div>
 </div>
 
 <!-- MODAL PHIẾU NHẬP KHO MỚI -->
@@ -1851,34 +1963,84 @@
 
 <!-- MODAL MÀN HÌNH ĐĂNG NHẬP BẢO MẬT -->
 <div id="loginOverlay" class="login-overlay">
-    <div class="login-card">
+    <div class="login-card" style="max-width: 460px;">
         <div class="login-header">
             <h2>☀️ SOLAR BẮC NINH</h2>
             <p style="font-weight: 700; color: #0f172a; margin-top: 4px;">PHẦN MỀM BÁO GIÁ & QUẢN LÝ KHO</p>
-            <p style="margin-top: 2px;">Vui lòng đăng nhập tài khoản để tiếp tục</p>
+            <p style="margin-top: 2px;">Vui lòng đăng nhập hoặc đăng ký tài khoản để tiếp tục</p>
         </div>
-        <form onsubmit="handleLogin(event)">
-            <div class="form-group" style="margin-bottom: 14px;">
-                <label style="font-size: 11.5px;">Tài Khoản / Tên Đăng Nhập (*)</label>
-                <input type="text" id="loginUsername" placeholder="Nhập tên đăng nhập..." required style="padding: 10px; font-size: 13.5px; font-weight: 600;">
-            </div>
-            <div class="form-group" style="margin-bottom: 16px;">
-                <label style="font-size: 11.5px;">Mật Khẩu (*)</label>
-                <div style="position: relative;">
-                    <input type="password" id="loginPassword" placeholder="Nhập mật khẩu..." required style="padding: 10px 40px 10px 10px; font-size: 13.5px; font-weight: 600;">
-                    <button type="button" onclick="toggleShowPassword()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 14px; color: #64748b;">👁️</button>
+
+        <div style="display: flex; gap: 6px; background: #f1f5f9; padding: 4px; border-radius: 8px; margin-bottom: 18px;">
+            <button type="button" id="btnLoginFormTab" class="tier-btn active" style="flex:1; padding: 8px;" onclick="switchLoginPanel('login')">🔑 Đăng Nhập</button>
+            <button type="button" id="btnRegisterFormTab" class="tier-btn" style="flex:1; padding: 8px;" onclick="switchLoginPanel('register')">📝 Đăng Ký Khách Hàng</button>
+        </div>
+
+        <!-- FORM ĐĂNG NHẬP -->
+        <div id="loginFormPanel">
+            <form onsubmit="handleLogin(event)">
+                <div class="form-group" style="margin-bottom: 14px;">
+                    <label style="font-size: 11.5px;">Tài Khoản / Tên Đăng Nhập (*)</label>
+                    <input type="text" id="loginUsername" placeholder="Nhập tên đăng nhập..." required style="padding: 10px; font-size: 13.5px; font-weight: 600;">
                 </div>
+                <div class="form-group" style="margin-bottom: 16px;">
+                    <label style="font-size: 11.5px;">Mật Khẩu (*)</label>
+                    <div style="position: relative;">
+                        <input type="password" id="loginPassword" placeholder="Nhập mật khẩu..." required style="padding: 10px 40px 10px 10px; font-size: 13.5px; font-weight: 600;">
+                        <button type="button" onclick="toggleShowPassword()" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 14px; color: #64748b;">👁️</button>
+                    </div>
+                </div>
+                <div id="loginErrorAlert" style="display: none; background: #fee2e2; border: 1px solid #fca5a5; color: #b91c1c; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; margin-bottom: 14px; text-align: center;">
+                    ⚠️ Tài khoản hoặc mật khẩu không chính xác!
+                </div>
+                <button type="submit" class="btn btn-primary btn-block" style="padding: 11px; font-size: 14px; font-weight: 800; border-radius: 8px;">
+                    🔑 ĐĂNG NHẬP HỆ THỐNG
+                </button>
+            </form>
+            <div style="margin-top: 20px; text-align: center; font-size: 11px; color: #94a3b8; border-top: 1px solid #f1f5f9; padding-top: 12px;">
+                <p>Mật khẩu mặc định ban đầu: <strong>admin</strong> / <strong>solarbacninh168</strong></p>
+                <p>© CÔNG TY TNHH SOLAR BẮC NINH - Hotline: 0829.86.3333</p>
             </div>
-            <div id="loginErrorAlert" style="display: none; background: #fee2e2; border: 1px solid #fca5a5; color: #b91c1c; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; margin-bottom: 14px; text-align: center;">
-                ⚠️ Tài khoản hoặc mật khẩu không chính xác!
+        </div>
+
+        <!-- FORM ĐĂNG KÝ KHÁCH HÀNG MỚI -->
+        <div id="registerFormPanel" style="display: none;">
+            <form onsubmit="handleRegisterCustomer(event)">
+                <div class="row-2">
+                    <div class="form-group">
+                        <label style="font-size: 11px;">Tên Đăng Nhập (*)</label>
+                        <input type="text" id="regUsername" placeholder="Đặt tên đăng nhập..." required style="font-size: 12.5px;">
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size: 11px;">Mật Khẩu (*)</label>
+                        <input type="password" id="regPassword" placeholder="Đặt mật khẩu..." required style="font-size: 12.5px;">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label style="font-size: 11px;">Họ Tên / Tên Công Ty (*)</label>
+                    <input type="text" id="regFullName" placeholder="VD: Nguyễn Văn A / Công ty ABC..." required style="font-size: 12.5px;">
+                </div>
+                <div class="row-2">
+                    <div class="form-group">
+                        <label style="font-size: 11px;">Số Điện Thoại (*)</label>
+                        <input type="text" id="regPhone" placeholder="09xx xxx xxx" required style="font-size: 12.5px;">
+                    </div>
+                    <div class="form-group">
+                        <label style="font-size: 11px;">Mã Số Thuế</label>
+                        <input type="text" id="regTaxCode" placeholder="Nếu là công ty..." style="font-size: 12.5px;">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label style="font-size: 11px;">Địa Chỉ Giao Hàng (*)</label>
+                    <input type="text" id="regAddr" placeholder="Số nhà, đường, xã/phường, tỉnh/thành..." required style="font-size: 12.5px;">
+                </div>
+                <div id="registerErrorAlert" style="display: none; background: #fee2e2; border: 1px solid #fca5a5; color: #b91c1c; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; margin-bottom: 14px; text-align: center;"></div>
+                <button type="submit" class="btn btn-success btn-block" style="padding: 11px; font-size: 14px; font-weight: 800; border-radius: 8px;">
+                    🎉 ĐĂNG KÝ & TỰ ĐỘNG ĐĂNG NHẬP
+                </button>
+            </form>
+            <div style="margin-top: 16px; text-align: center; font-size: 10.5px; color: #94a3b8; border-top: 1px solid #f1f5f9; padding-top: 10px;">
+                <p>Tài khoản mới sẽ được lưu vào danh bạ CRM của SOLAR BẮC NINH để nhân viên hỗ trợ nhanh chóng.</p>
             </div>
-            <button type="submit" class="btn btn-primary btn-block" style="padding: 11px; font-size: 14px; font-weight: 800; border-radius: 8px;">
-                🔑 ĐĂNG NHẬP HỆ THỐNG
-            </button>
-        </form>
-        <div style="margin-top: 20px; text-align: center; font-size: 11px; color: #94a3b8; border-top: 1px solid #f1f5f9; padding-top: 12px;">
-            <p>Mật khẩu mặc định ban đầu: <strong>admin</strong> / <strong>solarbacninh168</strong></p>
-            <p>© CÔNG TY TNHH SOLAR BẮC NINH - Hotline: 0829.86.3333</p>
         </div>
     </div>
 </div>
@@ -1919,6 +2081,7 @@ function checkAuthSession() {
             currentLoggedInUser = JSON.parse(activeUserJson);
             document.getElementById('loginOverlay').style.display = 'none';
             document.getElementById('lblLoggedInUser').innerText = currentLoggedInUser.username + ' (' + (currentLoggedInUser.role || 'Admin') + ')';
+            applyRolePermissions();
         } catch(e) {
             document.getElementById('loginOverlay').style.display = 'flex';
         }
@@ -1943,6 +2106,7 @@ function handleLogin(e) {
         document.getElementById('loginOverlay').style.display = 'none';
         document.getElementById('lblLoggedInUser').innerText = matchedAcc.username + ' (' + (matchedAcc.role || 'Admin') + ')';
         if (errAlert) errAlert.style.display = 'none';
+        applyRolePermissions();
     } else {
         if (errAlert) {
             errAlert.style.display = 'block';
@@ -1955,6 +2119,125 @@ function toggleShowPassword() {
     var passInput = document.getElementById('loginPassword');
     if (passInput) {
         passInput.type = (passInput.type === 'password') ? 'text' : 'password';
+    }
+}
+
+function switchLoginPanel(which) {
+    var loginPanel = document.getElementById('loginFormPanel');
+    var regPanel = document.getElementById('registerFormPanel');
+    var btnLogin = document.getElementById('btnLoginFormTab');
+    var btnReg = document.getElementById('btnRegisterFormTab');
+    if (which === 'register') {
+        loginPanel.style.display = 'none';
+        regPanel.style.display = 'block';
+        btnLogin.classList.remove('active');
+        btnReg.classList.add('active');
+    } else {
+        loginPanel.style.display = 'block';
+        regPanel.style.display = 'none';
+        btnReg.classList.remove('active');
+        btnLogin.classList.add('active');
+    }
+}
+
+function handleRegisterCustomer(e) {
+    if (e) e.preventDefault();
+    var uname = document.getElementById('regUsername').value.trim();
+    var pass = document.getElementById('regPassword').value.trim();
+    var fullName = document.getElementById('regFullName').value.trim();
+    var phone = document.getElementById('regPhone').value.trim();
+    var taxCode = document.getElementById('regTaxCode').value.trim();
+    var addr = document.getElementById('regAddr').value.trim();
+    var errAlert = document.getElementById('registerErrorAlert');
+
+    function showRegErr(msg) {
+        if (errAlert) {
+            errAlert.style.display = 'block';
+            errAlert.innerText = '⚠️ ' + msg;
+        }
+    }
+
+    if (!uname || !pass || !fullName || !phone || !addr) {
+        showRegErr('Vui lòng điền đầy đủ các trường bắt buộc (*)!');
+        return;
+    }
+
+    var exists = accountsList.some(function(a) { return a.username.toLowerCase() === uname.toLowerCase(); });
+    if (exists) {
+        showRegErr('Tên đăng nhập này đã tồn tại, vui lòng chọn tên khác!');
+        return;
+    }
+
+    var newAcc = {
+        username: uname,
+        password: pass,
+        role: 'Khách hàng',
+        dateCreated: new Date().toLocaleDateString('vi-VN'),
+        fullName: fullName,
+        phone: phone,
+        addr: addr,
+        taxCode: taxCode
+    };
+
+    accountsList.push(newAcc);
+    saveAccountsToStorage();
+    renderAccountsTable();
+
+    // Tự động lưu ngay vào danh bạ CRM của hệ thống
+    var custKey = normalizeCustomerKey(phone, fullName);
+    if (custKey) {
+        var existingCust = savedCustomers[custKey] || {};
+        savedCustomers[custKey] = {
+            name: fullName,
+            taxCode: taxCode || existingCust.taxCode || '',
+            representative: existingCust.representative || '',
+            email: existingCust.email || '',
+            phone: phone,
+            addr: addr,
+            customPrices: existingCust.customPrices || {},
+            lastQuoteDate: new Date().toLocaleDateString('vi-VN'),
+            linkedUsername: uname
+        };
+        saveCustomersToStorage();
+    }
+
+    // Tự động đăng nhập ngay sau khi đăng ký
+    currentLoggedInUser = newAcc;
+    sessionStorage.setItem('solar_bac_ninh_active_user', JSON.stringify(newAcc));
+    var overlay = document.getElementById('loginOverlay');
+    if (overlay) overlay.style.display = 'none';
+    document.getElementById('lblLoggedInUser').innerText = newAcc.username + ' (' + newAcc.role + ')';
+    if (errAlert) errAlert.style.display = 'none';
+
+    document.getElementById('regUsername').value = '';
+    document.getElementById('regPassword').value = '';
+    document.getElementById('regFullName').value = '';
+    document.getElementById('regPhone').value = '';
+    document.getElementById('regTaxCode').value = '';
+    document.getElementById('regAddr').value = '';
+
+    applyRolePermissions();
+}
+
+// -------------------------------------------------------------
+// PHÂN QUYỀN GIAO DIỆN THEO VAI TRÒ TÀI KHOẢN
+// -------------------------------------------------------------
+function applyRolePermissions() {
+    var isCustomer = !!(currentLoggedInUser && currentLoggedInUser.role === 'Khách hàng');
+    var staffBtns = document.querySelectorAll('.tab-role-staff');
+    var custBtns = document.querySelectorAll('.tab-role-customer');
+    var i;
+    for (i = 0; i < staffBtns.length; i++) {
+        staffBtns[i].style.display = isCustomer ? 'none' : '';
+    }
+    for (i = 0; i < custBtns.length; i++) {
+        custBtns[i].style.display = isCustomer ? '' : 'none';
+    }
+
+    if (isCustomer) {
+        switchTab('tab-store');
+    } else {
+        switchTab('tab-quote');
     }
 }
 
@@ -3340,6 +3623,31 @@ function loadAllData() {
     updateSavedCustomerDropdown();
     updateCustomerDatalistSuggestions();
     populateProductFilterDropdown();
+    updateNewOrdersBadge();
+}
+
+// -------------------------------------------------------------
+// 🔔 THÔNG BÁO ĐƠN HÀNG MỚI (Tab Quản Lý Đơn Hàng & Công Nợ)
+// -------------------------------------------------------------
+function updateNewOrdersBadge() {
+    var badge = document.getElementById('lblNewOrdersBadge');
+    if (!badge) return;
+    var newCount = soldOrdersHistory.filter(function(o) { return o.isNew === true; }).length;
+    if (newCount > 0) {
+        badge.innerText = newCount > 99 ? '99+' : newCount.toString();
+        badge.style.display = 'flex';
+        badge.title = newCount + ' đơn hàng mới cần xử lý';
+    } else {
+        badge.style.display = 'none';
+    }
+}
+
+function markOrdersAsSeen() {
+    var hasNew = soldOrdersHistory.some(function(o) { return o.isNew === true; });
+    if (!hasNew) return;
+    soldOrdersHistory.forEach(function(o) { if (o.isNew) o.isNew = false; });
+    saveOrdersToStorage();
+    updateNewOrdersBadge();
 }
 
 function saveCustomersToStorage() {
@@ -3426,11 +3734,329 @@ function switchTab(tabId) {
         renderCustomerCRMList();
     } else if (tabId === 'tab-history') {
         renderOrdersHistoryList();
+        markOrdersAsSeen();
     } else if (tabId === 'tab-stats') {
         renderProductStatistics();
     } else if (tabId === 'tab-settings') {
         renderCatalogAdminTable();
+    } else if (tabId === 'tab-store') {
+        populateStoreBrandFilter();
+        renderStoreProducts();
+        renderStoreCart();
+    } else if (tabId === 'tab-my-orders') {
+        renderMyOrders();
     }
+}
+
+// -------------------------------------------------------------
+// 🛒 CỬA HÀNG ONLINE DÀNH CHO KHÁCH HÀNG
+// -------------------------------------------------------------
+var storeCart = [];
+
+function populateStoreBrandFilter() {
+    var sel = document.getElementById('filterStoreBrand');
+    if (!sel) return;
+    var currentVal = sel.value;
+    var brands = [];
+    rawCatalog.forEach(function(p) {
+        if (p.brand && brands.indexOf(p.brand) === -1) brands.push(p.brand);
+    });
+    sel.innerHTML = '<option value="">-- Tất cả thương hiệu --</option>';
+    brands.forEach(function(b) {
+        sel.innerHTML += '<option value="' + b + '">Hãng ' + b + '</option>';
+    });
+    sel.value = currentVal || '';
+}
+
+function renderStoreProducts() {
+    var container = document.getElementById('storeCatalogContainer');
+    if (!container) return;
+    var searchInput = document.getElementById('searchStoreInput');
+    var brandSelect = document.getElementById('filterStoreBrand');
+    var query = (searchInput ? searchInput.value : '').toLowerCase().trim();
+    var brandFilter = brandSelect ? brandSelect.value : '';
+
+    var items = rawCatalog.filter(function(p) {
+        var matchQuery = !query ||
+            p.name.toLowerCase().indexOf(query) !== -1 ||
+            (p.desc || '').toLowerCase().indexOf(query) !== -1 ||
+            (p.id || '').toLowerCase().indexOf(query) !== -1;
+        var matchBrand = !brandFilter || p.brand === brandFilter;
+        return matchQuery && matchBrand;
+    });
+
+    container.innerHTML = '';
+    if (items.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#94a3b8; font-size: 12.5px; padding: 20px 0;">Không tìm thấy sản phẩm phù hợp.</p>';
+        return;
+    }
+
+    items.forEach(function(item) {
+        var price = item.priceTier1;
+        var stockQty = item.stockQty !== undefined ? item.stockQty : 20;
+        var stockPill = '<span class="stock-badge stock-ok" style="margin-left:4px;">Còn hàng (' + stockQty + ')</span>';
+        if (stockQty === 0) stockPill = '<span class="stock-badge stock-out" style="margin-left:4px;">Hết hàng</span>';
+        else if (stockQty <= 5) stockPill = '<span class="stock-badge stock-low" style="margin-left:4px;">Sắp hết (' + stockQty + ')</span>';
+
+        var div = document.createElement('div');
+        div.className = 'catalog-item';
+        div.style.cursor = 'default';
+        div.innerHTML = '<div class="cat-info" style="flex: 1;">' +
+                '<strong>' +
+                    '<span class="badge badge-brand">' + item.brand + '</span> ' +
+                    item.name +
+                    stockPill +
+                '</strong>' +
+                '<span>' + (item.desc || '').substring(0, 70) + '</span>' +
+            '</div>' +
+            '<div style="display:flex; align-items:center; gap: 6px; flex-shrink: 0;">' +
+                '<div class="cat-price" style="text-align:right;">' + formatCurrency(price) + '</div>' +
+                '<input type="number" min="1" value="1" id="storeQty_' + item.id + '" style="width: 55px; padding: 5px; text-align:center; font-size: 11.5px;">' +
+                '<button class="btn btn-primary" style="padding: 6px 10px; font-size: 11px;" onclick="addToStoreCart(\'' + item.id + '\')" ' + (stockQty === 0 ? 'disabled' : '') + '>➕ Thêm</button>' +
+            '</div>';
+        container.appendChild(div);
+    });
+}
+
+function addToStoreCart(catalogId) {
+    var catItem = rawCatalog.find(function(c) { return c.id === catalogId; });
+    if (!catItem) return;
+
+    var qtyInput = document.getElementById('storeQty_' + catalogId);
+    var qty = qtyInput ? parseInt(qtyInput.value, 10) : 1;
+    if (isNaN(qty) || qty < 1) qty = 1;
+
+    var stockQty = catItem.stockQty !== undefined ? catItem.stockQty : 20;
+    if (stockQty === 0) {
+        alert('⚠️ Sản phẩm "' + catItem.name + '" hiện đã hết hàng!');
+        return;
+    }
+
+    var existing = storeCart.find(function(it) { return it.catalogId === catalogId; });
+    if (existing) {
+        existing.qty += qty;
+    } else {
+        storeCart.push({
+            catalogId: catItem.id,
+            brand: catItem.brand,
+            name: catItem.name,
+            desc: catItem.desc,
+            unit: catItem.unit,
+            qty: qty,
+            priceWithVat: catItem.priceTier1,
+            costPrice: catItem.costPrice
+        });
+    }
+    renderStoreCart();
+}
+
+function changeStoreCartQty(idx, newQty) {
+    newQty = parseInt(newQty, 10);
+    if (isNaN(newQty) || newQty < 1) newQty = 1;
+    if (storeCart[idx]) storeCart[idx].qty = newQty;
+    renderStoreCart();
+}
+
+function removeStoreCartItem(idx) {
+    storeCart.splice(idx, 1);
+    renderStoreCart();
+}
+
+function renderStoreCart() {
+    var container = document.getElementById('storeCartContainer');
+    var lblCount = document.getElementById('lblStoreCartCount');
+    var lblTotal = document.getElementById('lblStoreCartTotal');
+    if (!container) return;
+
+    if (storeCart.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#94a3b8; font-size: 12px; padding: 16px 0;">Giỏ hàng đang trống. Hãy chọn thiết bị bên cạnh để thêm vào giỏ.</p>';
+        if (lblCount) lblCount.innerText = '0 SP';
+        if (lblTotal) lblTotal.innerText = '0 đ';
+        return;
+    }
+
+    var html = '';
+    var total = 0;
+    storeCart.forEach(function(it, idx) {
+        var lineTotal = it.priceWithVat * it.qty;
+        total += lineTotal;
+        html += '<div class="catalog-item" style="cursor:default;">' +
+                '<div class="cat-info" style="flex:1;">' +
+                    '<strong style="font-size: 11px;">' + it.name + '</strong>' +
+                    '<span>' + formatCurrency(it.priceWithVat) + ' / ' + it.unit + '</span>' +
+                '</div>' +
+                '<div style="display:flex; align-items:center; gap:4px;">' +
+                    '<input type="number" min="1" value="' + it.qty + '" style="width:48px; padding:4px; text-align:center; font-size:11px;" onchange="changeStoreCartQty(' + idx + ', this.value)">' +
+                    '<button class="btn btn-danger" style="padding:3px 7px; font-size:10.5px;" onclick="removeStoreCartItem(' + idx + ')">✕</button>' +
+                '</div>' +
+            '</div>';
+    });
+
+    container.innerHTML = html;
+    if (lblCount) lblCount.innerText = storeCart.length + ' SP';
+    if (lblTotal) lblTotal.innerText = formatCurrency(total);
+}
+
+function generateOnlineOrderId() {
+    var today = new Date();
+    var yyyy = today.getFullYear();
+    var mm = (today.getMonth() + 1).toString().padStart(2, '0');
+    var dd = today.getDate().toString().padStart(2, '0');
+    var seq = invoiceCounter.toString().padStart(3, '0');
+    return 'DH-ONL-' + yyyy + mm + dd + '-' + seq;
+}
+
+function submitOnlineOrder() {
+    if (!currentLoggedInUser) {
+        alert('⚠️ Vui lòng đăng nhập tài khoản khách hàng để đặt hàng!');
+        return;
+    }
+    if (storeCart.length === 0) {
+        alert('⚠️ Giỏ hàng của bạn đang trống!');
+        return;
+    }
+    if (!confirm('Xác nhận gửi đơn đặt hàng trực tuyến với ' + storeCart.length + ' sản phẩm?')) return;
+
+    var orderId = generateOnlineOrderId();
+    var totalCost = 0;
+    var grandTotal = 0;
+
+    var itemsSnapshot = storeCart.map(function(item) {
+        var lineTotal = item.priceWithVat * item.qty;
+        grandTotal += lineTotal;
+        totalCost += (item.costPrice || Math.round(item.priceWithVat * 0.78)) * item.qty;
+
+        // Tự động trừ tồn kho & ghi nhật ký xuất kho
+        var catProduct = rawCatalog.find(function(c) { return c.id === item.catalogId; });
+        if (catProduct) {
+            if (catProduct.stockQty === undefined || catProduct.stockQty === null) catProduct.stockQty = 20;
+            catProduct.stockQty = Math.max(0, catProduct.stockQty - item.qty);
+            addStockLog('EXPORT', catProduct.name, item.qty, catProduct.costPrice || item.costPrice, 'Khách tự đặt Online - Đơn ' + orderId + ' (' + currentLoggedInUser.fullName + ')');
+        }
+
+        return {
+            catalogId: item.catalogId,
+            name: item.name,
+            desc: item.desc || '',
+            unit: item.unit,
+            qty: item.qty,
+            priceWithVat: item.priceWithVat,
+            costPrice: item.costPrice
+        };
+    });
+
+    localStorage.setItem('solar_bac_ninh_app_catalog_v13', JSON.stringify(rawCatalog));
+
+    var newOrder = {
+        orderId: orderId,
+        customerName: currentLoggedInUser.fullName || currentLoggedInUser.username,
+        customerPhone: currentLoggedInUser.phone || '',
+        customerAddr: currentLoggedInUser.addr || '',
+        orderDate: new Date().toLocaleDateString('vi-VN'),
+        vatRate: 8,
+        paymentStatus: 'Chưa thanh toán',
+        depositVal: 0,
+        discountVal: 0,
+        items: itemsSnapshot,
+        grandTotalWithVat: grandTotal,
+        totalCost: totalCost,
+        profit: grandTotal - totalCost,
+        orderSource: 'online_customer',
+        customerUsername: currentLoggedInUser.username,
+        isNew: true
+    };
+
+    soldOrdersHistory.unshift(newOrder);
+    invoiceCounter++;
+    saveOrdersToStorage();
+    updateNewOrdersBadge();
+
+    // Cập nhật danh bạ CRM (không đụng tới form báo giá đang thao tác của nhân viên)
+    var custKey = normalizeCustomerKey(newOrder.customerPhone, newOrder.customerName);
+    if (custKey) {
+        var existingCust = savedCustomers[custKey] || {};
+        savedCustomers[custKey] = {
+            name: newOrder.customerName,
+            taxCode: currentLoggedInUser.taxCode || existingCust.taxCode || '',
+            representative: existingCust.representative || '',
+            email: existingCust.email || '',
+            phone: newOrder.customerPhone,
+            addr: newOrder.customerAddr,
+            customPrices: existingCust.customPrices || {},
+            lastQuoteDate: new Date().toLocaleDateString('vi-VN'),
+            linkedUsername: currentLoggedInUser.username
+        };
+        saveCustomersToStorage();
+    }
+
+    storeCart = [];
+    renderStoreCart();
+    renderStoreProducts();
+
+    alert('🎉 ĐÃ GỬI ĐƠN ĐẶT HÀNG THÀNH CÔNG!\n' +
+          '- Mã Đơn Hàng: ' + newOrder.orderId + '\n' +
+          '- Tổng Tiền: ' + formatCurrency(grandTotal) + '\n' +
+          'Vui lòng xem tiến độ & thanh toán tại mục "📦 Đơn Hàng Của Tôi".');
+
+    switchTab('tab-my-orders');
+}
+
+// -------------------------------------------------------------
+// 📦 ĐƠN HÀNG CỦA TÔI (DÀNH CHO KHÁCH HÀNG)
+// -------------------------------------------------------------
+function renderMyOrders() {
+    var container = document.getElementById('myOrdersContainer');
+    if (!container) return;
+
+    if (!currentLoggedInUser) {
+        container.innerHTML = '<p style="text-align:center; color:#94a3b8; padding: 20px;">Vui lòng đăng nhập để xem đơn hàng.</p>';
+        return;
+    }
+
+    var myOrders = [];
+    soldOrdersHistory.forEach(function(order, idx) {
+        var isMine = (order.customerUsername && order.customerUsername === currentLoggedInUser.username) ||
+                     (currentLoggedInUser.phone && order.customerPhone && order.customerPhone === currentLoggedInUser.phone);
+        if (isMine) myOrders.push({ order: order, idx: idx });
+    });
+
+    if (myOrders.length === 0) {
+        container.innerHTML = '<div style="text-align: center; padding: 40px 20px; color: #64748b; background: #f8fafc; border-radius: 8px; border: 1px dashed #cbd5e1;">' +
+                '<p style="font-size: 15px; font-weight: 600;">Bạn chưa có đơn hàng nào.</p>' +
+                '<p style="font-size: 12px; margin-top: 6px;">Hãy sang mục "🛒 Cửa Hàng Online" để đặt hàng!</p>' +
+            '</div>';
+        return;
+    }
+
+    container.innerHTML = '';
+    myOrders.forEach(function(entry) {
+        var order = entry.order;
+        var orderIdx = entry.idx;
+        var statusClass = 'status-unpaid';
+        if (order.paymentStatus === 'Đã thanh toán') statusClass = 'status-paid';
+        else if (order.paymentStatus === 'Thanh toán 1 phần') statusClass = 'status-partial';
+        var remainingDebt = Math.max(0, (order.grandTotalWithVat || 0) - (order.depositVal || 0));
+
+        var card = document.createElement('div');
+        card.className = 'order-card';
+        card.innerHTML = '<div class="order-card-header">' +
+                '<div>' +
+                    '<strong style="font-size: 14.5px; color: #0369a1;">🔖 Số Đơn: ' + order.orderId + '</strong>' +
+                    '<span style="font-size: 12px; color: #64748b; margin-left: 10px;">📅 Ngày: ' + order.orderDate + '</span>' +
+                    '<span class="badge ' + statusClass + '" style="margin-left: 8px; font-size: 11px;">' + (order.paymentStatus || 'Chưa thanh toán') + '</span>' +
+                    (order.orderSource === 'online_customer' ? '<span class="badge badge-brand" style="margin-left: 6px; font-size: 11px;">🛒 Khách Tự Đặt</span>' : '') +
+                '</div>' +
+                '<div style="display:flex; gap:6px;">' +
+                    '<button class="btn btn-primary" style="padding: 4px 9px;" onclick="openInvoicePreviewModal(' + orderIdx + ')">👁️ Xem Hóa Đơn & Mã QR Thanh Toán</button>' +
+                '</div>' +
+            '</div>' +
+            '<div style="font-size: 12.5px; background: #f8fafc; padding: 8px 12px; border-radius: 6px; margin-bottom: 8px;">' +
+                '<p>💰 <strong>Tổng thanh toán:</strong> <span style="font-weight: 800; color: #166534; font-size: 13.5px;">' + formatCurrency(order.grandTotalWithVat) + '</span></p>' +
+                (order.depositVal > 0 ? '<p style="color:#b91c1c;">🔴 <strong>Đã cọc:</strong> ' + formatCurrency(order.depositVal) + ' (Còn nợ: <strong>' + formatCurrency(remainingDebt) + '</strong>)</p>' : '') +
+                '<p>📦 <strong>Số mặt hàng:</strong> ' + order.items.length + ' sản phẩm</p>' +
+            '</div>';
+        container.appendChild(card);
+    });
 }
 
 // Initialize
@@ -3440,8 +4066,8 @@ window.onload = function() {
     var lblDate = document.getElementById('lblDate');
     if (lblDate) lblDate.innerText = dateStr;
     
-    checkAuthSession();
     loadAllData();
+    checkAuthSession();
     renderAccountsTable();
     renderAddressSuggestions();
     generateNewInvoiceNumber();
@@ -3645,8 +4271,6 @@ function renderQuotationTable() {
         var priceExVat = vatRatePercent > 0 ? (item.priceWithVat / vatFactor) : item.priceWithVat;
         var lineTotalWithVat = item.priceWithVat * item.qty;
         var lineTotalExVat = priceExVat * item.qty;
-        var vatPerUnit = item.priceWithVat - priceExVat;
-        var lineVatAmount = lineTotalWithVat - lineTotalExVat;
 
         if (item.costPrice === undefined || item.costPrice === null) {
             item.costPrice = Math.round(item.priceWithVat * 0.78);
@@ -3660,24 +4284,22 @@ function renderQuotationTable() {
         var row = document.createElement('tr');
         row.innerHTML = '<td class="text-center font-bold">' + (idx + 1) + '</td>' +
             '<td>' +
-                '<input type="text" class="editable-input font-bold" value="' + (item.name || '').replace(/"/g, '&quot;') + '" onchange="onUpdateItemName(' + idx + ', this.value)" style="color: #0f172a; margin-bottom: 2px; font-size: 13px;">' +
-                '<textarea class="editable-input" rows="1" onchange="onUpdateItemDesc(' + idx + ', this.value)" style="font-size: 11.5px; color: #64748b;">' + (item.desc || '') + '</textarea>' +
+                '<input type="text" class="editable-input font-bold" value="' + (item.name || '').replace(/"/g, '&quot;') + '" onchange="onUpdateItemName(' + idx + ', this.value)" style="color: #0f172a; margin-bottom: 2px;">' +
+                '<textarea class="editable-input" rows="1" onchange="onUpdateItemDesc(' + idx + ', this.value)" style="font-size: 11px; color: #64748b;">' + (item.desc || '') + '</textarea>' +
             '</td>' +
-            '<td class="text-center" style="font-size: 11.5px;">' + item.unit + '</td>' +
+            '<td class="text-center">' + item.unit + '</td>' +
             '<td class="text-center">' +
-                '<input type="number" class="editable-input text-center" value="' + item.qty + '" min="1" onchange="onUpdateItemQty(' + idx + ', this.value)" style="width: 42px; font-weight: bold; padding: 2px;">' +
+                '<input type="number" class="editable-input text-center" value="' + item.qty + '" min="1" onchange="onUpdateItemQty(' + idx + ', this.value)" style="width: 48px; font-weight: bold;">' +
             '</td>' +
             '<td class="text-right">' +
-                '<input type="number" class="editable-input text-right" value="' + Math.round(priceExVat) + '" onchange="onUpdateItemPriceExVat(' + idx + ', this.value)" style="width: 78px; color: #0369a1; font-weight: 600; padding: 2px 4px; font-size: 11px;">' +
+                '<input type="number" class="editable-input text-right" value="' + Math.round(priceExVat) + '" onchange="onUpdateItemPriceExVat(' + idx + ', this.value)" style="width: 95px; color: #0369a1; font-weight: 600;">' +
             '</td>' +
             '<td class="text-right font-bold" style="color: #0f172a;">' +
-                '<input type="number" class="editable-input text-right font-bold" value="' + Math.round(item.priceWithVat) + '" onchange="onUpdateItemPriceWithVat(' + idx + ', this.value)" style="width: 82px; color: #0f172a; padding: 2px 4px; font-size: 11px;">' +
-                '<div style="font-size: 9.5px; color: #0284c7; font-weight: 600; margin-top: 1px;">+VAT: ' + formatCurrency(vatPerUnit) + '</div>' +
+                '<input type="number" class="editable-input text-right font-bold" value="' + Math.round(item.priceWithVat) + '" onchange="onUpdateItemPriceWithVat(' + idx + ', this.value)" style="width: 100px; color: #0f172a;">' +
                 (item.isCustomPrice ? '<span class="custom-price-badge">Đã sửa giá</span>' : '') +
             '</td>' +
             '<td class="text-right font-bold" style="color: #15803d; font-size: 12px;">' +
                 formatCurrency(lineTotalWithVat) +
-                '<div style="font-size: 9.5px; color: #0284c7; font-weight: 600; margin-top: 1px;">Tiền VAT: ' + formatCurrency(lineVatAmount) + '</div>' +
             '</td>' +
             '<td class="text-center no-print">' +
                 '<button class="btn btn-danger" style="padding: 2px 5px; font-size: 10px;" onclick="deleteItem(' + idx + ')">✕</button>' +
@@ -4375,6 +4997,8 @@ function renderOrdersHistoryList() {
                     '<strong style="font-size: 14.5px; color: #0369a1;">🔖 Số HĐ: ' + order.orderId + '</strong>' +
                     '<span style="font-size: 12px; color: #64748b; margin-left: 10px;">📅 Ngày: ' + order.orderDate + '</span>' +
                     '<span class="badge ' + statusClass + '" style="margin-left: 8px; font-size: 11px;">' + (order.paymentStatus || 'Chưa thanh toán') + '</span>' +
+                    (order.orderSource === 'online_customer' ? '<span class="badge badge-brand" style="margin-left: 6px; font-size: 11px;">🛒 Khách Tự Đặt</span>' : '') +
+                    (order.isNew ? '<span class="badge" style="margin-left: 6px; font-size: 11px; background:#ef4444; color:#fff;">🆕 MỚI</span>' : '') +
                 '</div>' +
                 '<div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">' +
                     '<label style="margin: 0; font-size: 11px;">Trạng thái TT:</label>' +

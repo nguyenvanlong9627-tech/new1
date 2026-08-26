@@ -501,10 +501,13 @@
                 <!-- Player Controls Bar -->
                 <div class="flex flex-wrap items-center justify-between gap-3 bg-purple-950/60 p-3 sm:p-3.5 rounded-xl border border-brand-800/30">
                     <div class="flex items-center space-x-2 sm:space-x-3">
-                        <button id="btn-play-pause" onclick="togglePlayPause()" class="w-10 h-10 rounded-full bg-brand-600 hover:bg-brand-500 text-white flex items-center justify-center transition shadow touch-manipulation">
+                        <button id="btn-play-pause" onclick="togglePlayPause()" class="w-10 h-10 rounded-full bg-brand-600 hover:bg-brand-500 text-white flex items-center justify-center transition shadow touch-manipulation" title="Phát / Tạm dừng">
                             <i class="fa-solid fa-play text-sm" id="play-pause-icon"></i>
                         </button>
-                        <button onclick="stopSpeechPlayback()" class="w-9 h-9 rounded-full bg-purple-900/80 hover:bg-purple-800 text-purple-200 flex items-center justify-center transition touch-manipulation">
+                        <button onclick="replayCurrentAudio()" class="w-9 h-9 rounded-full bg-purple-900/80 hover:bg-purple-800 text-purple-200 flex items-center justify-center transition touch-manipulation" title="Nghe lại clip vừa tạo">
+                            <i class="fa-solid fa-rotate-left text-xs"></i>
+                        </button>
+                        <button onclick="stopSpeechPlayback()" class="w-9 h-9 rounded-full bg-purple-900/80 hover:bg-purple-800 text-purple-200 flex items-center justify-center transition touch-manipulation" title="Dừng phát">
                             <i class="fa-solid fa-square text-xs"></i>
                         </button>
                     </div>
@@ -1179,9 +1182,29 @@
         }
 
         // MAIN SPEECH GENERATION & PLAYBACK FUNCTION
-        async function generateAndPlaySpeech() {
+        function prepareMobileAudioPlayback() {
             unlockMobileAudio();
             initAudioContext();
+            const mobileAudioEl = document.getElementById('mobile-html5-audio');
+            if (mobileAudioEl) {
+                try {
+                    if (!mobileAudioEl.src) {
+                        mobileAudioEl.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
+                    }
+                    const p = mobileAudioEl.play();
+                    if (p !== undefined) {
+                        p.then(() => {
+                            if (mobileAudioEl.src && mobileAudioEl.src.startsWith('data:')) {
+                                mobileAudioEl.pause();
+                            }
+                        }).catch(() => {});
+                    }
+                } catch(e){}
+            }
+        }
+
+        async function generateAndPlaySpeech() {
+            prepareMobileAudioPlayback();
 
             const textInput = document.getElementById('script-input').value.trim();
             if (!textInput) {
@@ -1211,9 +1234,12 @@
                 const audioData = await fetchGeminiVietnameseTTS(fullPrompt, activeVoiceObj.geminiVoice);
                 const audioBuffer = processPcmAudioData(audioData.base64Data, audioData.mimeType);
 
+                // Save to history immediately so user can replay anytime
+                saveToHistory(activeVoiceObj ? activeVoiceObj.name : 'Giọng Tiếng Việt AI', cleanText, audioBuffer, currentWavBlob);
+
                 // Play fetched audio buffer with Mobile Dual Engine
                 await playAudioBuffer(audioBuffer, activeVoiceObj, cleanText);
-                showToast(`Đã phát giọng Tiếng Việt: ${activeVoiceObj.name}`, 'success');
+                showToast(`Đã tạo & đang phát giọng: ${activeVoiceObj.name}`, 'success');
 
             } catch (err) {
                 console.warn('Gemini TTS fallback to browser WebSpeech:', err);
@@ -1225,16 +1251,17 @@
             }
         }
 
-        async function playAudioBuffer(buffer, voiceObj, text) {
+        async function playAudioBuffer(buffer, voiceObj, text, customWavBlob) {
             unlockMobileAudio();
             initAudioContext();
 
+            const wavToPlay = customWavBlob || currentWavBlob;
             const mobileAudioEl = document.getElementById('mobile-html5-audio');
 
             // 1. Primary path for Mobile browsers: Use HTML5 Audio tag with Blob URL
-            if (mobileAudioEl && currentWavBlob) {
+            if (mobileAudioEl && wavToPlay) {
                 try {
-                    const audioUrl = URL.createObjectURL(currentWavBlob);
+                    const audioUrl = URL.createObjectURL(wavToPlay);
                     mobileAudioEl.src = audioUrl;
 
                     const speed = parseFloat(document.getElementById('speed-slider').value) || 1.0;
@@ -1245,7 +1272,6 @@
                         updatePlayStateUI(false);
                         stopBGM();
                         document.getElementById('visualizer-placeholder').classList.remove('hidden');
-                        saveToHistory(voiceObj ? voiceObj.name : 'Giọng Tiếng Việt AI', text);
                     };
 
                     if (audioCtx && audioCtx.state === 'suspended') {
@@ -1293,13 +1319,27 @@
                 updatePlayStateUI(false);
                 stopBGM();
                 document.getElementById('visualizer-placeholder').classList.remove('hidden');
-                saveToHistory(voiceObj ? voiceObj.name : 'Giọng Tiếng Việt AI', text);
             };
 
             if (audioCtx.state === 'suspended') {
                 await audioCtx.resume();
             }
             currentSourceNode.start(0);
+        }
+
+        function replayCurrentAudio() {
+            prepareMobileAudioPlayback();
+            if (currentAudioBuffer) {
+                stopSpeechPlayback();
+                const allVoices = [...PRESET_VOICES, ...customVoices];
+                const activeVoiceObj = allVoices.find(v => v.id === activeVoiceId) || PRESET_VOICES[0];
+                playAudioBuffer(currentAudioBuffer, activeVoiceObj, '', currentWavBlob);
+                showToast('Đang phát lại audio vừa tạo', 'info');
+            } else if (generatedClips.length > 0) {
+                playHistoryClip(0);
+            } else {
+                generateAndPlaySpeech();
+            }
         }
 
         function fallbackBrowserVietnameseTTS(text, voiceObj) {
@@ -1330,10 +1370,10 @@
                     updatePlayStateUI(false);
                     stopBGM();
                     document.getElementById('visualizer-placeholder').classList.remove('hidden');
-                    saveToHistory(voiceObj ? voiceObj.name : 'Giọng Tiếng Việt AI', text);
                 };
 
                 speechSynth.speak(currentUtterance);
+                saveToHistory(voiceObj ? voiceObj.name : 'Giọng Tiếng Việt AI', text);
                 showToast('Đã phát bằng trình đọc Tiếng Việt!', 'info');
             } else {
                 showToast('Không thể tạo giọng nói. Vui lòng kiểm tra kết nối mạng!', 'error');
@@ -1341,7 +1381,7 @@
         }
 
         function togglePlayPause() {
-            unlockMobileAudio();
+            prepareMobileAudioPlayback();
             const mobileAudioEl = document.getElementById('mobile-html5-audio');
 
             if (mobileAudioEl && mobileAudioEl.src && !mobileAudioEl.ended && mobileAudioEl.duration > 0) {
@@ -1379,7 +1419,7 @@
                     updatePlayStateUI(false);
                 }
             } else {
-                generateAndPlaySpeech();
+                replayCurrentAudio();
             }
         }
 
@@ -1420,18 +1460,52 @@
             }
         }
 
-        function saveToHistory(voiceName, text) {
+        function saveToHistory(voiceName, text, audioBuffer, wavBlob) {
             const clip = {
                 id: Date.now(),
                 voiceName: voiceName,
                 textSnippet: text.substring(0, 60) + (text.length > 60 ? '...' : ''),
                 fullText: text,
-                wavBlob: currentWavBlob,
+                audioBuffer: audioBuffer || currentAudioBuffer,
+                wavBlob: wavBlob || currentWavBlob,
                 time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
             };
 
             generatedClips.unshift(clip);
             renderHistory();
+        }
+
+        async function playHistoryClip(index) {
+            prepareMobileAudioPlayback();
+            const clip = generatedClips[index];
+            if (!clip) return;
+
+            stopSpeechPlayback();
+
+            currentWavBlob = clip.wavBlob;
+            currentAudioBuffer = clip.audioBuffer;
+
+            if (clip.audioBuffer) {
+                await playAudioBuffer(clip.audioBuffer, { name: clip.voiceName }, clip.fullText, clip.wavBlob);
+            } else if (clip.wavBlob) {
+                const mobileAudioEl = document.getElementById('mobile-html5-audio');
+                if (mobileAudioEl) {
+                    mobileAudioEl.src = URL.createObjectURL(clip.wavBlob);
+                    mobileAudioEl.playbackRate = parseFloat(document.getElementById('speed-slider').value) || 1.0;
+                    mobileAudioEl.onended = () => {
+                        isPlaying = false;
+                        updatePlayStateUI(false);
+                        stopBGM();
+                        document.getElementById('visualizer-placeholder').classList.remove('hidden');
+                    };
+                    await mobileAudioEl.play();
+                    isPlaying = true;
+                    updatePlayStateUI(true);
+                    if (activeBgmType !== 'none') startBGM(activeBgmType);
+                    document.getElementById('visualizer-placeholder').classList.add('hidden');
+                }
+            }
+            showToast(`Đang phát lại: ${clip.voiceName}`, 'info');
         }
 
         function renderHistory() {
@@ -1448,7 +1522,7 @@
 
             container.innerHTML = generatedClips.map((clip, index) => `
                 <div class="bg-purple-950/50 border border-purple-800/40 p-3 rounded-xl flex items-center justify-between gap-3 text-xs">
-                    <div class="space-y-0.5 max-w-[70%]">
+                    <div class="space-y-0.5 max-w-[55%]">
                         <div class="flex items-center space-x-2">
                             <span class="font-bold text-brand-gold">${clip.voiceName}</span>
                             <span class="text-[10px] text-purple-400">${clip.time}</span>
@@ -1456,9 +1530,13 @@
                         <p class="text-purple-200/80 truncate">${clip.textSnippet}</p>
                     </div>
 
-                    <div class="flex items-center space-x-2">
-                        <button onclick="downloadClipWAV(${index})" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg transition flex items-center gap-1 text-[11px] shadow">
-                            <i class="fa-solid fa-download"></i>
+                    <div class="flex items-center space-x-1.5 shrink-0">
+                        <button onclick="playHistoryClip(${index})" class="bg-brand-600 hover:bg-brand-500 text-white font-bold px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 text-[11px] shadow touch-manipulation">
+                            <i class="fa-solid fa-play text-[10px]"></i>
+                            <span>Nghe lại</span>
+                        </button>
+                        <button onclick="downloadClipWAV(${index})" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 text-[11px] shadow touch-manipulation">
+                            <i class="fa-solid fa-download text-[10px]"></i>
                             <span>Tải WAV</span>
                         </button>
                     </div>

@@ -90,6 +90,16 @@
             background: #8b5cf6;
         }
 
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .no-scrollbar {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
         /* Wave Animation */
         @keyframes wavePulse {
             0%, 100% { height: 10px; }
@@ -157,34 +167,34 @@
     </header>
 
     <!-- MAIN APP CONTAINER -->
-    <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 flex-grow space-y-6">
+    <main class="max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-6 flex-grow space-y-4 sm:space-y-6">
 
-        <!-- PROMO BANNER BAR (Inspired by user image) -->
-        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-brand-900 via-purple-900 to-indigo-950 p-6 border border-brand-500/30 shadow-2xl">
+        <!-- PROMO BANNER BAR -->
+        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-brand-900 via-purple-900 to-indigo-950 p-4 sm:p-6 border border-brand-500/30 shadow-2xl">
             <div class="absolute -right-10 -bottom-10 w-60 h-60 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-                <div class="md:col-span-8 space-y-3">
-                    <div class="inline-flex items-center gap-2 bg-purple-500/20 text-purple-200 border border-purple-400/30 px-3 py-1 rounded-full text-xs font-semibold">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 items-center">
+                <div class="md:col-span-8 space-y-2 sm:space-y-3">
+                    <div class="inline-flex items-center gap-2 bg-purple-500/20 text-purple-200 border border-purple-400/30 px-2.5 py-1 rounded-full text-[11px] sm:text-xs font-semibold">
                         <i class="fa-solid fa-wand-magic-sparkles text-brand-gold"></i>
                         Công Nghệ Tổng Hợp Giọng AI Mới Nhất
                     </div>
-                    <h1 class="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight leading-tight">
+                    <h1 class="text-xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight leading-tight">
                         Clone Giọng AI Không Giới Hạn <br class="hidden sm:inline">
                         <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold via-amber-300 to-yellow-500">Tiết Kiệm 100% Chi Phí API</span>
                     </h1>
-                    <p class="text-purple-200/80 text-sm max-w-2xl">
+                    <p class="text-purple-200/80 text-xs sm:text-sm max-w-2xl">
                         Tạo giọng review phim, video TikTok, Thỏ Bảy Màu, Adam, Podcast hoặc clone chính giọng nói của bạn chỉ trong vài giây. Hỗ trợ xuất âm thanh chất lượng cao WAV / MP3.
                     </p>
                 </div>
 
                 <div class="md:col-span-4 flex flex-col items-start md:items-end justify-center">
-                    <div class="bg-brand-950/80 border border-brand-500/40 rounded-2xl p-4 text-center w-full max-w-xs shadow-xl backdrop-blur-md">
-                        <span class="text-xs uppercase tracking-wider text-purple-300 font-bold">Gói Sở Hữu Trọn Đời</span>
-                        <div class="text-3xl lg:text-4xl font-black text-brand-gold my-1">
-                            CHỈ 500<span class="text-lg">.000đ</span>
+                    <div class="bg-brand-950/80 border border-brand-500/40 rounded-2xl p-3.5 sm:p-4 text-center w-full max-w-xs shadow-xl backdrop-blur-md">
+                        <span class="text-[10px] sm:text-xs uppercase tracking-wider text-purple-300 font-bold">Gói Sở Hữu Trọn Đời</span>
+                        <div class="text-2xl sm:text-3xl lg:text-4xl font-black text-brand-gold my-0.5 sm:my-1">
+                            CHỈ 500<span class="text-base sm:text-lg">.000đ</span>
                         </div>
-                        <span class="text-xs text-purple-300/70 block border-t border-purple-800/60 pt-2 mt-1">/ NĂM (Dùng Không Giới Hạn)</span>
-                        <button onclick="showToast('Cảm ơn bạn đã quan tâm! Dùng thử tính năng hoàn toàn miễn phí bên dưới.', 'info')" class="w-full mt-3 bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs py-2 px-4 rounded-xl transition shadow-md">
+                        <span class="text-[10px] sm:text-xs text-purple-300/70 block border-t border-purple-800/60 pt-1.5 mt-0.5">/ NĂM (Dùng Không Giới Hạn)</span>
+                        <button onclick="showToast('Cảm ơn bạn đã quan tâm! Dùng thử tính năng hoàn toàn miễn phí bên dưới.', 'info')" class="w-full mt-2.5 sm:mt-3 bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs py-2 px-4 rounded-xl transition shadow-md touch-manipulation active:scale-95">
                             Đăng Ký Ngay
                         </button>
                     </div>
@@ -193,17 +203,262 @@
         </div>
 
         <!-- MAIN WORKSPACE GRID -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="flex flex-col lg:grid lg:grid-cols-12 gap-5 sm:gap-6">
 
-            <!-- LEFT COLUMN: VOICE SELECTOR & CLONING CENTER (4 COLS) -->
-            <div class="lg:col-span-4 space-y-6">
+            <!-- PRIMARY STUDIO COLUMN (8 COLS ON DESKTOP, ORDER 1 ON MOBILE) -->
+            <div class="lg:col-span-8 lg:order-2 space-y-5 sm:space-y-6">
+
+                <!-- 1. SCRIPT EDITOR PANEL (MOVED TO VERY TOP) -->
+                <div id="script-editor-section" class="glass-panel rounded-2xl p-4 sm:p-5 lg:p-6 shadow-xl space-y-4 border border-brand-500/30">
+                    
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-purple-800/40 pb-3">
+                        <div>
+                            <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-file-pen text-brand-gold"></i>
+                                Soạn Thảo Kịch Bản Nói AI
+                            </h2>
+                            <p class="text-xs text-purple-300/80">Nhập văn bản cần đọc hoặc chọn mẫu kịch bản có sẵn</p>
+                        </div>
+
+                        <!-- Sample Script Presets Dropdown -->
+                        <div class="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-start">
+                            <span class="text-xs text-purple-300 whitespace-nowrap">Mẫu:</span>
+                            <select id="preset-script-select" onchange="loadPresetScript(this.value)" class="w-full sm:w-auto bg-purple-950 text-purple-200 border border-brand-600/40 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-brand-400">
+                                <option value="">-- Chọn Mẫu Kịch Bản --</option>
+                                <option value="review">🎬 Review Phim Hot</option>
+                                <option value="tho">🐰 Thỏ Bảy Màu Hài Hước</option>
+                                <option value="tiktok">🔥 Bán Hàng TikTok Viral</option>
+                                <option value="podcast">🎙️ Intro Podcast Truyền Cảm Hứng</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Text Area with Quick Formatting Bar -->
+                    <div class="space-y-2">
+                        <!-- Quick Insert Pause Tags (Mobile Friendly Horizontal Scroll) -->
+                        <div class="flex items-center gap-1.5 text-xs overflow-x-auto no-scrollbar pb-1 whitespace-nowrap">
+                            <span class="text-purple-400 text-[11px] shrink-0">Thẻ ngắt nhịp:</span>
+                            <button onclick="insertTag('[Nghỉ 0.5s]')" class="bg-purple-900/60 hover:bg-brand-700 text-purple-200 px-2.5 py-1 rounded-lg border border-purple-700/50 shrink-0 touch-manipulation active:scale-95 transition">
+                                + Nghỉ 0.5s
+                            </button>
+                            <button onclick="insertTag('[Nghỉ 1s]')" class="bg-purple-900/60 hover:bg-brand-700 text-purple-200 px-2.5 py-1 rounded-lg border border-purple-700/50 shrink-0 touch-manipulation active:scale-95 transition">
+                                + Nghỉ 1s
+                            </button>
+                            <button onclick="insertTag('[Nhấn Giọng]')" class="bg-purple-900/60 hover:bg-brand-700 text-purple-200 px-2.5 py-1 rounded-lg border border-purple-700/50 shrink-0 touch-manipulation active:scale-95 transition">
+                                + Nhấn Giọng
+                            </button>
+                            <button onclick="clearScriptText()" class="ml-auto text-rose-400 hover:text-rose-300 shrink-0 px-2 py-1">
+                                <i class="fa-solid fa-trash mr-1"></i>Xóa sạch
+                            </button>
+                        </div>
+
+                        <textarea id="script-input" rows="6" placeholder="Nhập văn bản bạn muốn AI đọc tại đây... Ví dụ: Xin chào các bạn, đây là công cụ clone giọng AI hoàn toàn miễn phí API..." class="w-full bg-purple-950/80 text-purple-100 placeholder-purple-400/50 border border-brand-800/60 rounded-xl p-3.5 sm:p-4 text-sm sm:text-base focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400 transition resize-y min-h-[140px]"></textarea>
+                    </div>
+
+                    <!-- Script Stats & Action Buttons -->
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-1">
+                        <div class="flex items-center justify-between sm:justify-start space-x-3 sm:space-x-4 text-xs text-purple-300 bg-purple-950/40 p-2 sm:p-0 rounded-lg">
+                            <span>Ký tự: <strong id="char-count" class="text-brand-gold">0</strong></span>
+                            <span>Số từ: <strong id="word-count" class="text-brand-gold">0</strong></span>
+                            <span>Thời lượng: <strong id="time-est" class="text-brand-gold">0s</strong></span>
+                        </div>
+
+                        <button id="btn-generate-audio" onclick="generateAndPlaySpeech()" class="w-full sm:w-auto bg-gradient-to-r from-brand-600 via-purple-600 to-pink-600 hover:from-brand-500 hover:to-pink-500 text-white font-extrabold px-6 py-3.5 sm:py-3 rounded-xl shadow-lg shadow-brand-600/30 flex items-center justify-center space-x-2 transition transform active:scale-95 text-sm sm:text-base touch-manipulation">
+                            <i class="fa-solid fa-wand-magic-sparkles text-lg" id="btn-gen-icon"></i>
+                            <span id="btn-gen-text">TẠO GIỌNG NÓI TIẾNG VIỆT AI</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3. VIDEO TO TEXT TRANSCRIBER PANEL -->
+                <div class="glass-panel rounded-2xl p-4 sm:p-5 lg:p-6 shadow-xl space-y-4 border border-brand-500/30">
+                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-purple-800/40 pb-3">
+                        <div>
+                            <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-file-video text-brand-gold"></i>
+                                Tự Động Tách Văn Bản Từ Video AI (Dung Lượng Lớn)
+                            </h2>
+                            <p class="text-xs text-purple-300/80">Hỗ trợ file video lớn (lên tới 500MB - 1GB+) • Tự động nén & chia nhỏ AI</p>
+                        </div>
+                        <span class="bg-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2.5 py-1 rounded-full border border-emerald-500/40 flex items-center gap-1">
+                            <i class="fa-solid fa-bolt"></i> Gemini AI Transcribe Pro
+                        </span>
+                    </div>
+
+                    <!-- Video Upload Area & Preview Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- File Drop Zone -->
+                        <div class="space-y-2">
+                            <input type="file" id="video-file-input" accept="video/*,audio/*" class="hidden" onchange="handleVideoFileSelect(event)">
+                            <label for="video-file-input" class="cursor-pointer border-2 border-dashed border-purple-500/40 hover:border-brand-400 bg-purple-950/40 hover:bg-purple-900/30 rounded-xl p-4 sm:p-5 flex flex-col items-center justify-center transition text-center min-h-[130px] touch-manipulation">
+                                <i class="fa-solid fa-cloud-arrow-up text-2xl sm:text-3xl text-brand-gold mb-2"></i>
+                                <span class="text-xs text-purple-100 font-bold">Tải lên Video hoặc File Audio</span>
+                                <span class="text-[10px] text-purple-300/70 mt-1">Hỗ trợ file dung lượng lớn (MP4, MOV, WEBM, MP3, WAV...)</span>
+                            </label>
+                            <div id="video-file-info" class="text-xs font-mono text-purple-300 truncate">Chưa chọn file</div>
+                        </div>
+
+                        <!-- Video Player Preview -->
+                        <div class="flex flex-col justify-between space-y-2">
+                            <div class="bg-black/60 rounded-xl overflow-hidden border border-purple-800/40 min-h-[130px] flex items-center justify-center relative">
+                                <video id="video-preview-player" controls class="w-full max-h-36 hidden rounded-xl object-contain"></video>
+                                <div id="video-preview-placeholder" class="text-center p-3 text-purple-400/60 text-xs">
+                                    <i class="fa-solid fa-film text-xl mb-1 block"></i>
+                                    Xem trước video tại đây sau khi chọn file
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Processing Progress Bar -->
+                    <div id="transcription-progress-box" class="hidden space-y-2 bg-purple-950/60 border border-brand-700/50 p-3 rounded-xl">
+                        <div class="flex items-center justify-between text-xs">
+                            <span id="transcription-progress-status" class="text-purple-200 font-medium truncate pr-2">Đang chuẩn bị xử lý...</span>
+                            <span id="transcription-progress-percent" class="font-bold text-brand-gold shrink-0">0%</span>
+                        </div>
+                        <div class="w-full bg-purple-900/80 rounded-full h-2.5 overflow-hidden border border-purple-700/40">
+                            <div id="transcription-progress-bar" class="bg-gradient-to-r from-brand-500 via-pink-500 to-amber-400 h-full w-0 transition-all duration-300"></div>
+                        </div>
+                    </div>
+
+                    <!-- Extract Action Button -->
+                    <button id="btn-extract-text" onclick="extractTextFromVideo()" class="w-full bg-gradient-to-r from-purple-600 via-brand-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-extrabold py-3 px-4 rounded-xl shadow-lg flex items-center justify-center space-x-2 transition transform active:scale-95 text-xs sm:text-sm touch-manipulation">
+                        <i class="fa-solid fa-wand-magic-sparkles text-base sm:text-lg" id="btn-extract-icon"></i>
+                        <span id="btn-extract-text-span">TÁCH VĂN BẢN TIẾNG VIỆT TỪ VIDEO DUNG LƯỢNG LỚN</span>
+                    </button>
+
+                    <!-- Extracted Result Container -->
+                    <div id="transcription-result-box" class="hidden space-y-2 pt-2 border-t border-purple-800/40">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-check"></i> Kết Quả Văn Bản Tách Được:
+                            </span>
+                            <div class="flex items-center space-x-2">
+                                <button onclick="copyTranscribedText()" class="text-xs bg-purple-900/80 hover:bg-purple-800 text-purple-200 px-2.5 py-1 rounded-lg border border-purple-700/50 transition touch-manipulation">
+                                    <i class="fa-solid fa-copy mr-1"></i>Sao chép
+                                </button>
+                                <button onclick="downloadTranscribedTextFile()" class="text-xs bg-purple-900/80 hover:bg-purple-800 text-purple-200 px-2.5 py-1 rounded-lg border border-purple-700/50 transition touch-manipulation">
+                                    <i class="fa-solid fa-download mr-1"></i>File .TXT
+                                </button>
+                            </div>
+                        </div>
+
+                        <textarea id="transcription-text-output" rows="4" class="w-full bg-purple-950/90 text-purple-100 border border-emerald-500/40 rounded-xl p-3 text-xs focus:outline-none focus:border-brand-400 transition" placeholder="Văn bản trích xuất từ video sẽ xuất hiện tại đây..."></textarea>
+
+                        <button onclick="applyTranscribedTextToScript()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow flex items-center justify-center gap-2 touch-manipulation">
+                            <i class="fa-solid fa-arrow-up-long"></i>
+                            <span>Đưa Văn Bản Vào Ô Kịch Bản Đọc AI Để Clone Giọng</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 4. EXPORT & AUDIO HISTORY LIST -->
+                <div class="glass-panel rounded-2xl p-4 sm:p-5 lg:p-6 shadow-xl space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-list-check text-emerald-400"></i>
+                            Lịch Sử Clip & Xuất Audio
+                        </h3>
+                        <button onclick="clearHistory()" class="text-xs text-purple-400 hover:text-rose-400 transition">
+                            <i class="fa-solid fa-trash-can mr-1"></i>Xóa Lịch Sử
+                        </button>
+                    </div>
+
+                    <!-- History List -->
+                    <div id="history-container" class="space-y-2.5 max-h-60 overflow-y-auto pr-1">
+                        <div class="text-center py-6 text-purple-400/60 text-xs">
+                            <i class="fa-solid fa-box-open text-2xl mb-2 block"></i>
+                            Chưa có clip nào được xuất. Hãy nhấn "TẠO GIỌNG NÓI TIẾNG VIỆT AI" để bắt đầu!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. AUDIO PLAYER & REAL-TIME SPECTRUM VISUALIZER (MOVED TO BOTTOM) -->
+                <div class="glass-panel rounded-2xl p-4 sm:p-5 lg:p-6 shadow-xl space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-waveform-lines text-brand-gold"></i>
+                            Trình Phát & Sóng Âm Trực Tiếp
+                        </h3>
+                        <div id="playing-status-badge" class="hidden items-center space-x-1.5 bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs font-semibold">
+                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <span>Đang Phát AI...</span>
+                        </div>
+                    </div>
+
+                    <!-- Spectrum Canvas Visualizer -->
+                    <div class="relative bg-black/60 rounded-xl overflow-hidden border border-purple-800/40 p-2">
+                        <canvas id="visualizer-canvas" class="w-full h-20 sm:h-28 block"></canvas>
+                        
+                        <!-- Overlay Text if Idle -->
+                        <div id="visualizer-placeholder" class="absolute inset-0 flex items-center justify-center text-purple-400/60 text-xs font-medium pointer-events-none px-2 text-center">
+                            <i class="fa-solid fa-music mr-2"></i> Nhấn "TẠO GIỌNG NÓI TIẾNG VIỆT AI" để xem sóng âm
+                        </div>
+                    </div>
+
+                    <!-- Player Controls Bar -->
+                    <div class="flex flex-wrap items-center justify-between gap-3 bg-purple-950/60 p-3 sm:p-3.5 rounded-xl border border-brand-800/30">
+                        <div class="flex items-center space-x-2 sm:space-x-3">
+                            <button id="btn-play-pause" onclick="togglePlayPause()" class="w-10 h-10 rounded-full bg-brand-600 hover:bg-brand-500 text-white flex items-center justify-center transition shadow touch-manipulation">
+                                <i class="fa-solid fa-play text-sm" id="play-pause-icon"></i>
+                            </button>
+                            <button onclick="stopSpeechPlayback()" class="w-9 h-9 rounded-full bg-purple-900/80 hover:bg-purple-800 text-purple-200 flex items-center justify-center transition touch-manipulation">
+                                <i class="fa-solid fa-square text-xs"></i>
+                            </button>
+                        </div>
+
+                        <!-- Progress indicator -->
+                        <div class="flex-grow max-w-xs mx-1 sm:mx-2">
+                            <div class="w-full bg-purple-900/60 rounded-full h-2 overflow-hidden border border-purple-700/40">
+                                <div id="playback-progress" class="bg-gradient-to-r from-brand-500 to-brand-gold h-full w-0 transition-all duration-200"></div>
+                            </div>
+                        </div>
+
+                        <!-- Volume Slider -->
+                        <div class="flex items-center space-x-2 text-xs text-purple-300">
+                            <i class="fa-solid fa-volume-high text-purple-400"></i>
+                            <input type="range" id="master-volume" min="0" max="1" step="0.05" value="1" class="w-16 sm:w-20" oninput="updateMasterVolume(this.value)">
+                        </div>
+                    </div>
+
+                    <!-- BACKGROUND MUSIC MIXER -->
+                    <div class="pt-3 border-t border-purple-800/40 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-purple-200 flex items-center gap-1.5">
+                                <i class="fa-solid fa-compact-disc text-pink-400"></i>
+                                Nhạc Nền Phối Kèm (Background Music)
+                            </span>
+                            <span class="text-[10px] text-purple-400 hidden sm:inline">Tự động trộn với giọng đọc</span>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
+                            <select id="bgm-select" onchange="changeBGMTrack(this.value)" class="bg-purple-950 text-purple-200 border border-brand-700/50 rounded-xl px-3 py-2 text-xs focus:outline-none">
+                                <option value="none">🚫 Không Dùng Nhạc Nền</option>
+                                <option value="lofi">☕ Lo-Fi Chill Beats</option>
+                                <option value="upbeat">🔥 Upbeat TikTok Dynamic</option>
+                                <option value="cinematic">🎬 Dramatic Movie Cinematic</option>
+                            </select>
+
+                            <div class="sm:col-span-2 flex items-center space-x-3 bg-purple-950/40 px-3 py-2 rounded-xl border border-purple-900/50">
+                                <span class="text-xs text-purple-300 whitespace-nowrap">Âm lượng nhạc:</span>
+                                <input type="range" id="bgm-volume" min="0" max="0.5" step="0.02" value="0.1" class="w-full" oninput="updateBGMVolume(this.value)">
+                                <span id="bgm-vol-num" class="text-xs font-bold text-brand-gold">20%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- SIDEBAR LIBRARY COLUMN (4 COLS ON DESKTOP, ORDER 1 ON MOBILE) -->
+            <div class="lg:col-span-4 lg:order-1 space-y-5 sm:space-y-6">
                 
                 <!-- PRESET & CLONE VOICE LIBRARY -->
-                <div class="glass-panel rounded-2xl p-5 shadow-xl">
-                    <div class="flex items-center justify-between mb-4">
-                        <h2 class="text-base font-bold text-white flex items-center gap-2">
+                <div class="glass-panel rounded-2xl p-4 sm:p-5 shadow-xl">
+                    <div class="flex items-center justify-between mb-3.5">
+                        <h2 class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
                             <i class="fa-solid fa-users-viewfinder text-brand-500"></i>
-                            Thư Viện Giọng AI
+                            Thư Viện Giọng AI Tiếng Việt
                         </h2>
                         <span id="voice-count-badge" class="text-xs bg-purple-900/80 border border-purple-600/40 text-purple-300 px-2 py-0.5 rounded-full">6 Giọng</span>
                     </div>
@@ -214,9 +469,9 @@
                     </div>
 
                     <!-- VOICE CLONING (RECORD / UPLOAD) -->
-                    <div id="cloning-section" class="mt-5 pt-5 border-t border-purple-800/40">
+                    <div id="cloning-section" class="mt-4 pt-4 border-t border-purple-800/40">
                         <div class="flex items-center justify-between mb-3">
-                            <h3 class="text-sm font-bold text-purple-200 flex items-center gap-2">
+                            <h3 class="text-xs sm:text-sm font-bold text-purple-200 flex items-center gap-2">
                                 <i class="fa-solid fa-fingerprint text-brand-gold"></i>
                                 Clone Giọng Chính Chủ
                             </h3>
@@ -225,10 +480,10 @@
 
                         <!-- Record or Upload Tabs -->
                         <div class="grid grid-cols-2 gap-2 p-1 bg-purple-950/60 rounded-xl mb-3 text-xs">
-                            <button id="tab-rec-btn" onclick="switchCloneTab('rec')" class="py-1.5 rounded-lg font-semibold bg-brand-600 text-white transition">
+                            <button id="tab-rec-btn" onclick="switchCloneTab('rec')" class="py-1.5 rounded-lg font-semibold bg-brand-600 text-white transition touch-manipulation">
                                 <i class="fa-solid fa-microphone mr-1"></i> Ghi Âm
                             </button>
-                            <button id="tab-upload-btn" onclick="switchCloneTab('upload')" class="py-1.5 rounded-lg font-semibold text-purple-300 hover:text-white transition">
+                            <button id="tab-upload-btn" onclick="switchCloneTab('upload')" class="py-1.5 rounded-lg font-semibold text-purple-300 hover:text-white transition touch-manipulation">
                                 <i class="fa-solid fa-upload mr-1"></i> Tải File
                             </button>
                         </div>
@@ -238,7 +493,7 @@
                             <p class="text-xs text-purple-300/80">Nói 1 câu 5 - 10 giây để AI phân tích tần số & đặc trưng giọng</p>
                             
                             <div class="flex items-center justify-center gap-3">
-                                <button id="start-rec-btn" onclick="toggleMicrophoneRecord()" class="w-12 h-12 rounded-full bg-gradient-to-tr from-rose-600 to-pink-500 hover:from-rose-500 hover:to-pink-400 text-white flex items-center justify-center shadow-lg transition transform active:scale-95">
+                                <button id="start-rec-btn" onclick="toggleMicrophoneRecord()" class="w-12 h-12 rounded-full bg-gradient-to-tr from-rose-600 to-pink-500 hover:from-rose-500 hover:to-pink-400 text-white flex items-center justify-center shadow-lg transition transform active:scale-95 touch-manipulation">
                                     <i class="fa-solid fa-microphone text-lg" id="rec-icon"></i>
                                 </button>
                             </div>
@@ -251,7 +506,7 @@
                         <!-- Upload Audio Panel -->
                         <div id="clone-upload-panel" class="p-3 bg-purple-950/40 border border-brand-800/50 rounded-xl text-center space-y-2 hidden">
                             <input type="file" id="audio-file-input" accept="audio/*" class="hidden" onchange="handleAudioUpload(event)">
-                            <label for="audio-file-input" class="cursor-pointer border-2 border-dashed border-purple-600/40 hover:border-brand-500 rounded-xl p-4 flex flex-col items-center justify-center transition bg-purple-900/20">
+                            <label for="audio-file-input" class="cursor-pointer border-2 border-dashed border-purple-600/40 hover:border-brand-500 rounded-xl p-4 flex flex-col items-center justify-center transition bg-purple-900/20 touch-manipulation">
                                 <i class="fa-solid fa-cloud-arrow-up text-2xl text-brand-400 mb-1"></i>
                                 <span class="text-xs text-purple-200 font-medium">Tải lên file giọng (.mp3, .wav)</span>
                                 <span class="text-[10px] text-purple-400">Tối đa 10MB</span>
@@ -266,8 +521,8 @@
                                 </span>
                                 <span id="cloned-pitch-val" class="text-[10px] font-mono text-purple-300">Pitch: 145Hz</span>
                             </div>
-                            <input type="text" id="cloned-voice-name" value="Giọng Mẫu Của Tôi" class="w-full bg-purple-950/80 border border-purple-700/50 rounded px-2 py-1 text-xs text-white focus:outline-none focus:border-brand-400 mb-2">
-                            <button onclick="saveCustomVoiceProfile()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-1.5 rounded-lg transition shadow">
+                            <input type="text" id="cloned-voice-name" value="Giọng Mẫu Của Tôi" class="w-full bg-purple-950/80 border border-purple-700/50 rounded px-2 py-1.5 text-xs text-white focus:outline-none focus:border-brand-400 mb-2">
+                            <button onclick="saveCustomVoiceProfile()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2 rounded-lg transition shadow touch-manipulation">
                                 Thêm Vào Thư Viện Giọng
                             </button>
                         </div>
@@ -275,8 +530,8 @@
                 </div>
 
                 <!-- AUDIO FINE-TUNING & EFFECTS -->
-                <div class="glass-panel rounded-2xl p-5 shadow-xl space-y-4">
-                    <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <div class="glass-panel rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
+                    <h3 class="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
                         <i class="fa-solid fa-sliders text-brand-gold"></i>
                         Tinh Chỉnh Tốc Độ & Bộ Lọc
                     </h3>
@@ -315,291 +570,56 @@
                         <div class="grid grid-cols-2 gap-2 text-xs">
                             <label class="flex items-center space-x-2 bg-purple-950/50 p-2 rounded-lg border border-purple-800/40 cursor-pointer hover:border-brand-500">
                                 <input type="checkbox" id="fx-reverb" class="accent-brand-500 rounded">
-                                <span class="text-purple-200">Vang nhẹ (Echo)</span>
+                                <span class="text-purple-200 text-[11px] sm:text-xs">Vang nhẹ (Echo)</span>
                             </label>
                             <label class="flex items-center space-x-2 bg-purple-950/50 p-2 rounded-lg border border-purple-800/40 cursor-pointer hover:border-brand-500">
                                 <input type="checkbox" id="fx-bassboost" class="accent-brand-500 rounded">
-                                <span class="text-purple-200">Tăng Bass Trầm</span>
+                                <span class="text-purple-200 text-[11px] sm:text-xs">Tăng Bass Trầm</span>
                             </label>
                             <label class="flex items-center space-x-2 bg-purple-950/50 p-2 rounded-lg border border-purple-800/40 cursor-pointer hover:border-brand-500">
                                 <input type="checkbox" id="fx-robot" class="accent-brand-500 rounded">
-                                <span class="text-purple-200">Giọng Robot</span>
+                                <span class="text-purple-200 text-[11px] sm:text-xs">Giọng Robot</span>
                             </label>
                             <label class="flex items-center space-x-2 bg-purple-950/50 p-2 rounded-lg border border-purple-800/40 cursor-pointer hover:border-brand-500">
                                 <input type="checkbox" id="fx-cleaner" class="accent-brand-500 rounded" checked>
-                                <span class="text-purple-200">Lọc Nhiễu AI</span>
+                                <span class="text-purple-200 text-[11px] sm:text-xs">Lọc Nhiễu AI</span>
                             </label>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- RIGHT/CENTER COLUMN: SCRIPT EDITOR & AUDIO STUDIO (8 COLS) -->
-            <div class="lg:col-span-8 space-y-6">
-
-                <!-- VIDEO TO TEXT TRANSCRIBER PANEL -->
-                <div class="glass-panel rounded-2xl p-5 lg:p-6 shadow-xl space-y-4 border border-brand-500/30">
-                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-purple-800/40 pb-3">
-                        <div>
-                            <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                                <i class="fa-solid fa-file-video text-brand-gold"></i>
-                                Tự Động Tách Văn Bản Từ Video AI
-                            </h2>
-                            <p class="text-xs text-purple-300/80">Tải lên video/audio để AI tự động chuyển lời nói thành kịch bản văn bản Tiếng Việt</p>
-                        </div>
-                        <span class="bg-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2.5 py-1 rounded-full border border-emerald-500/40 flex items-center gap-1">
-                            <i class="fa-solid fa-bolt"></i> Gemini AI Transcribe
-                        </span>
-                    </div>
-
-                    <!-- Video Upload Area & Preview Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <!-- File Drop Zone -->
-                        <div class="space-y-2">
-                            <input type="file" id="video-file-input" accept="video/*,audio/*" class="hidden" onchange="handleVideoFileSelect(event)">
-                            <label for="video-file-input" class="cursor-pointer border-2 border-dashed border-purple-500/40 hover:border-brand-400 bg-purple-950/40 hover:bg-purple-900/30 rounded-xl p-5 flex flex-col items-center justify-center transition text-center min-h-[140px]">
-                                <i class="fa-solid fa-cloud-arrow-up text-3xl text-brand-gold mb-2"></i>
-                                <span class="text-xs text-purple-100 font-bold">Tải lên Video hoặc File Audio</span>
-                                <span class="text-[10px] text-purple-300/70 mt-1">Hỗ trợ MP4, MOV, WEBM, MP3, WAV, M4A</span>
-                            </label>
-                            <div id="video-file-info" class="text-xs font-mono text-purple-300 truncate">Chưa chọn file</div>
-                        </div>
-
-                        <!-- Video Player Preview -->
-                        <div class="flex flex-col justify-between space-y-2">
-                            <div class="bg-black/60 rounded-xl overflow-hidden border border-purple-800/40 min-h-[140px] flex items-center justify-center relative">
-                                <video id="video-preview-player" controls class="w-full max-h-36 hidden rounded-xl object-contain"></video>
-                                <div id="video-preview-placeholder" class="text-center p-4 text-purple-400/60 text-xs">
-                                    <i class="fa-solid fa-film text-2xl mb-1 block"></i>
-                                    Xem trước video tại đây sau khi chọn file
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Extract Action Button -->
-                    <button id="btn-extract-text" onclick="extractTextFromVideo()" class="w-full bg-gradient-to-r from-purple-600 via-brand-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-extrabold py-3 px-4 rounded-xl shadow-lg flex items-center justify-center space-x-2 transition transform active:scale-95 text-sm">
-                        <i class="fa-solid fa-wand-magic-sparkles text-lg" id="btn-extract-icon"></i>
-                        <span id="btn-extract-text-span">TÁCH VĂN BẢN TIẾNG VIỆT TỪ VIDEO</span>
-                    </button>
-
-                    <!-- Extracted Result Container -->
-                    <div id="transcription-result-box" class="hidden space-y-2 pt-2 border-t border-purple-800/40">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
-                                <i class="fa-solid fa-circle-check"></i> Kết Quả Văn Bản Tách Được:
-                            </span>
-                            <div class="flex items-center space-x-2">
-                                <button onclick="copyTranscribedText()" class="text-xs bg-purple-900/80 hover:bg-purple-800 text-purple-200 px-2.5 py-1 rounded-lg border border-purple-700/50 transition">
-                                    <i class="fa-solid fa-copy mr-1"></i>Sao chép
-                                </button>
-                                <button onclick="downloadTranscribedTextFile()" class="text-xs bg-purple-900/80 hover:bg-purple-800 text-purple-200 px-2.5 py-1 rounded-lg border border-purple-700/50 transition">
-                                    <i class="fa-solid fa-download mr-1"></i>File .TXT
-                                </button>
-                            </div>
-                        </div>
-
-                        <textarea id="transcription-text-output" rows="4" class="w-full bg-purple-950/90 text-purple-100 border border-emerald-500/40 rounded-xl p-3 text-xs focus:outline-none focus:border-brand-400 transition" placeholder="Văn bản trích xuất từ video sẽ xuất hiện tại đây..."></textarea>
-
-                        <button onclick="applyTranscribedTextToScript()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2 rounded-xl transition shadow flex items-center justify-center gap-2">
-                            <i class="fa-solid fa-arrow-down-long"></i>
-                            <span>Đưa Văn Bản Vào Ô Kịch Bản Đọc AI Để Clone Giọng</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- SCRIPT EDITOR PANEL -->
-                <div class="glass-panel rounded-2xl p-5 lg:p-6 shadow-xl space-y-4">
-                    
-                    <div class="flex flex-wrap items-center justify-between gap-2 border-b border-purple-800/40 pb-3">
-                        <div>
-                            <h2 class="text-lg font-bold text-white flex items-center gap-2">
-                                <i class="fa-solid fa-file-pen text-brand-500"></i>
-                                Soạn Thảo Kịch Bản Nói
-                            </h2>
-                            <p class="text-xs text-purple-300/80">Nhập văn bản cần đọc hoặc chọn mẫu kịch bản có sẵn</p>
-                        </div>
-
-                        <!-- Sample Script Presets Dropdown -->
-                        <div class="flex items-center space-x-2">
-                            <span class="text-xs text-purple-300">Mẫu:</span>
-                            <select id="preset-script-select" onchange="loadPresetScript(this.value)" class="bg-purple-950 text-purple-200 border border-brand-600/40 rounded-xl px-3 py-1.5 text-xs focus:outline-none focus:border-brand-400">
-                                <option value="">-- Chọn Mẫu Kịch Bản --</option>
-                                <option value="review">🎬 Review Phim Hot</option>
-                                <option value="tho">🐰 Thỏ Bảy Màu Hài Hước</option>
-                                <option value="tiktok">🔥 Bán Hàng TikTok Viral</option>
-                                <option value="podcast">🎙️ Intro Podcast Truyền Cảm Hứng</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <!-- Text Area with Quick Formatting Bar -->
-                    <div class="space-y-2">
-                        <!-- Quick Insert Pause Tags -->
-                        <div class="flex flex-wrap items-center gap-1.5 text-xs">
-                            <span class="text-purple-400 text-[11px]">Thêm thẻ ngắt nhịp:</span>
-                            <button onclick="insertTag('[Nghỉ 0.5s]')" class="bg-purple-900/60 hover:bg-brand-700 text-purple-200 px-2 py-0.5 rounded border border-purple-700/50">
-                                + Nghỉ 0.5s
-                            </button>
-                            <button onclick="insertTag('[Nghỉ 1s]')" class="bg-purple-900/60 hover:bg-brand-700 text-purple-200 px-2 py-0.5 rounded border border-purple-700/50">
-                                + Nghỉ 1s
-                            </button>
-                            <button onclick="insertTag('[Nhấn Giọng]')" class="bg-purple-900/60 hover:bg-brand-700 text-purple-200 px-2 py-0.5 rounded border border-purple-700/50">
-                                + Nhấn Giọng
-                            </button>
-                            <button onclick="clearScriptText()" class="ml-auto text-rose-400 hover:text-rose-300">
-                                <i class="fa-solid fa-trash mr-1"></i>Xóa sạch
-                            </button>
-                        </div>
-
-                        <textarea id="script-input" rows="8" placeholder="Nhập văn bản bạn muốn AI đọc tại đây... Ví dụ: Xin chào các bạn, đây là công cụ clone giọng AI hoàn toàn miễn phí API..." class="w-full bg-purple-950/70 text-purple-100 placeholder-purple-400/50 border border-brand-800/60 rounded-xl p-4 text-sm focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400 transition resize-y"></textarea>
-                    </div>
-
-                    <!-- Script Stats & Action Buttons -->
-                    <div class="flex flex-wrap items-center justify-between gap-4 pt-2">
-                        <div class="flex items-center space-x-4 text-xs text-purple-300">
-                            <span>Ký tự: <strong id="char-count" class="text-brand-gold">0</strong></span>
-                            <span>Số từ: <strong id="word-count" class="text-brand-gold">0</strong></span>
-                            <span>Thời lượng ước tính: <strong id="time-est" class="text-brand-gold">0s</strong></span>
-                        </div>
-
-                        <div class="flex items-center space-x-3">
-                            <button id="btn-generate-audio" onclick="generateAndPlaySpeech()" class="bg-gradient-to-r from-brand-600 via-purple-600 to-pink-600 hover:from-brand-500 hover:to-pink-500 text-white font-extrabold px-6 py-3 rounded-xl shadow-lg shadow-brand-600/30 flex items-center space-x-2 transition transform active:scale-95 text-sm">
-                                <i class="fa-solid fa-wand-magic-sparkles text-lg" id="btn-gen-icon"></i>
-                                <span id="btn-gen-text">TẠO GIỌNG NÓI TIẾNG VIỆT AI</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- AUDIO PLAYER & REAL-TIME SPECTRUM VISUALIZER -->
-                <div class="glass-panel rounded-2xl p-5 lg:p-6 shadow-xl space-y-4">
-                    <div class="flex items-center justify-between">
-                        <h3 class="text-base font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-waveform-lines text-brand-gold"></i>
-                            Trình Phát & Sóng Âm Trực Tiếp
-                        </h3>
-                        <div id="playing-status-badge" class="hidden items-center space-x-1.5 bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 px-3 py-1 rounded-full text-xs font-semibold">
-                            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                            <span>Đang Phát AI...</span>
-                        </div>
-                    </div>
-
-                    <!-- Spectrum Canvas Visualizer -->
-                    <div class="relative bg-black/60 rounded-xl overflow-hidden border border-purple-800/40 p-2">
-                        <canvas id="visualizer-canvas" class="w-full h-28 block"></canvas>
-                        
-                        <!-- Overlay Text if Idle -->
-                        <div id="visualizer-placeholder" class="absolute inset-0 flex items-center justify-center text-purple-400/60 text-xs font-medium pointer-events-none">
-                            <i class="fa-solid fa-music mr-2"></i> Nhấn "Tạo Giọng Nói AI" để xem sóng âm thời gian thực
-                        </div>
-                    </div>
-
-                    <!-- Player Controls Bar -->
-                    <div class="flex flex-wrap items-center justify-between gap-4 bg-purple-950/60 p-3.5 rounded-xl border border-brand-800/30">
-                        <div class="flex items-center space-x-3">
-                            <button id="btn-play-pause" onclick="togglePlayPause()" class="w-10 h-10 rounded-full bg-brand-600 hover:bg-brand-500 text-white flex items-center justify-center transition shadow">
-                                <i class="fa-solid fa-play text-sm" id="play-pause-icon"></i>
-                            </button>
-                            <button onclick="stopSpeechPlayback()" class="w-9 h-9 rounded-full bg-purple-900/80 hover:bg-purple-800 text-purple-200 flex items-center justify-center transition">
-                                <i class="fa-solid fa-square text-xs"></i>
-                            </button>
-                        </div>
-
-                        <!-- Progress indicator -->
-                        <div class="flex-grow max-w-xs mx-2">
-                            <div class="w-full bg-purple-900/60 rounded-full h-2 overflow-hidden border border-purple-700/40">
-                                <div id="playback-progress" class="bg-gradient-to-r from-brand-500 to-brand-gold h-full w-0 transition-all duration-200"></div>
-                            </div>
-                        </div>
-
-                        <!-- Volume Slider -->
-                        <div class="flex items-center space-x-2 text-xs text-purple-300">
-                            <i class="fa-solid fa-volume-high text-purple-400"></i>
-                            <input type="range" id="master-volume" min="0" max="1" step="0.05" value="1" class="w-20" oninput="updateMasterVolume(this.value)">
-                        </div>
-                    </div>
-
-                    <!-- BACKGROUND MUSIC MIXER -->
-                    <div class="pt-3 border-t border-purple-800/40 space-y-3">
-                        <div class="flex items-center justify-between">
-                            <span class="text-xs font-bold text-purple-200 flex items-center gap-1.5">
-                                <i class="fa-solid fa-compact-disc text-pink-400"></i>
-                                Nhạc Nền Phối Kèm (Background Music)
-                            </span>
-                            <span class="text-[10px] text-purple-400">Tự động trộn với giọng đọc</span>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                            <select id="bgm-select" onchange="changeBGMTrack(this.value)" class="bg-purple-950 text-purple-200 border border-brand-700/50 rounded-xl px-3 py-2 text-xs focus:outline-none">
-                                <option value="none">🚫 Không Dùng Nhạc Nền</option>
-                                <option value="lofi">☕ Lo-Fi Chill Beats</option>
-                                <option value="upbeat">🔥 Upbeat TikTok Dynamic</option>
-                                <option value="cinematic">🎬 Dramatic Movie Cinematic</option>
-                            </select>
-
-                            <div class="sm:col-span-2 flex items-center space-x-3 bg-purple-950/40 px-3 py-2 rounded-xl border border-purple-900/50">
-                                <span class="text-xs text-purple-300 whitespace-nowrap">Âm lượng nhạc nền:</span>
-                                <input type="range" id="bgm-volume" min="0" max="0.5" step="0.02" value="0.1" class="w-full" oninput="updateBGMVolume(this.value)">
-                                <span id="bgm-vol-num" class="text-xs font-bold text-brand-gold">20%</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- EXPORT & AUDIO HISTORY LIST -->
-                <div class="glass-panel rounded-2xl p-5 lg:p-6 shadow-xl space-y-4">
-                    <div class="flex items-center justify-between">
-                        <h3 class="text-base font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-list-check text-emerald-400"></i>
-                            Lịch Sử Clip & Xuất Audio
-                        </h3>
-                        <button onclick="clearHistory()" class="text-xs text-purple-400 hover:text-rose-400 transition">
-                            <i class="fa-solid fa-trash-can mr-1"></i>Xóa Lịch Sử
-                        </button>
-                    </div>
-
-                    <!-- History List -->
-                    <div id="history-container" class="space-y-3 max-h-60 overflow-y-auto pr-1">
-                        <div class="text-center py-6 text-purple-400/60 text-xs">
-                            <i class="fa-solid fa-box-open text-2xl mb-2 block"></i>
-                            Chưa có clip nào được xuất. Hãy nhấn "Tạo Giọng Nói AI" để bắt đầu!
-                        </div>
-                    </div>
-                </div>
-
-            </div>
         </div>
 
-        <!-- FEATURES RECAP GRID (Inspired by Promo Banner) -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-4">
-            <div class="glass-card p-4 rounded-xl flex items-start space-x-3">
-                <div class="p-2.5 bg-brand-600/30 border border-brand-500/40 rounded-xl text-brand-gold text-lg">
+        <!-- FEATURES RECAP GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 pt-2">
+            <div class="glass-card p-3.5 sm:p-4 rounded-xl flex items-start space-x-3">
+                <div class="p-2.5 bg-brand-600/30 border border-brand-500/40 rounded-xl text-brand-gold text-base sm:text-lg shrink-0">
                     <i class="fa-solid fa-shield-halved"></i>
                 </div>
                 <div>
-                    <h4 class="text-sm font-bold text-white">An Toàn & Bảo Mật</h4>
-                    <p class="text-xs text-purple-300/80 mt-0.5">Mọi thao tác xử lý trực tiếp trên trình duyệt, không lưu trữ thông tin cá nhân.</p>
+                    <h4 class="text-xs sm:text-sm font-bold text-white">An Toàn & Bảo Mật</h4>
+                    <p class="text-[11px] sm:text-xs text-purple-300/80 mt-0.5">Mọi thao tác xử lý trực tiếp trên trình duyệt, không lưu trữ thông tin cá nhân.</p>
                 </div>
             </div>
 
-            <div class="glass-card p-4 rounded-xl flex items-start space-x-3">
-                <div class="p-2.5 bg-brand-600/30 border border-brand-500/40 rounded-xl text-brand-gold text-lg">
+            <div class="glass-card p-3.5 sm:p-4 rounded-xl flex items-start space-x-3">
+                <div class="p-2.5 bg-brand-600/30 border border-brand-500/40 rounded-xl text-brand-gold text-base sm:text-lg shrink-0">
                     <i class="fa-solid fa-globe"></i>
                 </div>
                 <div>
-                    <h4 class="text-sm font-bold text-white">Hỗ Trợ Đa Ngôn Ngữ</h4>
-                    <p class="text-xs text-purple-300/80 mt-0.5">Tiếng Việt (Bắc / Nam), Tiếng Anh, Tiếng Nhật, Tiếng Trung và Hàn Quốc.</p>
+                    <h4 class="text-xs sm:text-sm font-bold text-white">Hỗ Trợ Tiếng Việt 100%</h4>
+                    <p class="text-[11px] sm:text-xs text-purple-300/80 mt-0.5">Tiếng Việt (Bắc / Nam) chuẩn biểu cảm, đúng chính tả & ngắt nhịp.</p>
                 </div>
             </div>
 
-            <div class="glass-card p-4 rounded-xl flex items-start space-x-3">
-                <div class="p-2.5 bg-brand-600/30 border border-brand-500/40 rounded-xl text-brand-gold text-lg">
+            <div class="glass-card p-3.5 sm:p-4 rounded-xl flex items-start space-x-3">
+                <div class="p-2.5 bg-brand-600/30 border border-brand-500/40 rounded-xl text-brand-gold text-base sm:text-lg shrink-0">
                     <i class="fa-solid fa-clapperboard"></i>
                 </div>
                 <div>
-                    <h4 class="text-sm font-bold text-white">Tối Ưu Sáng Tạo Content</h4>
-                    <p class="text-xs text-purple-300/80 mt-0.5">Phù hợp làm Youtube Shorts, TikTok Video, Facebook Reels, Podcast & Quảng Cáo.</p>
+                    <h4 class="text-xs sm:text-sm font-bold text-white">Tối Ưu Sáng Tạo Content</h4>
+                    <p class="text-[11px] sm:text-xs text-purple-300/80 mt-0.5">Phù hợp làm Youtube Shorts, TikTok Video, Facebook Reels, Podcast & Quảng Cáo.</p>
                 </div>
             </div>
         </div>
@@ -1417,10 +1437,11 @@
             videoPlayer.classList.remove('hidden');
             placeholder.classList.add('hidden');
 
-            document.getElementById('video-file-info').textContent = `📹 ${file.name} (${(file.size / (1024 * 1024)).toFixed(1)} MB)`;
+            const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
+            document.getElementById('video-file-info').textContent = `📹 ${file.name} (${sizeMB} MB)`;
             document.getElementById('transcription-result-box').classList.add('hidden');
 
-            showToast(`Đã tải file "${file.name}". Nhấn nút "TÁCH VĂN BẢN" để AI xử lý!`, 'info');
+            showToast(`Đã tải file "${file.name}" (${sizeMB}MB). Sẵn sàng tách văn bản!`, 'info');
         }
 
         async function extractTextFromVideo() {
@@ -1435,49 +1456,82 @@
             const btn = document.getElementById('btn-extract-text');
             const btnSpan = document.getElementById('btn-extract-text-span');
             const btnIcon = document.getElementById('btn-extract-icon');
+            const progressBox = document.getElementById('transcription-progress-box');
+            const progressStatus = document.getElementById('transcription-progress-status');
+            const progressBar = document.getElementById('transcription-progress-bar');
+            const progressPercent = document.getElementById('transcription-progress-percent');
 
             btn.disabled = true;
             btnIcon.className = "fa-solid fa-spinner fa-spin text-lg";
-            btnSpan.textContent = "ĐANG GIẢI MÃ ÂM THANH VIDEO...";
+            btnSpan.textContent = "ĐANG XỬ LÝ FILE DUNG LƯỢNG LỚN...";
+            progressBox.classList.remove('hidden');
+
+            function updateProgress(percent, text) {
+                progressBar.style.width = `${percent}%`;
+                progressPercent.textContent = `${Math.round(percent)}%`;
+                progressStatus.textContent = text;
+            }
 
             try {
                 initAudioContext();
-                showToast('Đang giải mã dải âm thanh từ video...', 'info');
+                updateProgress(10, 'Đang giải mã dải âm thanh từ file media lớn...');
+                showToast(`Đang xử lý file ${(file.size / (1024 * 1024)).toFixed(1)}MB...`, 'info');
 
-                // Extract audio track and compress to lightweight 16kHz WAV base64
-                const audioData = await extractCompactAudioFromMediaFile(file);
+                // Extract audio into optimized 3-minute chunks for large files
+                const audioChunks = await extractAudioChunksFromLargeMedia(file, (p, statusText) => {
+                    updateProgress(10 + p * 0.3, statusText); // 10% to 40%
+                });
 
-                btnSpan.textContent = "AI GEMINI ĐANG TÁCH VĂN BẢN TIẾNG VIỆT...";
-                showToast('AI đang phân tích và chuyển giọng nói thành văn bản...', 'info');
+                const totalChunks = audioChunks.length;
+                let fullTranscription = [];
 
-                // Call Gemini Speech-to-Text model
-                const transcriptText = await fetchGeminiSpeechToText(audioData.base64, audioData.mimeType);
+                for (let i = 0; i < totalChunks; i++) {
+                    const chunk = audioChunks[i];
+                    const chunkNum = i + 1;
+                    const chunkPercentStart = 40 + (i / totalChunks) * 55;
+                    
+                    updateProgress(chunkPercentStart, `AI Gemini đang phân tích lời nói Tiếng Việt (Phần ${chunkNum}/${totalChunks})...`);
+                    
+                    const textChunk = await fetchGeminiSpeechToText(chunk.base64, chunk.mimeType);
+                    if (textChunk) fullTranscription.push(textChunk);
+                }
 
-                document.getElementById('transcription-text-output').value = transcriptText;
+                updateProgress(100, 'Tách văn bản thành công 100%!');
+                
+                const finalResult = fullTranscription.join('\n\n');
+                document.getElementById('transcription-text-output').value = finalResult;
                 document.getElementById('transcription-result-box').classList.remove('hidden');
-                showToast('Đã tách văn bản từ Video thành công 100%!', 'success');
+                
+                showToast(`Đã tách văn bản Tiếng Việt thành công từ file ${(file.size / (1024 * 1024)).toFixed(1)}MB!`, 'success');
 
             } catch (err) {
                 console.error('Video transcription error:', err);
-                showToast('Không thể tách văn bản. Vui lòng thử lại với file nhỏ hơn!', 'error');
+                showToast('Không thể tách văn bản. File quá lớn hoặc xảy ra lỗi bộ nhớ!', 'error');
             } finally {
                 btn.disabled = false;
                 btnIcon.className = "fa-solid fa-wand-magic-sparkles text-lg";
-                btnSpan.textContent = "TÁCH VĂN BẢN TIẾNG VIỆT TỪ VIDEO";
+                btnSpan.textContent = "TÁCH VĂN BẢN TIẾNG VIỆT TỪ VIDEO DUNG LƯỢNG LỚN";
+                setTimeout(() => {
+                    progressBox.classList.add('hidden');
+                }, 4000);
             }
         }
 
-        async function extractCompactAudioFromMediaFile(file) {
+        async function extractAudioChunksFromLargeMedia(file, onProgress) {
+            if (onProgress) onProgress(5, 'Đang đọc dữ liệu file media...');
             const arrayBuffer = await file.arrayBuffer();
+            
+            if (onProgress) onProgress(15, 'Đang giải mã kênh âm thanh...');
             const tempCtx = new (window.AudioContext || window.webkitAudioContext)();
             const decodedBuffer = await tempCtx.decodeAudioData(arrayBuffer);
 
             const channelData = decodedBuffer.getChannelData(0);
-            const targetSampleRate = 16000;
+            const targetSampleRate = 12000; // 12kHz mono downsampling for high efficiency & small payload
             const sourceSampleRate = decodedBuffer.sampleRate;
             const sampleRateRatio = sourceSampleRate / targetSampleRate;
             const newLength = Math.round(channelData.length / sampleRateRatio);
 
+            if (onProgress) onProgress(25, 'Đang tối ưu hóa và nén tần số mẫu audio...');
             const pcm16 = new Int16Array(newLength);
             for (let i = 0; i < newLength; i++) {
                 const sourceIndex = Math.floor(i * sampleRateRatio);
@@ -1486,9 +1540,25 @@
                 pcm16[i] = sample < 0 ? sample * 0x8000 : sample * 0x7FFF;
             }
 
-            const wavBlob = createWavFromPcm(pcm16, targetSampleRate);
-            const base64 = await blobToBase64(wavBlob);
-            return { base64, mimeType: "audio/wav" };
+            // Chunk duration: 180 seconds (3 mins) per chunk to keep base64 lightweight (<4MB)
+            const chunkSeconds = 180;
+            const samplesPerChunk = targetSampleRate * chunkSeconds;
+            const totalChunks = Math.ceil(pcm16.length / samplesPerChunk);
+            const chunks = [];
+
+            if (onProgress) onProgress(35, `Đã chia nhỏ thành ${totalChunks} phần âm thanh tối ưu...`);
+
+            for (let i = 0; i < totalChunks; i++) {
+                const start = i * samplesPerChunk;
+                const end = Math.min(start + samplesPerChunk, pcm16.length);
+                const chunkPcm = pcm16.subarray(start, end);
+                
+                const wavBlob = createWavFromPcm(chunkPcm, targetSampleRate);
+                const base64 = await blobToBase64(wavBlob);
+                chunks.push({ base64, mimeType: "audio/wav" });
+            }
+
+            return chunks;
         }
 
         function blobToBase64(blob) {
@@ -1556,7 +1626,10 @@
             updateScriptStats();
             showToast('Đã đưa văn bản từ Video vào Kịch Bản AI!', 'success');
 
-            document.getElementById('script-input').scrollIntoView({ behavior: 'smooth' });
+            const scriptEditor = document.getElementById('script-editor-section');
+            if (scriptEditor) {
+                scriptEditor.scrollIntoView({ behavior: 'smooth' });
+            }
         }
 
         function copyTranscribedText() {

@@ -169,39 +169,6 @@
     <!-- MAIN APP CONTAINER -->
     <main class="max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-6 flex-grow space-y-4 sm:space-y-6">
 
-        <!-- PROMO BANNER BAR -->
-        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-brand-900 via-purple-900 to-indigo-950 p-4 sm:p-6 border border-brand-500/30 shadow-2xl">
-            <div class="absolute -right-10 -bottom-10 w-60 h-60 bg-brand-500/10 rounded-full blur-3xl pointer-events-none"></div>
-            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 sm:gap-6 items-center">
-                <div class="md:col-span-8 space-y-2 sm:space-y-3">
-                    <div class="inline-flex items-center gap-2 bg-purple-500/20 text-purple-200 border border-purple-400/30 px-2.5 py-1 rounded-full text-[11px] sm:text-xs font-semibold">
-                        <i class="fa-solid fa-wand-magic-sparkles text-brand-gold"></i>
-                        Công Nghệ Tổng Hợp Giọng AI Mới Nhất
-                    </div>
-                    <h1 class="text-xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight leading-tight">
-                        Clone Giọng AI Không Giới Hạn <br class="hidden sm:inline">
-                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-gold via-amber-300 to-yellow-500">Tiết Kiệm 100% Chi Phí API</span>
-                    </h1>
-                    <p class="text-purple-200/80 text-xs sm:text-sm max-w-2xl">
-                        Tạo giọng review phim, video TikTok, Thỏ Bảy Màu, Adam, Podcast hoặc clone chính giọng nói của bạn chỉ trong vài giây. Hỗ trợ xuất âm thanh chất lượng cao WAV / MP3.
-                    </p>
-                </div>
-
-                <div class="md:col-span-4 flex flex-col items-start md:items-end justify-center">
-                    <div class="bg-brand-950/80 border border-brand-500/40 rounded-2xl p-3.5 sm:p-4 text-center w-full max-w-xs shadow-xl backdrop-blur-md">
-                        <span class="text-[10px] sm:text-xs uppercase tracking-wider text-purple-300 font-bold">Gói Sở Hữu Trọn Đời</span>
-                        <div class="text-2xl sm:text-3xl lg:text-4xl font-black text-brand-gold my-0.5 sm:my-1">
-                            CHỈ 500<span class="text-base sm:text-lg">.000đ</span>
-                        </div>
-                        <span class="text-[10px] sm:text-xs text-purple-300/70 block border-t border-purple-800/60 pt-1.5 mt-0.5">/ NĂM (Dùng Không Giới Hạn)</span>
-                        <button onclick="showToast('Cảm ơn bạn đã quan tâm! Dùng thử tính năng hoàn toàn miễn phí bên dưới.', 'info')" class="w-full mt-2.5 sm:mt-3 bg-brand-600 hover:bg-brand-500 text-white font-bold text-xs py-2 px-4 rounded-xl transition shadow-md touch-manipulation active:scale-95">
-                            Đăng Ký Ngay
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         <!-- MAIN WORKSPACE GRID -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-start">
 
@@ -518,6 +485,9 @@
                     </div>
                 </div>
 
+                <!-- Hidden HTML5 Audio Element with inline attributes for Mobile Compatibility -->
+                <audio id="mobile-html5-audio" playsinline webkit-playsinline class="hidden"></audio>
+
                 <!-- Spectrum Canvas Visualizer -->
                 <div class="relative bg-black/60 rounded-xl overflow-hidden border border-purple-800/40 p-2">
                     <canvas id="visualizer-canvas" class="w-full h-20 sm:h-28 block"></canvas>
@@ -653,6 +623,31 @@
         let bgmGainNode = null;
         let activeBgmType = 'none';
         let generatedClips = [];
+        let isAudioUnlocked = false;
+
+        // Mobile Gesture Audio Unlocker
+        function unlockMobileAudio() {
+            if (!audioCtx) {
+                initAudioContext();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            if (audioCtx && !isAudioUnlocked) {
+                try {
+                    const buffer = audioCtx.createBuffer(1, 1, 22050);
+                    const source = audioCtx.createBufferSource();
+                    source.buffer = buffer;
+                    source.connect(audioCtx.destination);
+                    source.start(0);
+                    isAudioUnlocked = true;
+                } catch(e){}
+            }
+        }
+
+        ['touchstart', 'touchend', 'click', 'pointerdown'].forEach(evtType => {
+            document.addEventListener(evtType, unlockMobileAudio, { passive: true });
+        });
 
         // PRESET VOICES LIST WITH GEMINI TTS DIRECTIVES (100% VIETNAMESE)
         const PRESET_VOICES = [
@@ -750,6 +745,17 @@
                     audioCtx = new AudioContextClass();
                     analyserNode = audioCtx.createAnalyser();
                     analyserNode.fftSize = 64;
+
+                    const mobileAudioEl = document.getElementById('mobile-html5-audio');
+                    if (mobileAudioEl) {
+                        try {
+                            const source = audioCtx.createMediaElementSource(mobileAudioEl);
+                            source.connect(analyserNode);
+                            analyserNode.connect(audioCtx.destination);
+                        } catch(e) {
+                            console.warn("MediaElementSource connection warning:", e);
+                        }
+                    }
                 }
             }
             if (audioCtx && audioCtx.state === 'suspended') {
@@ -911,40 +917,49 @@
 
         function setupVisualizerCanvas() {
             const canvas = document.getElementById('visualizer-canvas');
+            if (!canvas) return;
             const ctx = canvas.getContext('2d');
 
             function resizeCanvas() {
-                canvas.width = canvas.parentElement.clientWidth;
-                canvas.height = canvas.parentElement.clientHeight || 112;
+                const parent = canvas.parentElement;
+                if (!parent) return;
+                canvas.width = parent.clientWidth || 300;
+                canvas.height = parent.clientHeight || 112;
             }
             resizeCanvas();
             window.addEventListener('resize', resizeCanvas);
+            window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 200));
 
             function drawWaveform() {
                 requestAnimationFrame(drawWaveform);
 
-                const width = canvas.width;
-                const height = canvas.height;
+                const width = canvas.width || 300;
+                const height = canvas.height || 112;
 
                 ctx.clearRect(0, 0, width, height);
 
-                const numBars = 45;
-                const barWidth = width / numBars - 2;
+                const numBars = Math.min(45, Math.floor(width / 7));
+                const barWidth = Math.max(3, (width / numBars) - 2);
 
                 let dataArray = null;
+                let hasData = false;
+
                 if (analyserNode && isPlaying) {
                     dataArray = new Uint8Array(analyserNode.frequencyBinCount);
                     analyserNode.getByteFrequencyData(dataArray);
+                    hasData = dataArray.some(val => val > 0);
                 }
 
                 for (let i = 0; i < numBars; i++) {
                     let barHeight = 4;
                     if (isPlaying) {
-                        if (dataArray && dataArray.length > i) {
+                        if (hasData && dataArray && dataArray[i] !== undefined) {
                             barHeight = (dataArray[i] / 255) * (height * 0.85) + 4;
                         } else {
-                            const freq = Math.sin(Date.now() * 0.008 + i * 0.3) * 0.5 + 0.5;
-                            barHeight = freq * (height * 0.75) + 6;
+                            // Mobile fallback animation when audio is active
+                            const t = Date.now() * 0.008;
+                            const val = (Math.sin(t + i * 0.35) + Math.cos(t * 1.5 + i * 0.2)) / 2;
+                            barHeight = Math.abs(val) * (height * 0.75) + 6;
                         }
                     }
 
@@ -958,7 +973,11 @@
 
                     ctx.fillStyle = gradient;
                     ctx.beginPath();
-                    ctx.roundRect(x, y, barWidth, barHeight, [3, 3, 0, 0]);
+                    if (ctx.roundRect) {
+                        ctx.roundRect(x, y, barWidth, barHeight, [3, 3, 0, 0]);
+                    } else {
+                        ctx.rect(x, y, barWidth, barHeight);
+                    }
                     ctx.fill();
                 }
             }
@@ -1161,6 +1180,7 @@
 
         // MAIN SPEECH GENERATION & PLAYBACK FUNCTION
         async function generateAndPlaySpeech() {
+            unlockMobileAudio();
             initAudioContext();
 
             const textInput = document.getElementById('script-input').value.trim();
@@ -1191,13 +1211,12 @@
                 const audioData = await fetchGeminiVietnameseTTS(fullPrompt, activeVoiceObj.geminiVoice);
                 const audioBuffer = processPcmAudioData(audioData.base64Data, audioData.mimeType);
 
-                // Play fetched audio buffer with Web Audio API
-                playAudioBuffer(audioBuffer, activeVoiceObj, cleanText);
+                // Play fetched audio buffer with Mobile Dual Engine
+                await playAudioBuffer(audioBuffer, activeVoiceObj, cleanText);
                 showToast(`Đã phát giọng Tiếng Việt: ${activeVoiceObj.name}`, 'success');
 
             } catch (err) {
                 console.warn('Gemini TTS fallback to browser WebSpeech:', err);
-                // Fallback to browser SpeechSynthesis explicitly enforced in Vietnamese
                 fallbackBrowserVietnameseTTS(cleanText, activeVoiceObj);
             } finally {
                 genBtn.disabled = false;
@@ -1206,13 +1225,54 @@
             }
         }
 
-        function playAudioBuffer(buffer, voiceObj, text) {
+        async function playAudioBuffer(buffer, voiceObj, text) {
+            unlockMobileAudio();
+            initAudioContext();
+
+            const mobileAudioEl = document.getElementById('mobile-html5-audio');
+
+            // 1. Primary path for Mobile browsers: Use HTML5 Audio tag with Blob URL
+            if (mobileAudioEl && currentWavBlob) {
+                try {
+                    const audioUrl = URL.createObjectURL(currentWavBlob);
+                    mobileAudioEl.src = audioUrl;
+
+                    const speed = parseFloat(document.getElementById('speed-slider').value) || 1.0;
+                    mobileAudioEl.playbackRate = speed;
+
+                    mobileAudioEl.onended = () => {
+                        isPlaying = false;
+                        updatePlayStateUI(false);
+                        stopBGM();
+                        document.getElementById('visualizer-placeholder').classList.remove('hidden');
+                        saveToHistory(voiceObj ? voiceObj.name : 'Giọng Tiếng Việt AI', text);
+                    };
+
+                    if (audioCtx && audioCtx.state === 'suspended') {
+                        await audioCtx.resume();
+                    }
+
+                    await mobileAudioEl.play();
+                    isPlaying = true;
+                    updatePlayStateUI(true);
+                    if (activeBgmType !== 'none') startBGM(activeBgmType);
+                    document.getElementById('visualizer-placeholder').classList.add('hidden');
+                    return;
+                } catch (err) {
+                    console.warn("Mobile HTML5 Audio play error, trying WebAudio BufferSource:", err);
+                }
+            }
+
+            // 2. Fallback path: WebAudio BufferSource
             if (!audioCtx) return;
+
+            if (currentSourceNode) {
+                try { currentSourceNode.stop(); } catch(e){}
+            }
 
             currentSourceNode = audioCtx.createBufferSource();
             currentSourceNode.buffer = buffer;
 
-            // Apply pitch slider adjustment if modified
             const speed = parseFloat(document.getElementById('speed-slider').value) || 1.0;
             currentSourceNode.playbackRate.value = speed;
 
@@ -1236,10 +1296,14 @@
                 saveToHistory(voiceObj ? voiceObj.name : 'Giọng Tiếng Việt AI', text);
             };
 
+            if (audioCtx.state === 'suspended') {
+                await audioCtx.resume();
+            }
             currentSourceNode.start(0);
         }
 
         function fallbackBrowserVietnameseTTS(text, voiceObj) {
+            unlockMobileAudio();
             if ('speechSynthesis' in window) {
                 currentUtterance = new SpeechSynthesisUtterance(text);
                 currentUtterance.lang = 'vi-VN';
@@ -1277,6 +1341,23 @@
         }
 
         function togglePlayPause() {
+            unlockMobileAudio();
+            const mobileAudioEl = document.getElementById('mobile-html5-audio');
+
+            if (mobileAudioEl && mobileAudioEl.src && !mobileAudioEl.ended && mobileAudioEl.duration > 0) {
+                if (mobileAudioEl.paused) {
+                    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+                    mobileAudioEl.play();
+                    isPlaying = true;
+                    updatePlayStateUI(true);
+                } else {
+                    mobileAudioEl.pause();
+                    isPlaying = false;
+                    updatePlayStateUI(false);
+                }
+                return;
+            }
+
             if (currentSourceNode && audioCtx) {
                 if (audioCtx.state === 'running') {
                     audioCtx.suspend();
@@ -1303,6 +1384,11 @@
         }
 
         function stopSpeechPlayback() {
+            const mobileAudioEl = document.getElementById('mobile-html5-audio');
+            if (mobileAudioEl) {
+                mobileAudioEl.pause();
+                mobileAudioEl.currentTime = 0;
+            }
             if (currentSourceNode) {
                 try { currentSourceNode.stop(); } catch(e){}
                 currentSourceNode = null;

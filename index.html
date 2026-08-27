@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Hệ Thống Cảnh Báo Khoảng Cách Xe Phía Trước (ADAS)</title>
+    <title>Hệ Thống Cảnh Báo Khoảng Cách Xe Phía Trước (SmartADAS AI)</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- TensorFlow.js and COCO-SSD Model -->
+    <!-- TensorFlow.js and COCO-SSD AI Model -->
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3"></script>
     <script>
@@ -43,7 +43,6 @@
             background-image: radial-gradient(rgba(0, 242, 254, 0.1) 1px, transparent 1px);
             background-size: 20px 20px;
         }
-        /* Custom scrollbars */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -59,9 +58,10 @@
 </head>
 <body class="bg-adas-bg text-slate-100 font-sans min-h-screen flex flex-col justify-between grid-pattern select-none">
 
-    <!-- Toast Banner Notification Container -->
+    <!-- Toast Notification Container -->
     <div id="toast-container" class="fixed top-4 right-4 z-50 space-y-2 max-w-sm w-full px-4 pointer-events-none"></div>
 
+    <!-- Header Bar -->
     <header class="border-b border-adas-border bg-adas-card/80 backdrop-blur sticky top-0 z-40">
         <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center space-x-3">
@@ -78,7 +78,7 @@
 
             <!-- Tab Switchers (Desktop) -->
             <nav class="hidden md:flex items-center space-x-1 bg-adas-bg/60 p-1 rounded-xl border border-adas-border">
-                <button id="tab-app-btn" onclick="switchTab('app')" class="px-4 py-1.5 rounded-lg text-sm font-medium transition-all bg-cyan-500 text-slate-900 font-semibold shadow">
+                <button id="tab-app-btn" onclick="switchTab('app')" class="px-4 py-1.5 rounded-lg text-sm font-semibold transition-all bg-cyan-500 text-slate-900 shadow">
                     <i class="fa-solid fa-radar mr-2"></i>Màn Hình Cảnh Báo
                 </button>
                 <button id="tab-calib-btn" onclick="switchTab('calib')" class="px-4 py-1.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition-all">
@@ -91,6 +91,11 @@
 
             <!-- Sound Toggle & Status Indicator -->
             <div class="flex items-center space-x-3">
+                <!-- GPS Speed Tracking Toggle Button -->
+                <button id="gps-toggle" onclick="toggleGps()" class="p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 hover:text-cyan-400 transition flex items-center space-x-1.5 text-xs font-semibold" title="Bật/Tắt Đo Tốc Độ GPS Thực">
+                    <i id="gps-icon" class="fa-solid fa-location-arrow text-slate-400"></i>
+                    <span id="gps-text" class="hidden sm:inline">GPS Tốc Độ</span>
+                </button>
                 <button id="sound-toggle" onclick="toggleSound()" class="p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 hover:text-cyan-400 transition" title="Bật/Tắt Âm Thanh Cảnh Báo">
                     <i id="sound-icon" class="fa-solid fa-volume-high text-cyan-400"></i>
                 </button>
@@ -102,6 +107,7 @@
         </div>
     </header>
 
+    <!-- Mobile Bottom Navigation -->
     <div class="md:hidden flex border-b border-adas-border bg-adas-card text-xs text-center">
         <button id="mobile-tab-app" onclick="switchTab('app')" class="flex-1 py-2.5 font-semibold text-cyan-400 border-b-2 border-cyan-400">
             <i class="fa-solid fa-radar block text-sm mb-0.5"></i> Màn Hình
@@ -114,7 +120,6 @@
         </button>
     </div>
 
-    <!-- Main Content Area -->
     <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full">
 
         <!-- ================= TAB 1: MAIN ADAS DASHBOARD ================= -->
@@ -123,18 +128,18 @@
             <div class="flex flex-col gap-3 bg-adas-card p-4 rounded-2xl border border-adas-border">
                 <div class="flex items-center justify-between flex-wrap gap-2">
                     <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider flex items-center">
-                        <i class="fa-solid fa-video text-cyan-400 mr-2"></i> Nguồn Video Xe Phía Trước:
+                        <i class="fa-solid fa-video text-cyan-400 mr-2"></i> Chọn Nguồn Video Xe Phía Trước:
                     </span>
                     <div class="flex items-center space-x-3 text-xs">
-                        <span class="inline-flex items-center text-emerald-400"><span class="w-2 h-2 rounded-full bg-emerald-400 mr-1.5"></span>An toàn (>15m)</span>
-                        <span class="inline-flex items-center text-amber-400"><span class="w-2 h-2 rounded-full bg-amber-400 mr-1.5"></span>Chú ý (8-15m)</span>
-                        <span class="inline-flex items-center text-rose-500"><span class="w-2 h-2 rounded-full bg-rose-500 mr-1.5"></span>Nguy hiểm (&lt;8m)</span>
+                        <span class="inline-flex items-center text-emerald-400"><span class="w-2 h-2 rounded-full bg-emerald-400 mr-1.5"></span>An toàn (><span id="legend-safe-dist">15</span>m)</span>
+                        <span class="inline-flex items-center text-amber-400"><span class="w-2 h-2 rounded-full bg-amber-400 mr-1.5"></span>Chú ý (<span id="legend-warn-dist">8-15</span>m)</span>
+                        <span class="inline-flex items-center text-rose-500"><span class="w-2 h-2 rounded-full bg-rose-500 mr-1.5"></span>Nguy hiểm (&lt;<span id="legend-danger-dist">8</span>m)</span>
                     </div>
                 </div>
 
-                <!-- Source Options Bar -->
+                <!-- Input Source Options -->
                 <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
-                    <button id="mode-demo" onclick="setMode('demo')" class="px-3 py-2 rounded-xl border border-slate-700 bg-slate-700 text-white font-medium flex items-center justify-center space-x-2 transition">
+                    <button id="mode-demo" onclick="setMode('demo')" class="px-3 py-2 rounded-xl border border-cyan-500 bg-slate-700 text-white font-semibold flex items-center justify-center space-x-2 transition shadow">
                         <i class="fa-solid fa-cube text-cyan-400"></i>
                         <span>Mô Phỏng 3D</span>
                     </button>
@@ -146,7 +151,7 @@
 
                     <button id="mode-file" onclick="triggerFileInput()" class="px-3 py-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-300 font-medium flex items-center justify-center space-x-2 transition hover:bg-slate-700">
                         <i class="fa-solid fa-upload text-emerald-400"></i>
-                        <span>Tải Clip/Quay Video</span>
+                        <span>Tải Clip / Quay Video</span>
                     </button>
 
                     <button id="mode-sample" onclick="setMode('sample')" class="px-3 py-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-300 font-medium flex items-center justify-center space-x-2 transition hover:bg-slate-700">
@@ -155,17 +160,16 @@
                     </button>
                 </div>
 
-                <!-- Hidden Input for File / Camera Capture -->
+                <!-- Hidden Input for Video Upload & Native Mobile Camera Capture -->
                 <input type="file" id="video-file-input" accept="video/*,image/*" capture="environment" onchange="handleFileSelect(event)" class="hidden">
             </div>
 
-            <!-- Main Grid layout -->
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 
                 <div class="lg:col-span-8 space-y-4">
                     <div id="canvas-container" class="relative bg-black rounded-2xl overflow-hidden border-2 border-adas-border shadow-2xl aspect-video flex items-center justify-center">
                         
-                        <!-- Hidden Video Elements for Webcam, Uploaded Video & Sample Video -->
+                        <!-- Video elements for stream rendering -->
                         <video id="webcam-video" class="hidden" autoplay playsinline muted></video>
                         <video id="file-video" class="hidden" loop playsinline muted></video>
 
@@ -173,35 +177,107 @@
                         <canvas id="adas-canvas" class="w-full h-full object-contain block"></canvas>
 
                         <!-- HUD Details Overlay -->
-                        <div class="absolute top-4 left-4 pointer-events-none flex items-center space-x-2 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-xs">
-                            <i class="fa-solid fa-crosshairs text-cyan-400 animate-spin"></i>
-                            <span class="text-slate-200 font-mono" id="hud-fps">FPS: --</span>
+                        <div class="absolute top-4 left-4 pointer-events-none flex flex-col space-y-2 z-10">
+                            <div class="flex items-center space-x-2 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-xs">
+                                <i class="fa-solid fa-crosshairs text-cyan-400 animate-spin"></i>
+                                <span class="text-slate-200 font-mono" id="hud-fps">FPS: --</span>
+                            </div>
+                            <!-- Speed Badge HUD -->
+                            <div class="bg-black/80 backdrop-blur-md px-3 py-1.5 rounded-xl border border-cyan-500/40 text-xs flex items-center space-x-2 shadow-lg">
+                                <i class="fa-solid fa-gauge-high text-cyan-400"></i>
+                                <div>
+                                    <span class="text-slate-400 text-[10px] block leading-none">Tốc Độ Xe</span>
+                                    <span class="text-cyan-300 font-extrabold font-mono text-sm" id="hud-speed">65 km/h</span>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="absolute top-4 right-4 pointer-events-none bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-xs text-right">
-                            <div class="text-slate-400">Tiêu Cự Calib (f)</div>
-                            <div class="text-cyan-400 font-mono font-bold" id="hud-focal">F = 700 px</div>
+                        <div class="absolute top-4 right-4 pointer-events-none bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-xs text-right z-10 space-y-1">
+                            <div>
+                                <div class="text-slate-400 text-[10px]">Tiêu Cự Calib (f)</div>
+                                <div class="text-cyan-400 font-mono font-bold" id="hud-focal">F = 700 px</div>
+                            </div>
+                            <div class="pt-1 border-t border-white/10">
+                                <div class="text-slate-400 text-[10px]">Khoảng Cách Chuẩn Req</div>
+                                <div class="text-amber-400 font-mono font-bold" id="hud-min-safe-dist">Min: 60 m</div>
+                            </div>
                         </div>
 
                         <!-- Switch Camera Flip Button (Visible in Webcam Mode) -->
-                        <button id="switch-cam-btn" onclick="toggleCameraFacing()" class="hidden absolute top-4 right-32 bg-slate-900/80 hover:bg-slate-800 text-cyan-400 px-3 py-1.5 rounded-xl border border-slate-700 text-xs flex items-center space-x-1.5 backdrop-blur shadow-lg">
+                        <button id="switch-cam-btn" onclick="toggleCameraFacing()" class="hidden absolute top-4 right-36 bg-slate-900/80 hover:bg-slate-800 text-cyan-400 px-3 py-1.5 rounded-xl border border-slate-700 text-xs flex items-center space-x-1.5 backdrop-blur shadow-lg z-20">
                             <i class="fa-solid fa-camera-rotate"></i>
                             <span>Đổi Cam</span>
                         </button>
 
-                        <!-- Collision Banner (Hidden by default) -->
-                        <div id="warning-banner" class="hidden absolute bottom-6 left-1/2 -translate-x-1/2 w-11/12 max-w-md bg-rose-600/90 text-white font-black text-center py-3 rounded-2xl border-2 border-rose-400 shadow-2xl text-lg tracking-wider animate-bounce z-20">
+                        <!-- Collision Banner -->
+                        <div id="warning-banner" class="hidden absolute bottom-16 left-1/2 -translate-x-1/2 w-11/12 max-w-md bg-rose-600/90 text-white font-black text-center py-3 rounded-2xl border-2 border-rose-400 shadow-2xl text-lg tracking-wider animate-bounce z-20">
                             <i class="fa-solid fa-triangle-exclamation mr-2"></i> CẢNH BÁO: VA CHẠM PHÍA TRƯỚC!
                         </div>
 
-                        <!-- Controls Overlay for Demo Simulation Mode -->
-                        <div id="demo-controls" class="absolute bottom-3 left-3 right-3 bg-black/70 backdrop-blur-md p-3 rounded-xl border border-white/10 flex items-center justify-between text-xs">
-                            <span class="text-slate-300 font-medium">Khoảng cách xe mô phỏng:</span>
-                            <div class="flex items-center space-x-3 w-1/2">
-                                <span class="text-slate-400 font-mono">Gần</span>
-                                <input type="range" id="sim-distance-slider" min="3" max="35" step="0.5" value="18" class="w-full accent-cyan-400 cursor-pointer">
-                                <span class="text-slate-400 font-mono">Xa</span>
+                        <!-- Controls Overlay for Demo Mode -->
+                        <div id="demo-controls" class="absolute bottom-3 left-3 right-3 bg-black/80 backdrop-blur-md p-3 rounded-xl border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs z-20">
+                            <div class="flex items-center space-x-2 w-full sm:w-1/2">
+                                <span class="text-slate-300 font-medium whitespace-nowrap"><i class="fa-solid fa-gauge-high text-cyan-400 mr-1"></i>Tốc độ xe:</span>
+                                <input type="range" id="sim-speed-slider" min="0" max="120" step="5" value="65" oninput="updateSpeedFromSlider()" class="w-full accent-cyan-400 cursor-pointer">
+                                <span class="text-cyan-400 font-mono font-bold w-14 text-right" id="sim-speed-val">65 km/h</span>
                             </div>
+                            <div class="flex items-center space-x-2 w-full sm:w-1/2">
+                                <span class="text-slate-300 font-medium whitespace-nowrap"><i class="fa-solid fa-ruler-horizontal text-amber-400 mr-1"></i>Khoảng cách:</span>
+                                <input type="range" id="sim-distance-slider" min="3" max="70" step="0.5" value="45" class="w-full accent-amber-400 cursor-pointer">
+                                <span class="text-amber-400 font-mono font-bold w-12 text-right" id="sim-dist-val">45m</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-4 space-y-4 flex flex-col justify-between">
+                    <!-- Main Distance Card -->
+                    <div id="status-card" class="bg-adas-card p-6 rounded-2xl border-2 border-adas-border transition-all duration-300 relative overflow-hidden">
+                        <div class="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-1">
+                            Khoảng Cách Xe Gần Nhất
+                        </div>
+                        <div class="flex items-baseline space-x-2">
+                            <span id="metric-distance" class="text-5xl font-extrabold text-cyan-400 font-mono">--</span>
+                            <span class="text-slate-400 text-xl font-bold">m (mét)</span>
+                        </div>
+
+                        <!-- Warning Alert Box -->
+                        <div id="metric-status-box" class="mt-4 px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-between">
+                            <span class="text-xs text-slate-400">Trạng thái va chạm:</span>
+                            <span id="metric-status-text" class="text-sm font-bold text-slate-200">Đang chờ quét...</span>
+                        </div>
+                    </div>
+
+                    <!-- Additional Metrics Grid -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-adas-card p-4 rounded-xl border border-cyan-500/30">
+                            <div class="text-slate-400 text-xs font-medium flex items-center justify-between">
+                                <span>Tốc Độ Hiện Tại</span>
+                                <i class="fa-solid fa-gauge text-cyan-400 text-xs"></i>
+                            </div>
+                            <div id="metric-speed-display" class="text-xl font-black text-cyan-400 mt-1 font-mono">65 km/h</div>
+                            <div id="metric-speed-source" class="text-[10px] text-slate-500 mt-0.5">Mô phỏng (Hoặc GPS)</div>
+                        </div>
+
+                        <div class="bg-adas-card p-4 rounded-xl border border-amber-500/30">
+                            <div class="text-slate-400 text-xs font-medium flex items-center justify-between">
+                                <span>KC An Toàn Bắt Buộc</span>
+                                <i class="fa-solid fa-shield-halved text-amber-400 text-xs"></i>
+                            </div>
+                            <div id="metric-required-safe-dist" class="text-xl font-black text-amber-400 mt-1 font-mono">60 m</div>
+                            <div id="metric-rule-note" class="text-[10px] text-amber-300/80 mt-0.5">Quy định >60km/h: min 60m</div>
+                        </div>
+
+                        <div class="bg-adas-card p-4 rounded-xl border border-adas-border">
+                            <div class="text-slate-400 text-xs font-medium">Loại Phương Tiện</div>
+                            <div id="metric-target-type" class="text-lg font-bold text-slate-100 mt-1 capitalize">Chưa có</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Target Vehicle</div>
+                        </div>
+
+                        <div class="bg-adas-card p-4 rounded-xl border border-adas-border">
+                            <div class="text-slate-400 text-xs font-medium">Thời Gian Va Chạm (TTC)</div>
+                            <div id="metric-ttc" class="text-lg font-bold text-slate-100 mt-1 font-mono">-- s</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Time to Collision</div>
                         </div>
                     </div>
                 </div>
@@ -251,7 +327,7 @@
                         </div>
                     </div>
 
-                    <!-- System Info & Calibration Quick Link -->
+                    <!-- Calibration Link -->
                     <div class="bg-adas-card/60 p-4 rounded-xl border border-adas-border text-xs text-slate-400 space-y-2">
                         <div class="flex items-center justify-between">
                             <span>Mô hình AI:</span>
@@ -269,7 +345,6 @@
             </div>
         </section>
 
-        <!-- Camera Error / Diagnostic Modal -->
         <div id="cam-diag-modal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
             <div class="bg-adas-card border border-rose-500/50 rounded-2xl p-6 max-w-lg w-full space-y-4 shadow-2xl">
                 <div class="flex items-center space-x-3 text-rose-500">
@@ -284,9 +359,9 @@
                 <div class="bg-slate-900 p-3 rounded-xl border border-slate-800 text-xs space-y-2 text-slate-300">
                     <div class="font-bold text-amber-400">Cách khắc phục nhanh trên điện thoại:</div>
                     <ul class="list-disc list-inside space-y-1 text-slate-400">
-                        <li>Sử dụng tùy chọn <b class="text-emerald-400">"Tải Clip/Quay Video"</b>: Trình duyệt sẽ mở ứng dụng Camera máy điện thoại của bạn để quay video xe rồi phân tích.</li>
+                        <li>Sử dụng tùy chọn <b class="text-emerald-400">"Tải Clip / Quay Video"</b>: Trình duyệt sẽ mở ứng dụng Camera máy điện thoại của bạn để quay video xe rồi phân tích.</li>
                         <li>Đảm bảo trang web đang chạy qua liên kết <b class="text-cyan-400">https://</b>.</li>
-                        <li>Mở bằng trình duyệt **Chrome** hoặc **Safari** thay vì webview ứng dụng.</li>
+                        <li>Mở bằng trình duyệt **Safari** hoặc **Chrome** gốc thay vì xem qua ứng dụng thứ 3.</li>
                     </ul>
                 </div>
 
@@ -301,7 +376,6 @@
             </div>
         </div>
 
-        <!-- ================= TAB 2: CALIBRATION & PHYSICS ================= -->
         <section id="view-calib" class="hidden space-y-6">
             <div class="bg-adas-card p-6 rounded-2xl border border-adas-border space-y-6">
                 <div>
@@ -313,15 +387,14 @@
                     </p>
                 </div>
 
-                <!-- Math Formula Display Card -->
+                <!-- Math Formula Display -->
                 <div class="bg-adas-bg p-4 rounded-xl border border-adas-border font-mono text-sm space-y-2 text-cyan-300">
                     <div class="text-xs text-slate-400 font-sans uppercase tracking-wider font-bold">Công thức tính toán:</div>
                     <div class="text-base text-center py-2 bg-slate-900/80 rounded-lg border border-slate-800">
                         Distance (D) = <span class="text-amber-400">( Focal Length (f) × Real Vehicle Width (W) )</span> / <span class="text-emerald-400">Pixel Width (w)</span>
                     </div>
                     <p class="text-xs text-slate-400 font-sans leading-relaxed">
-                        Trong đó: <br>
-                        • <b>f (Focal Length)</b>: Tiêu cự tính bằng pixel của camera.<br>
+                        • <b>f (Focal Length)</b>: Tiêu cự tính bằng pixel của camera (iPhone khuyên dùng $f = 700 - 850\text{ px}$).<br>
                         • <b>W (Real Width)</b>: Chiều rộng trung bình của xe thực tế (Ô tô ≈ 1.8m, Xe tải/Bus ≈ 2.5m, Xe máy ≈ 0.8m).<br>
                         • <b>w (Pixel Width)</b>: Chiều rộng khung nhận diện xe phát hiện bởi AI trong ảnh (pixels).
                     </p>
@@ -335,7 +408,7 @@
                         </label>
                         <input type="range" id="focal-slider" min="300" max="1500" value="700" step="10" oninput="updateCalibration()" class="w-full accent-cyan-400 cursor-pointer">
                         <p class="text-xs text-slate-400">
-                            * Mẹo: Nếu đo thấy khoảng cách hiển thị <b>NHỎ HƠN</b> thực tế, hãy <b>GIẢM f</b>. Ngược lại nếu thấy lớn hơn, hãy <b>TĂNG f</b>.
+                            * Mẹo cho iPhone: Camera chính 1x chuẩn thường có tiêu cự calib khoảng <b>700 - 850 px</b>.
                         </p>
                     </div>
 
@@ -351,20 +424,19 @@
                     </div>
                 </div>
 
-                <!-- Calibration Test Helper -->
+                <!-- Calibration Advice -->
                 <div class="border-t border-adas-border pt-4">
                     <h3 class="text-sm font-bold text-slate-200 mb-2">Cách tự Calib thực tế với xe của bạn:</h3>
                     <ol class="list-decimal list-inside text-xs text-slate-300 space-y-1.5 leading-relaxed">
-                        <li>Đặt camera trên xe ô tô của bạn, đỗ xe đằng sau một chiếc ô tô khác ở khoảng cách chính xác <b>10 mét</b> (đo bằng thước dây hoặc máy đo laser).</li>
-                        <li>Bật phần mềm ở chế độ Camera Trực Tiếp.</li>
-                        <li>Kéo thanh trượt <b>Focal Length (f)</b> sao cho thông số khoảng cách trên màn hình nhảy đúng về số <b>10.0 m</b>.</li>
-                        <li>Lưu lại chỉ số tiêu cự đó cho camera của bạn!</li>
+                        <li>Đặt điện thoại/camera trên xe ô tô của bạn, đỗ xe đằng sau một chiếc ô tô khác ở khoảng cách chính xác <b>10 mét</b> (đo bằng thước dây hoặc máy đo laser).</li>
+                        <li>Bật ứng dụng ở chế độ Camera Trực Tiếp.</li>
+                        <li>Kéo thanh trượt <b>Focal Length (f)</b> sao cho thông số khoảng cách trên màn hình hiển thị đúng số <b>10.0 m</b>.</li>
+                        <li>Lưu lại chỉ số tiêu cự đó!</li>
                     </ol>
                 </div>
             </div>
         </section>
 
-        <!-- ================= TAB 3: DIY HARDWARE & SOFTWARE GUIDE ================= -->
         <section id="view-guide" class="hidden space-y-6">
             <div class="bg-adas-card p-6 rounded-2xl border border-adas-border space-y-6">
                 <div>
@@ -376,13 +448,13 @@
                     </p>
                 </div>
 
-                <!-- Component Checklist Grid -->
+                <!-- Checklist -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div class="bg-adas-bg p-4 rounded-xl border border-adas-border space-y-2">
                         <div class="text-cyan-400 text-lg font-bold"><i class="fa-solid fa-microchip mr-2"></i>1. Phần Cứng (Hardware)</div>
                         <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
-                            <li><b>Bo mạch xử lý</b>: Raspberry Pi 4 (4GB RAM) hoặc NVIDIA Jetson Nano / Orin Nano.</li>
-                            <li><b>Camera</b>: WebCam USB HD (1080p, góc nhìn 60°-90°) hoặc Camera Raspberry Pi V2/V3.</li>
+                            <li><b>Bo mạch xử lý</b>: Raspberry Pi 4 (4GB RAM) hoặc NVIDIA Jetson Nano.</li>
+                            <li><b>Camera</b>: WebCam USB HD (1080p, góc nhìn 60°-90°).</li>
                             <li><b>Màn hình HUD</b>: Màn hình cảm ứng LCD 5-7 inch đính kính lái.</li>
                             <li><b>Còi cảnh báo</b>: Buzzer 5V hoặc loa mini Jack 3.5mm.</li>
                             <li><b>Cấp nguồn</b>: Tẩu sạc ô tô USB Type-C 5V-3A.</li>
@@ -395,21 +467,21 @@
                             <li><b>Hệ điều hành</b>: Raspberry Pi OS / Ubuntu Linux.</li>
                             <li><b>Ngôn ngữ</b>: Python 3.10+.</li>
                             <li><b>Thư viện AI/CV</b>: OpenCV (`opencv-python`), Ultralytics YOLOv8 (`ultralytics`), PyTorch.</li>
-                            <li><b>Mô hình AI</b>: YOLOv8n (YOLOv8 Nano - chạy siêu mượt 30-60 FPS trên bo mạch nhúng).</li>
+                            <li><b>Mô hình AI</b>: YOLOv8n (YOLOv8 Nano - chạy 30-60 FPS trên máy nhúng).</li>
                         </ul>
                     </div>
 
                     <div class="bg-adas-bg p-4 rounded-xl border border-adas-border space-y-2">
                         <div class="text-amber-400 text-lg font-bold"><i class="fa-solid fa-calculator mr-2"></i>3. Cảm Biến Bổ Sung</div>
                         <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
-                            <li><b>LiDAR 1D TFmini Plus</b>: Đo khoảng cách bằng Laser chính xác tuyệt đối ban đêm (độ xa tới 12m).</li>
-                            <li><b>Cảm biến Radar mmWave 24GHz</b>: Hoạt động hoàn hảo cả khi mưa bão, sương mù dày đặc.</li>
-                            <li><b>OBD-II Dongle</b>: Đọc tốc độ xe hiện tại qua cổng OBD2 để tính toán thời gian va chạm (TTC).</li>
+                            <li><b>LiDAR 1D TFmini Plus</b>: Đo khoảng cách bằng Laser chính xác tuyệt đối ban đêm (độ xa 12m).</li>
+                            <li><b>Cảm biến Radar mmWave 24GHz</b>: Hoạt động hoàn hảo cả khi mưa bão, sương mù.</li>
+                            <li><b>OBD-II Dongle</b>: Đọc tốc độ xe hiện tại qua cổng OBD2 để tính TTC.</li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- Python Source Code Snippet Section -->
+                <!-- Python Source Code Snippet -->
                 <div class="space-y-3 border-t border-adas-border pt-4">
                     <div class="flex items-center justify-between">
                         <h3 class="text-base font-bold text-slate-100 flex items-center">
@@ -424,17 +496,16 @@
 import math
 from ultralytics import YOLO
 
-# 1. Tải mô hình AI YOLOv8 siêu nhẹ cho máy nhúng
+# 1. Tải mô hình AI YOLOv8
 model = YOLO('yolov8n.pt')
 
-# 2. Thông số Calib Camera
-FOCAL_LENGTH = 700  # Tiêu cự camera (pixels)
-REAL_CAR_WIDTH = 1.8 # Chiều rộng trung bình của ô tô (meters)
-
-# ID class phương tiện trong COCO Dataset
+FOCAL_LENGTH = 700   # Tiêu cự camera (pixels)
+REAL_CAR_WIDTH = 1.8 # Chiều rộng ô tô (meters)
 VEHICLE_CLASSES = [2, 3, 5, 7] # car, motorcycle, bus, truck
 
-# 3. Mở Camera ô tô (0: Webcam tích hợp, hoặc 1: USB Dashcam)
+# Giả lập tốc độ xe từ OBD-II / GPS (km/h)
+current_speed_kmh = 65.0 
+
 cap = cv2.VideoCapture(0)
 
 while cap.isOpened():
@@ -442,7 +513,15 @@ while cap.isOpened():
     if not ret:
         break
 
-    # Nhận diện phương tiện
+    # Tính khoảng cách an toàn tối thiểu quy định theo tốc độ
+    # Quy định: Tốc độ > 60 km/h -> Khoảng cách an toàn tối thiểu = 60m
+    if current_speed_kmh > 60:
+        min_safe_distance = 60.0
+        danger_distance = 30.0
+    else:
+        min_safe_distance = 15.0
+        danger_distance = 8.0
+
     results = model(frame, stream=True)
 
     for r in results:
@@ -450,33 +529,28 @@ while cap.isOpened():
         for box in boxes:
             cls = int(box.cls[0])
             if cls in VEHICLE_CLASSES:
-                # Lấy tọa độ Bounding Box (x1, y1, x2, y2)
                 x1, y1, x2, y2 = map(int, box.xyxy[0])
                 pixel_width = x2 - x1
 
                 if pixel_width > 0:
-                    # 4. Áp dụng Công thức Pinhole Camera Model
                     distance = (REAL_CAR_WIDTH * FOCAL_LENGTH) / pixel_width
 
-                    # Chọn màu cảnh báo dựa trên khoảng cách
-                    if distance < 8.0:
+                    if distance < danger_distance:
                         color = (0, 0, 255) # Đỏ - NGUY HIỂM!
-                        label_status = "DANGER! BRAKE!"
-                    elif distance < 15.0:
-                        color = (0, 165, 255) # Cam - Chú ý
-                        label_status = "WARNING"
+                        label_status = f"DANGER! (<{danger_distance:.0f}m)"
+                    elif distance < min_safe_distance:
+                        color = (0, 165, 255) # Cam - Chú ý giữ khoảng cách quy định
+                        label_status = f"WARNING (<{min_safe_distance:.0f}m)"
                     else:
                         color = (0, 255, 0) # Xanh - An toàn
                         label_status = "SAFE"
 
-                    # Vẽ Khung và Thông số lên màn hình
                     cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
-                    text = f"{distance:.1f}m | {label_status}"
+                    text = f"{distance:.1f}m | {label_status} | Speed: {current_speed_kmh:.0f}km/h"
                     cv2.putText(frame, text, (x1, y1 - 10),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
 
-    # Hiển thị luồng video
-    cv2.imshow("ADAS Forward Collision Warning", frame)
+    cv2.imshow("ADAS Speed-Adaptive Collision Warning", frame)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
@@ -502,27 +576,112 @@ cv2.destroyAllWindows()</code></pre>
         let webcamStream = null;
         let cameraFacing = 'environment'; // 'environment' or 'user'
         
+        // Speed & GPS tracking variables
+        let currentSpeed = 65; // Default vehicle speed in km/h
+        let isGpsActive = false;
+        let gpsWatchId = null;
+
         // Calibration values
         let focalLength = 700;
         let defaultCarWidth = 1.8; // meters
 
-        // FPS calculation
+        // FPS tracking
         let lastFrameTime = performance.now();
         let frameCount = 0;
         let fps = 0;
 
         // Simulation parameters
-        let simDistance = 18; // meters
+        let simDistance = 45; // meters
         let lastBeepTime = 0;
 
-        // Elements
+        // Canvas & Video Elements
         const canvas = document.getElementById('adas-canvas');
         const ctx = canvas.getContext('2d');
         const webcamVideo = document.getElementById('webcam-video');
         const fileVideo = document.getElementById('file-video');
 
-        // Web Audio API
+        // Web Audio Context
         let audioCtx = null;
+
+        function getSafeDistanceThresholds(speedKmh) {
+            // Rule: When speed > 60 km/h -> Minimum required safe distance = 60m
+            if (speedKmh > 60) {
+                return {
+                    danger: 30.0,   // Critical danger threshold (< 30m when driving fast)
+                    warning: 60.0,  // Minimum safe distance rule (> 60 km/h requires 60m distance)
+                    ruleText: "Quy định >60km/h: min 60m"
+                };
+            } else {
+                return {
+                    danger: 8.0,    // Normal low speed danger threshold
+                    warning: 15.0,  // Normal safe distance
+                    ruleText: "Quy định ≤60km/h: min 15m"
+                };
+            }
+        }
+
+        function updateSpeedFromSlider() {
+            const slider = document.getElementById('sim-speed-slider');
+            if (slider && !isGpsActive) {
+                currentSpeed = parseFloat(slider.value);
+                document.getElementById('sim-speed-val').innerText = `${currentSpeed} km/h`;
+            }
+        }
+
+        function toggleGps() {
+            const gpsBtn = document.getElementById('gps-toggle');
+            const gpsIcon = document.getElementById('gps-icon');
+            const gpsText = document.getElementById('gps-text');
+            const speedSource = document.getElementById('metric-speed-source');
+
+            if (!isGpsActive) {
+                if ('geolocation' in navigator) {
+                    showToast("Đang kết nối GPS đo tốc độ thực...", "info");
+                    gpsWatchId = navigator.geolocation.watchPosition(
+                        (position) => {
+                            isGpsActive = true;
+                            gpsIcon.className = "fa-solid fa-location-arrow text-emerald-400 animate-pulse";
+                            gpsBtn.className = "p-2.5 rounded-xl bg-emerald-900/40 border border-emerald-500/50 text-emerald-300 transition flex items-center space-x-1.5 text-xs font-semibold";
+                            
+                            // speed from GPS is in meters per second, convert to km/h
+                            let speedMps = position.coords.speed;
+                            if (speedMps !== null && !isNaN(speedMps) && speedMps >= 0) {
+                                currentSpeed = Math.round(speedMps * 3.6);
+                            } else {
+                                // Default fallback if parked or GPS speed unreadable
+                                currentSpeed = 0;
+                            }
+                            if (speedSource) speedSource.innerText = "GPS Thực Hiện Tại";
+                        },
+                        (error) => {
+                            console.warn("GPS error:", error);
+                            showToast("Không thể đọc GPS! Dùng chế độ mô phỏng tốc độ.", "warning");
+                            stopGps();
+                        },
+                        { enableHighAccuracy: true, maximumAge: 1000, timeout: 5000 }
+                    );
+                } else {
+                    showToast("Trình duyệt không hỗ trợ định vị GPS!", "warning");
+                }
+            } else {
+                stopGps();
+                showToast("Đã tắt đo tốc độ GPS. Đang dùng tốc độ mô phỏng.", "info");
+            }
+        }
+
+        function stopGps() {
+            if (gpsWatchId !== null) {
+                navigator.geolocation.clearWatch(gpsWatchId);
+                gpsWatchId = null;
+            }
+            isGpsActive = false;
+            const gpsBtn = document.getElementById('gps-toggle');
+            const gpsIcon = document.getElementById('gps-icon');
+            const speedSource = document.getElementById('metric-speed-source');
+            if (gpsIcon) gpsIcon.className = "fa-solid fa-location-arrow text-slate-400";
+            if (gpsBtn) gpsBtn.className = "p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 hover:text-cyan-400 transition flex items-center space-x-1.5 text-xs font-semibold";
+            if (speedSource) speedSource.innerText = "Mô phỏng (Hoặc GPS)";
+        }
 
         function showToast(message, type = 'info') {
             const container = document.getElementById('toast-container');
@@ -627,11 +786,9 @@ cv2.destroyAllWindows()</code></pre>
             const demoControls = document.getElementById('demo-controls');
             const switchCamBtn = document.getElementById('switch-cam-btn');
 
-            // Reset media playback
             stopWebcam();
             fileVideo.pause();
 
-            // Reset buttons styling
             [btnDemo, btnWebcam, btnSample].forEach(btn => {
                 btn.className = "px-3 py-2 rounded-xl border border-slate-700 bg-slate-800 text-slate-300 font-medium flex items-center justify-center space-x-2 transition hover:bg-slate-700";
             });
@@ -669,7 +826,7 @@ cv2.destroyAllWindows()</code></pre>
                     showToast("Đã kết nối Camera trực tiếp!", "success");
                     break;
                 } catch (err) {
-                    console.warn("Cấu hình camera thất bại, thử lại...", err);
+                    console.warn("Thử cấu hình camera tiếp theo...", err);
                 }
             }
 
@@ -711,7 +868,6 @@ cv2.destroyAllWindows()</code></pre>
         }
 
         function loadSampleVideo() {
-            // High quality synthetic driving sample video loop
             fileVideo.src = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4";
             fileVideo.play();
             showToast("Đang phát Video mẫu xe chạy...", "info");
@@ -746,9 +902,11 @@ cv2.destroyAllWindows()</code></pre>
         }
 
         function updateSimulation() {
-            const slider = document.getElementById('sim-distance-slider');
-            if (slider) {
-                simDistance = parseFloat(slider.value);
+            const distSlider = document.getElementById('sim-distance-slider');
+            const distValLabel = document.getElementById('sim-dist-val');
+            if (distSlider) {
+                simDistance = parseFloat(distSlider.value);
+                if (distValLabel) distValLabel.innerText = `${simDistance}m`;
             }
         }
 
@@ -763,7 +921,20 @@ cv2.destroyAllWindows()</code></pre>
                 lastFrameTime = now;
             }
 
-            // Clear Canvas
+            // Get dynamic safe distance rules based on current vehicle speed
+            const safeRule = getSafeDistanceThresholds(currentSpeed);
+
+            // Update UI speed and rule displays
+            document.getElementById('hud-speed').innerText = `${currentSpeed} km/h`;
+            document.getElementById('hud-min-safe-dist').innerText = `Min: ${safeRule.warning} m`;
+            document.getElementById('metric-speed-display').innerText = `${currentSpeed} km/h`;
+            document.getElementById('metric-required-safe-dist').innerText = `${safeRule.warning} m`;
+            document.getElementById('metric-rule-note').innerText = safeRule.ruleText;
+
+            document.getElementById('legend-safe-dist').innerText = safeRule.warning;
+            document.getElementById('legend-warn-dist').innerText = `${safeRule.danger}-${safeRule.warning}`;
+            document.getElementById('legend-danger-dist').innerText = safeRule.danger;
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             let detectedVehicles = [];
@@ -776,10 +947,8 @@ cv2.destroyAllWindows()</code></pre>
             }
 
             if (activeVideoSource) {
-                // Draw Active Video Stream onto Canvas
                 ctx.drawImage(activeVideoSource, 0, 0, canvas.width, canvas.height);
 
-                // Run AI Detection if model is ready
                 if (isModelLoaded && aiModel) {
                     try {
                         const predictions = await aiModel.detect(activeVideoSource);
@@ -810,13 +979,12 @@ cv2.destroyAllWindows()</code></pre>
                     }
                 }
             } else if (currentMode === 'demo') {
-                // =============== DEMO 3D SIMULATION MODE ===============
+                // 3D Vector Simulation Rendering
                 updateSimulation();
                 
                 const cx = canvas.width / 2;
                 const horizonY = canvas.height * 0.42;
 
-                // Sky & Ground
                 const skyGrad = ctx.createLinearGradient(0, 0, 0, horizonY);
                 skyGrad.addColorStop(0, '#0d1322');
                 skyGrad.addColorStop(1, '#1a243a');
@@ -829,7 +997,6 @@ cv2.destroyAllWindows()</code></pre>
                 ctx.fillStyle = groundGrad;
                 ctx.fillRect(0, horizonY, canvas.width, canvas.height - horizonY);
 
-                // Road Polygon
                 ctx.fillStyle = '#1e293b';
                 ctx.beginPath();
                 ctx.moveTo(cx - 60, horizonY);
@@ -839,7 +1006,6 @@ cv2.destroyAllWindows()</code></pre>
                 ctx.closePath();
                 ctx.fill();
 
-                // Lane Lines
                 ctx.strokeStyle = '#f59e0b';
                 ctx.lineWidth = 3;
                 ctx.setLineDash([15, 15]);
@@ -849,13 +1015,11 @@ cv2.destroyAllWindows()</code></pre>
                 ctx.stroke();
                 ctx.setLineDash([]);
 
-                // Calculate Simulated Vehicle Pixel Width: w_px = (f * W_real) / Distance
                 const simCarPixelWidth = (focalLength * defaultCarWidth) / simDistance;
                 const simCarPixelHeight = simCarPixelWidth * 0.65;
-                const carY = horizonY + (canvas.height - horizonY) * (1 - (simDistance / 40));
+                const carY = horizonY + (canvas.height - horizonY) * (1 - (simDistance / 70));
                 const carX = cx - simCarPixelWidth / 2;
 
-                // Draw Vector Car Asset
                 ctx.fillStyle = '#3b82f6';
                 ctx.shadowColor = '#00f2fe';
                 ctx.shadowBlur = 15;
@@ -864,7 +1028,6 @@ cv2.destroyAllWindows()</code></pre>
                 ctx.fill();
                 ctx.shadowBlur = 0;
 
-                // Car Tail lights
                 ctx.fillStyle = '#ef4444';
                 ctx.fillRect(carX + 4, carY - 12, simCarPixelWidth * 0.25, 6);
                 ctx.fillRect(carX + simCarPixelWidth * 0.75 - 4, carY - 12, simCarPixelWidth * 0.25, 6);
@@ -889,12 +1052,10 @@ cv2.destroyAllWindows()</code></pre>
                     closestTarget = veh;
                 }
 
-                // Select Bounding Box Color based on Danger Level
                 let boxColor = '#00e676';
-                if (veh.distance < 8) boxColor = '#ff3366';
-                else if (veh.distance < 15) boxColor = '#ffbb00';
+                if (veh.distance < safeRule.danger) boxColor = '#ff3366';
+                else if (veh.distance < safeRule.warning) boxColor = '#ffbb00';
 
-                // Draw Target Box HUD Corners
                 ctx.strokeStyle = boxColor;
                 ctx.lineWidth = 3;
                 
@@ -907,7 +1068,6 @@ cv2.destroyAllWindows()</code></pre>
                 ctx.fillStyle = boxColor + '22';
                 ctx.fillRect(veh.x, veh.y, veh.w, veh.h);
 
-                // Distance Badge
                 ctx.fillStyle = boxColor;
                 ctx.fillRect(veh.x, veh.y - 24, Math.max(veh.w, 110), 22);
                 ctx.fillStyle = '#000000';
@@ -930,41 +1090,40 @@ cv2.destroyAllWindows()</code></pre>
                 metricTargetType.innerText = closestTarget.type;
                 metricBboxWidth.innerText = `${Math.round(closestTarget.w)} px`;
 
-                const estimatedTTC = (closestTarget.distance / 11.1).toFixed(1);
+                // Calculate Time To Collision (TTC) using current speed
+                const speedMps = (currentSpeed > 0 ? currentSpeed : 40) / 3.6;
+                const estimatedTTC = (closestTarget.distance / Math.max(speedMps, 1)).toFixed(1);
                 metricTTC.innerText = `${estimatedTTC} s`;
 
-                if (closestTarget.distance < 8) {
-                    // DANGER
+                if (closestTarget.distance < safeRule.danger) {
                     metricDist.className = "text-5xl font-extrabold text-rose-500 font-mono";
-                    metricStatusText.innerText = "CẢNH BÁO: BÁM DẦU QUÁ GẦN!";
+                    metricStatusText.innerText = `CẢNH BÁO: VA CHẠM! (<${safeRule.danger}m)`;
                     metricStatusText.className = "text-sm font-bold text-rose-400";
                     metricDangerLevel.innerText = "NGUY HIỂM";
                     metricDangerLevel.className = "text-lg font-bold text-rose-500";
                     warningBanner.classList.remove('hidden');
                     statusCard.className = "bg-adas-card p-6 rounded-2xl border-2 border-rose-500 warning-flash relative overflow-hidden";
 
-                    if (now - lastBeepTime > 400) {
-                        playBeep(950, 0.2, 2);
+                    if (now - lastBeepTime > 350) {
+                        playBeep(980, 0.2, 2);
                         lastBeepTime = now;
                     }
-                } else if (closestTarget.distance < 15) {
-                    // WARNING
+                } else if (closestTarget.distance < safeRule.warning) {
                     metricDist.className = "text-5xl font-extrabold text-amber-400 font-mono";
-                    metricStatusText.innerText = "CHÚ Ý: GIỮ KHOẢNG CÁCH";
+                    metricStatusText.innerText = `CHÚ Ý: DƯỚI KC AN TOÀN (${safeRule.warning}m)`;
                     metricStatusText.className = "text-sm font-bold text-amber-400";
-                    metricDangerLevel.innerText = "TRUNG BÌNH";
+                    metricDangerLevel.innerText = "CẦN GIẢM TỐC";
                     metricDangerLevel.className = "text-lg font-bold text-amber-400";
                     warningBanner.classList.add('hidden');
                     statusCard.className = "bg-adas-card p-6 rounded-2xl border-2 border-amber-500/80 relative overflow-hidden";
 
-                    if (now - lastBeepTime > 1200) {
-                        playBeep(600, 0.15, 1);
+                    if (now - lastBeepTime > 1000) {
+                        playBeep(650, 0.15, 1);
                         lastBeepTime = now;
                     }
                 } else {
-                    // SAFE
                     metricDist.className = "text-5xl font-extrabold text-emerald-400 font-mono";
-                    metricStatusText.innerText = "KHOẢNG CÁCH AN TOÀN";
+                    metricStatusText.innerText = "KHOẢNG CÁCH AN TOÀN QUY ĐỊNH";
                     metricStatusText.className = "text-sm font-bold text-emerald-400";
                     metricDangerLevel.innerText = "AN TOÀN";
                     metricDangerLevel.className = "text-lg font-bold text-emerald-400";

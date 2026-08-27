@@ -3,1848 +3,900 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Voice Studio Pro - Tool Clone Giọng AI</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Hệ Thống Cảnh Báo Khoảng Cách Xe Phía Trước (ADAS)</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- TensorFlow.js and COCO-SSD Model -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.10.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd@2.2.3"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            50: '#f5f3ff',
-                            100: '#ede9fe',
-                            500: '#8b5cf6',
-                            600: '#7c3aed',
-                            700: '#6d28d9',
-                            800: '#5b21b6',
-                            900: '#3c096c',
-                            gold: '#facc15',
-                            accent: '#ec4899'
+                        adas: {
+                            bg: '#0b0f19',
+                            card: '#161e2e',
+                            border: '#2a364f',
+                            accent: '#00f2fe',
+                            danger: '#ff3366',
+                            warning: '#ffbb00',
+                            safe: '#00e676'
                         }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif']
                     }
                 }
             }
         }
     </script>
-    <!-- FontAwesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0b0914;
-            color: #f3f4f6;
-            background-image: 
-                radial-gradient(at 10% 10%, rgba(124, 58, 237, 0.25) 0px, transparent 50%),
-                radial-gradient(at 90% 90%, rgba(236, 72, 153, 0.15) 0px, transparent 50%),
-                radial-gradient(at 50% 50%, rgba(59, 130, 246, 0.1) 0px, transparent 50%);
-            background-attachment: fixed;
+        @keyframes pulse-red {
+            0%, 100% { background-color: rgba(255, 51, 102, 0.15); border-color: rgba(255, 51, 102, 0.8); }
+            50% { background-color: rgba(255, 51, 102, 0.45); border-color: rgba(255, 51, 102, 1); }
         }
-
-        .glass-panel {
-            background: rgba(22, 18, 41, 0.75);
-            backdrop-filter: blur(16px);
-            border: 1px solid rgba(139, 92, 246, 0.2);
+        .warning-flash {
+            animation: pulse-red 0.6s infinite;
         }
-
-        .glass-card {
-            background: rgba(30, 27, 75, 0.5);
-            border: 1px solid rgba(139, 92, 246, 0.15);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .grid-pattern {
+            background-image: radial-gradient(rgba(0, 242, 254, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
         }
-
-        .glass-card:hover {
-            border-color: rgba(139, 92, 246, 0.5);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px -5px rgba(124, 58, 237, 0.3);
-        }
-
-        .glow-purple {
-            box-shadow: 0 0 20px rgba(124, 58, 237, 0.4);
-        }
-
-        .glow-gold {
-            box-shadow: 0 0 20px rgba(250, 204, 21, 0.4);
-        }
-
-        /* Custom Scrollbar */
+        /* Custom scrollbars */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
         }
         ::-webkit-scrollbar-track {
-            background: rgba(15, 12, 29, 0.8);
+            background: #0b0f19;
         }
         ::-webkit-scrollbar-thumb {
-            background: #6d28d9;
-            border-radius: 3px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #8b5cf6;
-        }
-
-        /* Hide scrollbar for Chrome, Safari and Opera */
-        .no-scrollbar::-webkit-scrollbar {
-            display: none;
-        }
-        /* Hide scrollbar for IE, Edge and Firefox */
-        .no-scrollbar {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
-        }
-
-        /* Wave Animation */
-        @keyframes wavePulse {
-            0%, 100% { height: 10px; }
-            50% { height: 35px; }
-        }
-        .animate-wave {
-            animation: wavePulse 1.2s ease-in-out infinite;
-        }
-
-        /* Custom Range Slider Styling */
-        input[type=range] {
-            -webkit-appearance: none;
-            background: #1f1a3a;
-            border-radius: 8px;
-            height: 6px;
-        }
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 18px;
-            width: 18px;
-            border-radius: 50%;
-            background: #a78bfa;
-            cursor: pointer;
-            box-shadow: 0 0 10px #7c3aed;
-            transition: transform 0.1s ease, background-color 0.2s;
-        }
-        input[type=range]::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-            background: #facc15;
+            background: #2a364f;
+            border-radius: 4px;
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between overflow-x-hidden antialiased">
+<body class="bg-adas-bg text-slate-100 font-sans min-h-screen flex flex-col justify-between grid-pattern select-none">
 
-    <!-- TOP NAVIGATION -->
-    <header class="glass-panel sticky top-0 z-50 border-b border-brand-800/40 px-4 lg:px-8 py-3">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
-            <!-- Brand Logo -->
+    <!-- Top Navigation Header -->
+    <header class="border-b border-adas-border bg-adas-card/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-700 via-brand-500 to-pink-500 flex items-center justify-center shadow-lg shadow-brand-600/30">
-                    <i class="fa-solid font-bold fa-microphone-lines text-white text-xl"></i>
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center text-white shadow-lg shadow-cyan-500/30">
+                    <i class="fa-solid font-bold fa-car-rear text-xl"></i>
                 </div>
                 <div>
-                    <div class="flex items-center gap-2">
-                        <span class="font-extrabold text-lg lg:text-xl tracking-tight text-white">TOOL CLONE GIỌNG AI</span>
-                        <span class="bg-brand-gold/20 text-brand-gold text-[10px] font-bold px-2 py-0.5 rounded-full border border-brand-gold/40">KHÔNG TỐN API</span>
-                    </div>
-                    <p class="text-xs text-purple-300/80 hidden sm:block">Tạo Giọng Nói Đa Ngôn Ngữ • Clone Giọng Chính Chủ • Tốc Độ Cao</p>
+                    <h1 class="font-bold text-lg leading-tight tracking-wide bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
+                        SmartADAS AI
+                    </h1>
+                    <p class="text-xs text-slate-400">Đo Khoảng Cách & Cảnh Báo Va Chạm Phía Trước</p>
                 </div>
             </div>
 
-            <!-- Header Badge & Quick Stats -->
+            <!-- Tab Switchers -->
+            <nav class="hidden md:flex items-center space-x-1 bg-adas-bg/60 p-1 rounded-xl border border-adas-border">
+                <button id="tab-app-btn" onclick="switchTab('app')" class="px-4 py-1.5 rounded-lg text-sm font-medium transition-all bg-cyan-500 text-slate-900 font-semibold shadow">
+                    <i class="fa-solid fa-radar mr-2"></i>Màn Hình Cảnh Báo
+                </button>
+                <button id="tab-calib-btn" onclick="switchTab('calib')" class="px-4 py-1.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition-all">
+                    <i class="fa-solid fa-sliders mr-2"></i>Hiệu Chỉnh Camera
+                </button>
+                <button id="tab-guide-btn" onclick="switchTab('guide')" class="px-4 py-1.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition-all">
+                    <i class="fa-solid fa-book-open mr-2"></i>Hướng Dẫn Tự Làm
+                </button>
+            </nav>
+
+            <!-- Status Indicator & Sound Toggle -->
             <div class="flex items-center space-x-3">
-                <div class="hidden md:flex items-center space-x-2 bg-brand-900/60 border border-brand-600/30 px-3 py-1.5 rounded-lg text-xs">
-                    <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
-                    <span class="text-emerald-300 font-medium">Gemini AI TTS Tiếng Việt 100%</span>
+                <button id="sound-toggle" onclick="toggleSound()" class="p-2.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 hover:text-cyan-400 transition" title="Bật/Tắt Âm Thanh Cảnh Báo">
+                    <i id="sound-icon" class="fa-solid fa-volume-high text-cyan-400"></i>
+                </button>
+                <div class="px-3 py-1.5 rounded-full bg-slate-800 border border-slate-700 flex items-center space-x-2 text-xs">
+                    <span id="ai-status-dot" class="w-2.5 h-2.5 rounded-full bg-amber-400 animate-pulse"></span>
+                    <span id="ai-status-text" class="text-slate-300 font-medium">Đang khởi tạo AI...</span>
                 </div>
-                
-                <a href="#cloning-section" class="bg-gradient-to-r from-brand-gold to-amber-400 hover:from-amber-400 hover:to-brand-gold text-slate-950 font-bold px-4 py-2 rounded-xl text-xs sm:text-sm flex items-center space-x-2 shadow-lg transition-all duration-300 hover:scale-105">
-                    <i class="fa-solid fa-bolt"></i>
-                    <span>Nâng Cấp Pro</span>
-                </a>
             </div>
         </div>
     </header>
 
-    <!-- MAIN APP CONTAINER -->
-    <main class="max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-4 sm:py-6 flex-grow space-y-4 sm:space-y-6">
+    <!-- Mobile Navigation -->
+    <div class="md:hidden flex border-b border-adas-border bg-adas-card text-xs text-center">
+        <button id="mobile-tab-app" onclick="switchTab('app')" class="flex-1 py-2.5 font-semibold text-cyan-400 border-b-2 border-cyan-400">
+            <i class="fa-solid fa-radar block text-sm mb-0.5"></i> Màn Hình
+        </button>
+        <button id="mobile-tab-calib" onclick="switchTab('calib')" class="flex-1 py-2.5 text-slate-400">
+            <i class="fa-solid fa-sliders block text-sm mb-0.5"></i> Hiệu Chỉnh
+        </button>
+        <button id="mobile-tab-guide" onclick="switchTab('guide')" class="flex-1 py-2.5 text-slate-400">
+            <i class="fa-solid fa-book-open block text-sm mb-0.5"></i> Hướng Dẫn
+        </button>
+    </div>
 
-        <!-- MAIN WORKSPACE GRID -->
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 items-start">
+    <!-- Main Content Area -->
+    <main class="max-w-7xl mx-auto px-4 py-6 flex-1 w-full">
 
-            <!-- 1. SCRIPT EDITOR PANEL (MOBILE: ORDER 1 | DESKTOP: TOP LEFT COL 1-8) -->
-            <div id="script-editor-section" class="order-1 lg:order-1 lg:col-start-1 lg:col-span-8 glass-panel rounded-2xl p-4 sm:p-5 lg:p-6 shadow-xl space-y-4 border border-brand-500/30">
-                
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-purple-800/40 pb-3">
-                    <div>
-                        <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-file-pen text-brand-gold"></i>
-                            Soạn Thảo Kịch Bản Nói AI
-                        </h2>
-                        <p class="text-xs text-purple-300/80">Nhập văn bản cần đọc hoặc chọn mẫu kịch bản có sẵn</p>
-                    </div>
-
-                    <!-- Sample Script Presets Dropdown -->
-                    <div class="flex items-center space-x-2 w-full sm:w-auto justify-between sm:justify-start">
-                        <span class="text-xs text-purple-300 whitespace-nowrap">Mẫu:</span>
-                        <select id="preset-script-select" onchange="loadPresetScript(this.value)" class="w-full sm:w-auto bg-purple-950 text-purple-200 border border-brand-600/40 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-brand-400">
-                            <option value="">-- Chọn Mẫu Kịch Bản --</option>
-                            <option value="review">🎬 Review Phim Hot</option>
-                            <option value="tho">🐰 Thỏ Bảy Màu Hài Hước</option>
-                            <option value="tiktok">🔥 Bán Hàng TikTok Viral</option>
-                            <option value="podcast">🎙️ Intro Podcast Truyền Cảm Hứng</option>
-                        </select>
-                    </div>
-                </div>
-
-                <!-- Text Area with Quick Formatting Bar -->
-                <div class="space-y-2">
-                    <!-- Quick Insert Pause Tags (Mobile Friendly Horizontal Scroll) -->
-                    <div class="flex items-center gap-1.5 text-xs overflow-x-auto no-scrollbar pb-1 whitespace-nowrap">
-                        <span class="text-purple-400 text-[11px] shrink-0">Thẻ ngắt nhịp:</span>
-                        <button onclick="insertTag('[Nghỉ 0.5s]')" class="bg-purple-900/60 hover:bg-brand-700 text-purple-200 px-2.5 py-1 rounded-lg border border-purple-700/50 shrink-0 touch-manipulation active:scale-95 transition">
-                            + Nghỉ 0.5s
+        <!-- ================= TAB 1: MAIN ADAS DASHBOARD ================= -->
+        <section id="view-app" class="space-y-6">
+            <!-- Mode Switcher (Webcam vs Simulator) -->
+            <div class="flex flex-wrap items-center justify-between gap-4 bg-adas-card p-4 rounded-2xl border border-adas-border">
+                <div class="flex items-center space-x-3">
+                    <span class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Nguồn Video:</span>
+                    <div class="inline-flex p-1 rounded-xl bg-adas-bg border border-adas-border">
+                        <button id="mode-demo" onclick="setMode('demo')" class="px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-slate-700 text-white shadow">
+                            <i class="fa-solid fa-gamepad mr-1.5"></i> Mô Phỏng Giao Thông
                         </button>
-                        <button onclick="insertTag('[Nghỉ 1s]')" class="bg-purple-900/60 hover:bg-brand-700 text-purple-200 px-2.5 py-1 rounded-lg border border-purple-700/50 shrink-0 touch-manipulation active:scale-95 transition">
-                            + Nghỉ 1s
-                        </button>
-                        <button onclick="insertTag('[Nhấn Giọng]')" class="bg-purple-900/60 hover:bg-brand-700 text-purple-200 px-2.5 py-1 rounded-lg border border-purple-700/50 shrink-0 touch-manipulation active:scale-95 transition">
-                            + Nhấn Giọng
-                        </button>
-                        <button onclick="clearScriptText()" class="ml-auto text-rose-400 hover:text-rose-300 shrink-0 px-2 py-1">
-                            <i class="fa-solid fa-trash mr-1"></i>Xóa sạch
+                        <button id="mode-webcam" onclick="setMode('webcam')" class="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all">
+                            <i class="fa-solid fa-camera mr-1.5"></i> Camera Trực Tiếp
                         </button>
                     </div>
-
-                    <textarea id="script-input" rows="6" placeholder="Nhập văn bản bạn muốn AI đọc tại đây... Ví dụ: Xin chào các bạn, đây là công cụ clone giọng AI hoàn toàn miễn phí API..." class="w-full bg-purple-950/80 text-purple-100 placeholder-purple-400/50 border border-brand-800/60 rounded-xl p-3.5 sm:p-4 text-sm sm:text-base focus:outline-none focus:border-brand-400 focus:ring-1 focus:ring-brand-400 transition resize-y min-h-[140px]"></textarea>
                 </div>
 
-                <!-- Script Stats & Action Buttons -->
-                <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-1">
-                    <div class="flex items-center justify-between sm:justify-start space-x-3 sm:space-x-4 text-xs text-purple-300 bg-purple-950/40 p-2 sm:p-0 rounded-lg">
-                        <span>Ký tự: <strong id="char-count" class="text-brand-gold">0</strong></span>
-                        <span>Số từ: <strong id="word-count" class="text-brand-gold">0</strong></span>
-                        <span>Thời lượng: <strong id="time-est" class="text-brand-gold">0s</strong></span>
+                <div class="flex items-center space-x-4 text-xs">
+                    <div class="flex items-center space-x-1.5">
+                        <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+                        <span class="text-slate-300">An toàn (>15m)</span>
                     </div>
-
-                    <button id="btn-generate-audio" onclick="generateAndPlaySpeech()" class="w-full sm:w-auto bg-gradient-to-r from-brand-600 via-purple-600 to-pink-600 hover:from-brand-500 hover:to-pink-500 text-white font-extrabold px-6 py-3.5 sm:py-3 rounded-xl shadow-lg shadow-brand-600/30 flex items-center justify-center space-x-2 transition transform active:scale-95 text-sm sm:text-base touch-manipulation">
-                        <i class="fa-solid fa-wand-magic-sparkles text-lg" id="btn-gen-icon"></i>
-                        <span id="btn-gen-text">TẠO GIỌNG NÓI TIẾNG VIỆT AI</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- 2. AUDIO FINE-TUNING & EFFECTS (MOBILE: ORDER 2 | DESKTOP: RIGHT COL 9-12) -->
-            <div id="fine-tuning-section" class="order-2 lg:order-4 lg:col-start-9 lg:col-span-4 glass-panel rounded-2xl p-4 sm:p-5 shadow-xl space-y-4">
-                <h3 class="text-xs sm:text-sm font-bold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-sliders text-brand-gold"></i>
-                    Tinh Chỉnh Tốc Độ & Bộ Lọc
-                </h3>
-
-                <!-- Pitch Control -->
-                <div class="space-y-1">
-                    <div class="flex justify-between text-xs">
-                        <span class="text-purple-200">Độ Trầm / Bổng (Pitch):</span>
-                        <span id="pitch-val-disp" class="font-bold text-brand-gold">1.0x</span>
+                    <div class="flex items-center space-x-1.5">
+                        <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
+                        <span class="text-slate-300">Chú ý (8-15m)</span>
                     </div>
-                    <input type="range" id="pitch-slider" min="0.5" max="1.8" step="0.05" value="1.0" class="w-full" oninput="updateAudioParams()">
-                    <div class="flex justify-between text-[10px] text-purple-400">
-                        <span>Trầm Nam (-2)</span>
-                        <span>Chuẩn</span>
-                        <span>Bổng Nữ (+2)</span>
-                    </div>
-                </div>
-
-                <!-- Speed Control -->
-                <div class="space-y-1">
-                    <div class="flex justify-between text-xs">
-                        <span class="text-purple-200">Tốc Độ Nói (Speed):</span>
-                        <span id="speed-val-disp" class="font-bold text-brand-gold">1.0x</span>
-                    </div>
-                    <input type="range" id="speed-slider" min="0.5" max="2.0" step="0.1" value="1.0" class="w-full" oninput="updateAudioParams()">
-                    <div class="flex justify-between text-[10px] text-purple-400">
-                        <span>Chậm (0.5x)</span>
-                        <span>Chuẩn (1.0x)</span>
-                        <span>Nhanh (2.0x)</span>
-                    </div>
-                </div>
-
-                <!-- Sound Filters & Effects -->
-                <div class="space-y-2 pt-2 border-t border-purple-800/40">
-                    <span class="text-xs text-purple-300 font-semibold block">Hiệu Ứng Âm Thanh:</span>
-                    <div class="grid grid-cols-2 gap-2 text-xs">
-                        <label class="flex items-center space-x-2 bg-purple-950/50 p-2 rounded-lg border border-purple-800/40 cursor-pointer hover:border-brand-500">
-                            <input type="checkbox" id="fx-reverb" class="accent-brand-500 rounded">
-                            <span class="text-purple-200 text-[11px] sm:text-xs">Vang nhẹ (Echo)</span>
-                        </label>
-                        <label class="flex items-center space-x-2 bg-purple-950/50 p-2 rounded-lg border border-purple-800/40 cursor-pointer hover:border-brand-500">
-                            <input type="checkbox" id="fx-bassboost" class="accent-brand-500 rounded">
-                            <span class="text-purple-200 text-[11px] sm:text-xs">Tăng Bass Trầm</span>
-                        </label>
-                        <label class="flex items-center space-x-2 bg-purple-950/50 p-2 rounded-lg border border-purple-800/40 cursor-pointer hover:border-brand-500">
-                            <input type="checkbox" id="fx-robot" class="accent-brand-500 rounded">
-                            <span class="text-purple-200 text-[11px] sm:text-xs">Giọng Robot</span>
-                        </label>
-                        <label class="flex items-center space-x-2 bg-purple-950/50 p-2 rounded-lg border border-purple-800/40 cursor-pointer hover:border-brand-500">
-                            <input type="checkbox" id="fx-cleaner" class="accent-brand-500 rounded" checked>
-                            <span class="text-purple-200 text-[11px] sm:text-xs">Lọc Nhiễu AI</span>
-                        </label>
+                    <div class="flex items-center space-x-1.5">
+                        <span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span>
+                        <span class="text-slate-300">Nguy hiểm (&lt;8m)</span>
                     </div>
                 </div>
             </div>
 
-            <!-- 3. PRESET & CLONE VOICE LIBRARY (MOBILE: ORDER 3 | DESKTOP: RIGHT COL 9-12 TOP) -->
-            <div id="voice-library-section" class="order-3 lg:order-2 lg:col-start-9 lg:col-span-4 glass-panel rounded-2xl p-4 sm:p-5 shadow-xl">
-                <div class="flex items-center justify-between mb-3.5">
-                    <h2 class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-users-viewfinder text-brand-500"></i>
-                        Thư Viện Giọng AI Tiếng Việt
-                    </h2>
-                    <span id="voice-count-badge" class="text-xs bg-purple-900/80 border border-purple-600/40 text-purple-300 px-2 py-0.5 rounded-full">6 Giọng</span>
-                </div>
-
-                <!-- Voice Cards Grid -->
-                <div class="space-y-2.5 max-h-[380px] overflow-y-auto pr-1" id="voice-list-container">
-                    <!-- Populated by JavaScript -->
-                </div>
-
-                <!-- VOICE CLONING (RECORD / UPLOAD) -->
-                <div id="cloning-section" class="mt-4 pt-4 border-t border-purple-800/40">
-                    <div class="flex items-center justify-between mb-3">
-                        <h3 class="text-xs sm:text-sm font-bold text-purple-200 flex items-center gap-2">
-                            <i class="fa-solid fa-fingerprint text-brand-gold"></i>
-                            Clone Giọng Chính Chủ
-                        </h3>
-                        <span class="text-[10px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/30">Miễn Phí</span>
-                    </div>
-
-                    <!-- Record or Upload Tabs -->
-                    <div class="grid grid-cols-2 gap-2 p-1 bg-purple-950/60 rounded-xl mb-3 text-xs">
-                        <button id="tab-rec-btn" onclick="switchCloneTab('rec')" class="py-1.5 rounded-lg font-semibold bg-brand-600 text-white transition touch-manipulation">
-                            <i class="fa-solid fa-microphone mr-1"></i> Ghi Âm
-                        </button>
-                        <button id="tab-upload-btn" onclick="switchCloneTab('upload')" class="py-1.5 rounded-lg font-semibold text-purple-300 hover:text-white transition touch-manipulation">
-                            <i class="fa-solid fa-upload mr-1"></i> Tải File
-                        </button>
-                    </div>
-
-                    <!-- Mic Recording Panel -->
-                    <div id="clone-rec-panel" class="p-3 bg-purple-950/40 border border-brand-800/50 rounded-xl text-center space-y-3">
-                        <p class="text-xs text-purple-300/80">Nói 1 câu 5 - 10 giây để AI phân tích tần số & đặc trưng giọng</p>
+            <!-- Main Grid layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Video HUD Canvas Container (Col 8) -->
+                <div class="lg:col-span-8 space-y-4">
+                    <div id="canvas-container" class="relative bg-black rounded-2xl overflow-hidden border-2 border-adas-border shadow-2xl aspect-video flex items-center justify-center">
                         
-                        <div class="flex items-center justify-center gap-3">
-                            <button id="start-rec-btn" onclick="toggleMicrophoneRecord()" class="w-12 h-12 rounded-full bg-gradient-to-tr from-rose-600 to-pink-500 hover:from-rose-500 hover:to-pink-400 text-white flex items-center justify-center shadow-lg transition transform active:scale-95 touch-manipulation">
-                                <i class="fa-solid fa-microphone text-lg" id="rec-icon"></i>
-                            </button>
+                        <!-- Hidden Video Element for Webcam -->
+                        <video id="webcam-video" class="hidden" autoplay playsinline muted></video>
+
+                        <!-- Display Canvas -->
+                        <canvas id="adas-canvas" class="w-full h-full object-contain block"></canvas>
+
+                        <!-- HUD Overlay Overlay Details -->
+                        <div class="absolute top-4 left-4 pointer-events-none flex items-center space-x-2 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-xs">
+                            <i class="fa-solid fa-crosshairs text-cyan-400 animate-spin"></i>
+                            <span class="text-slate-200 font-mono" id="hud-fps">FPS: --</span>
                         </div>
-                        <div id="rec-status-text" class="text-[11px] text-purple-400 font-mono">Sẵn sàng ghi âm</div>
 
-                        <!-- Live Audio Visualizer for Mic -->
-                        <canvas id="mic-canvas" class="w-full h-10 bg-black/40 rounded-lg border border-purple-900/50 hidden"></canvas>
-                    </div>
-
-                    <!-- Upload Audio Panel -->
-                    <div id="clone-upload-panel" class="p-3 bg-purple-950/40 border border-brand-800/50 rounded-xl text-center space-y-2 hidden">
-                        <input type="file" id="audio-file-input" accept="audio/*" class="hidden" onchange="handleAudioUpload(event)">
-                        <label for="audio-file-input" class="cursor-pointer border-2 border-dashed border-purple-600/40 hover:border-brand-500 rounded-xl p-4 flex flex-col items-center justify-center transition bg-purple-900/20 touch-manipulation">
-                            <i class="fa-solid fa-cloud-arrow-up text-2xl text-brand-400 mb-1"></i>
-                            <span class="text-xs text-purple-200 font-medium">Tải lên file giọng (.mp3, .wav)</span>
-                            <span class="text-[10px] text-purple-400">Tối đa 10MB</span>
-                        </label>
-                    </div>
-
-                    <!-- Processed Voice Sample Metadata -->
-                    <div id="cloned-result-box" class="mt-3 p-3 bg-brand-900/40 border border-emerald-500/30 rounded-xl hidden">
-                        <div class="flex items-center justify-between text-xs mb-1">
-                            <span class="font-bold text-emerald-300 flex items-center gap-1.5">
-                                <i class="fa-solid fa-circle-check"></i> Đã Trích Xuất Mẫu Giọng
-                            </span>
-                            <span id="cloned-pitch-val" class="text-[10px] font-mono text-purple-300">Pitch: 145Hz</span>
+                        <div class="absolute top-4 right-4 pointer-events-none bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10 text-xs text-right">
+                            <div class="text-slate-400">Tiêu Cự Calib</div>
+                            <div class="text-cyan-400 font-mono font-bold" id="hud-focal">F = 700 px</div>
                         </div>
-                        <input type="text" id="cloned-voice-name" value="Giọng Mẫu Của Tôi" class="w-full bg-purple-950/80 border border-purple-700/50 rounded px-2 py-1.5 text-xs text-white focus:outline-none focus:border-brand-400 mb-2">
-                        <button onclick="saveCustomVoiceProfile()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2 rounded-lg transition shadow touch-manipulation">
-                            Thêm Vào Thư Viện Giọng
-                        </button>
-                    </div>
-                </div>
-            </div>
 
-            <!-- 4. VIDEO TO TEXT TRANSCRIBER PANEL (MOBILE: ORDER 4 | DESKTOP: LEFT COL 1-8) -->
-            <div id="video-transcriber-section" class="order-4 lg:order-3 lg:col-start-1 lg:col-span-8 glass-panel rounded-2xl p-4 sm:p-5 lg:p-6 shadow-xl space-y-4 border border-brand-500/30">
-                <div class="flex flex-wrap items-center justify-between gap-2 border-b border-purple-800/40 pb-3">
-                    <div>
-                        <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
-                            <i class="fa-solid fa-file-video text-brand-gold"></i>
-                            Tự Động Tách Văn Bản Từ Video AI (Dung Lượng Lớn)
-                        </h2>
-                        <p class="text-xs text-purple-300/80">Hỗ trợ file video lớn (lên tới 500MB - 1GB+) • Tự động nén & chia nhỏ AI</p>
-                    </div>
-                    <span class="bg-emerald-500/20 text-emerald-300 text-[10px] font-bold px-2.5 py-1 rounded-full border border-emerald-500/40 flex items-center gap-1">
-                        <i class="fa-solid fa-bolt"></i> Gemini AI Transcribe Pro
-                    </span>
-                </div>
+                        <!-- Collision Banner (Hidden by default) -->
+                        <div id="warning-banner" class="hidden absolute bottom-6 left-1/2 -translate-x-1/2 w-11/12 max-w-md bg-rose-600/90 text-white font-black text-center py-3 rounded-2xl border-2 border-rose-400 shadow-2xl text-lg tracking-wider animate-bounce">
+                            <i class="fa-solid fa-triangle-exclamation mr-2"></i> CẢNH BÁO: VA CHẠM PHÍA TRƯỚC!
+                        </div>
 
-                <!-- Video Upload Area & Preview Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <!-- File Drop Zone -->
-                    <div class="space-y-2">
-                        <input type="file" id="video-file-input" accept="video/*,audio/*" class="hidden" onchange="handleVideoFileSelect(event)">
-                        <label for="video-file-input" class="cursor-pointer border-2 border-dashed border-purple-500/40 hover:border-brand-400 bg-purple-950/40 hover:bg-purple-900/30 rounded-xl p-4 sm:p-5 flex flex-col items-center justify-center transition text-center min-h-[130px] touch-manipulation">
-                            <i class="fa-solid fa-cloud-arrow-up text-2xl sm:text-3xl text-brand-gold mb-2"></i>
-                            <span class="text-xs text-purple-100 font-bold">Tải lên Video hoặc File Audio</span>
-                            <span class="text-[10px] text-purple-300/70 mt-1">Hỗ trợ file dung lượng lớn (MP4, MOV, WEBM, MP3, WAV...)</span>
-                        </label>
-                        <div id="video-file-info" class="text-xs font-mono text-purple-300 truncate">Chưa chọn file</div>
-                    </div>
-
-                    <!-- Video Player Preview -->
-                    <div class="flex flex-col justify-between space-y-2">
-                        <div class="bg-black/60 rounded-xl overflow-hidden border border-purple-800/40 min-h-[130px] flex items-center justify-center relative">
-                            <video id="video-preview-player" controls class="w-full max-h-36 hidden rounded-xl object-contain"></video>
-                            <div id="video-preview-placeholder" class="text-center p-3 text-purple-400/60 text-xs">
-                                <i class="fa-solid fa-film text-xl mb-1 block"></i>
-                                Xem trước video tại đây sau khi chọn file
+                        <!-- Controls Overlay for Demo Mode -->
+                        <div id="demo-controls" class="absolute bottom-3 left-3 right-3 bg-black/70 backdrop-blur-md p-3 rounded-xl border border-white/10 flex items-center justify-between text-xs">
+                            <span class="text-slate-300 font-medium">Điều chỉnh khoảng cách xe mô phỏng:</span>
+                            <div class="flex items-center space-x-3 w-1/2">
+                                <span class="text-slate-400 font-mono">Gần</span>
+                                <input type="range" id="sim-distance-slider" min="3" max="35" step="0.5" value="18" class="w-full accent-cyan-400 cursor-pointer">
+                                <span class="text-slate-400 font-mono">Xa</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Processing Progress Bar -->
-                <div id="transcription-progress-box" class="hidden space-y-2 bg-purple-950/60 border border-brand-700/50 p-3 rounded-xl">
-                    <div class="flex items-center justify-between text-xs">
-                        <span id="transcription-progress-status" class="text-purple-200 font-medium truncate pr-2">Đang chuẩn bị xử lý...</span>
-                        <span id="transcription-progress-percent" class="font-bold text-brand-gold shrink-0">0%</span>
+                <!-- Telemetry & Metrics Panel (Col 4) -->
+                <div class="lg:col-span-4 space-y-4 flex flex-col justify-between">
+                    <!-- Main Distance Card -->
+                    <div id="status-card" class="bg-adas-card p-6 rounded-2xl border-2 border-adas-border transition-all duration-300 relative overflow-hidden">
+                        <div class="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-1">
+                            Khoảng Cách Xe Gần Nhất
+                        </div>
+                        <div class="flex items-baseline space-x-2">
+                            <span id="metric-distance" class="text-5xl font-extrabold text-cyan-400 font-mono">--</span>
+                            <span class="text-slate-400 text-xl font-bold">m (mét)</span>
+                        </div>
+
+                        <!-- Warning Alert Box -->
+                        <div id="metric-status-box" class="mt-4 px-4 py-2.5 rounded-xl bg-slate-800 border border-slate-700 flex items-center justify-between">
+                            <span class="text-xs text-slate-400">Tình trạng bám đuôi:</span>
+                            <span id="metric-status-text" class="text-sm font-bold text-slate-200">Đang chờ quét...</span>
+                        </div>
                     </div>
-                    <div class="w-full bg-purple-900/80 rounded-full h-2.5 overflow-hidden border border-purple-700/40">
-                        <div id="transcription-progress-bar" class="bg-gradient-to-r from-brand-500 via-pink-500 to-amber-400 h-full w-0 transition-all duration-300"></div>
+
+                    <!-- Additional Metrics Grid -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="bg-adas-card p-4 rounded-xl border border-adas-border">
+                            <div class="text-slate-400 text-xs font-medium">Loại Phương Tiện</div>
+                            <div id="metric-target-type" class="text-lg font-bold text-slate-100 mt-1 capitalize">Chưa có</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Target Vehicle</div>
+                        </div>
+
+                        <div class="bg-adas-card p-4 rounded-xl border border-adas-border">
+                            <div class="text-slate-400 text-xs font-medium">Thời Gian Va Chạm (TTC)</div>
+                            <div id="metric-ttc" class="text-lg font-bold text-slate-100 mt-1 font-mono">-- s</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Time to Collision</div>
+                        </div>
+
+                        <div class="bg-adas-card p-4 rounded-xl border border-adas-border">
+                            <div class="text-slate-400 text-xs font-medium">Chiều Rộng Khung (Bounding Box)</div>
+                            <div id="metric-bbox-width" class="text-lg font-bold text-slate-100 mt-1 font-mono">-- px</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Vehicle width on sensor</div>
+                        </div>
+
+                        <div class="bg-adas-card p-4 rounded-xl border border-adas-border">
+                            <div class="text-slate-400 text-xs font-medium">Mức Độ Nguy Hiểm</div>
+                            <div id="metric-danger-level" class="text-lg font-bold text-emerald-400 mt-1">An Toàn</div>
+                            <div class="text-[10px] text-slate-500 mt-0.5">Risk assessment</div>
+                        </div>
+                    </div>
+
+                    <!-- System Info & Calibration Quick Link -->
+                    <div class="bg-adas-card/60 p-4 rounded-xl border border-adas-border text-xs text-slate-400 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span>Mô hình AI:</span>
+                            <span class="text-slate-200 font-mono">COCO-SSD MobileNetV2</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span>Công thức đo:</span>
+                            <span class="text-slate-200 font-mono">Pinhole Camera Model</span>
+                        </div>
+                        <button onclick="switchTab('calib')" class="w-full mt-2 py-2 bg-slate-800 hover:bg-slate-700 text-cyan-400 rounded-lg font-medium transition text-center block">
+                            <i class="fa-solid fa-wrench mr-1.5"></i> Chỉnh Tiêu Cự Camera (f)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= TAB 2: CALIBRATION & PHYSICS ================= -->
+        <section id="view-calib" class="hidden space-y-6">
+            <div class="bg-adas-card p-6 rounded-2xl border border-adas-border space-y-6">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-100 flex items-center">
+                        <i class="fa-solid fa-sliders text-cyan-400 mr-2"></i> Hiệu Chỉnh Thông Số Đo Khoảng Cách (Camera Calibration)
+                    </h2>
+                    <p class="text-sm text-slate-400 mt-1">
+                        Khoảng cách được tính toán bằng mô hình hình học Camera Lỗ Kim (Pinhole Camera Model). Bạn cần thiết lập tiêu cự cảm biến $f$ để đảm bảo độ chính xác.
+                    </p>
+                </div>
+
+                <!-- Math Formula Display Card -->
+                <div class="bg-adas-bg p-4 rounded-xl border border-adas-border font-mono text-sm space-y-2 text-cyan-300">
+                    <div class="text-xs text-slate-400 font-sans uppercase tracking-wider font-bold">Công thức tính toán:</div>
+                    <div class="text-base text-center py-2 bg-slate-900/80 rounded-lg border border-slate-800">
+                        Distance (D) = <span class="text-amber-400">( Focal Length (f) × Real Vehicle Width (W) )</span> / <span class="text-emerald-400">Pixel Width (w)</span>
+                    </div>
+                    <p class="text-xs text-slate-400 font-sans leading-relaxed">
+                        Trong đó: <br>
+                        • <b>f (Focal Length)</b>: Tiêu cự tính bằng pixel của camera.<br>
+                        • <b>W (Real Width)</b>: Chiều rộng trung bình của xe thực tế (Ô tô ≈ 1.8m, Xe tải/Bus ≈ 2.5m, Xe máy ≈ 0.8m).<br>
+                        • <b>w (Pixel Width)</b>: Chiều rộng khung nhận diện xe phát hiện bởi AI trong ảnh (pixels).
+                    </p>
+                </div>
+
+                <!-- Controls Form -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                    <!-- Focal Length Adjustment -->
+                    <div class="space-y-3">
+                        <label class="block text-sm font-semibold text-slate-200">
+                            Tiêu Cự Camera (Focal Length - f): <span id="calib-focal-val" class="text-cyan-400 font-mono font-bold">700</span> px
+                        </label>
+                        <input type="range" id="focal-slider" min="300" max="1500" value="700" step="10" oninput="updateCalibration()" class="w-full accent-cyan-400 cursor-pointer">
+                        <p class="text-xs text-slate-400">
+                            * Mẹo: Nếu đo thấy khoảng cách hiển thị <b>NHỎ HƠN</b> thực tế, hãy <b>GIẢM f</b>. Ngược lại nếu thấy lớn hơn, hãy <b>TĂNG f</b>.
+                        </p>
+                    </div>
+
+                    <!-- Default Real Vehicle Width Settings -->
+                    <div class="space-y-3">
+                        <label class="block text-sm font-semibold text-slate-200">Chiều Rộng Mặc Định Xe Ô Tô (W):</label>
+                        <div class="flex items-center space-x-3">
+                            <input type="number" id="calib-car-width" value="1.8" step="0.1" min="1.0" max="3.0" onchange="updateCalibration()" class="bg-adas-bg border border-adas-border rounded-xl px-3 py-2 text-cyan-400 font-mono w-28 focus:outline-none focus:border-cyan-400">
+                            <span class="text-sm text-slate-400">Mét (m)</span>
+                        </div>
+                        <p class="text-xs text-slate-400">
+                            Độ rộng ước tính của xe con sedan/SUV thông thường.
+                        </p>
                     </div>
                 </div>
 
-                <!-- Extract Action Button -->
-                <button id="btn-extract-text" onclick="extractTextFromVideo()" class="w-full bg-gradient-to-r from-purple-600 via-brand-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-extrabold py-3 px-4 rounded-xl shadow-lg flex items-center justify-center space-x-2 transition transform active:scale-95 text-xs sm:text-sm touch-manipulation">
-                    <i class="fa-solid fa-wand-magic-sparkles text-base sm:text-lg" id="btn-extract-icon"></i>
-                    <span id="btn-extract-text-span">TÁCH VĂN BẢN TIẾNG VIỆT TỪ VIDEO DUNG LƯỢNG LỚN</span>
-                </button>
+                <!-- Calibration Test Helper -->
+                <div class="border-t border-adas-border pt-4">
+                    <h3 class="text-sm font-bold text-slate-200 mb-2">Cách tự Calib thực tế với xe của bạn:</h3>
+                    <ol class="list-decimal list-inside text-xs text-slate-300 space-y-1.5 leading-relaxed">
+                        <li>Đặt camera trên xe ô tô của bạn, đỗ xe đằng sau một chiếc ô tô khác ở khoảng cách chính xác <b>10 mét</b> (đo bằng thước dây hoặc máy đo laser).</li>
+                        <li>Bật phần mềm ở chế độ Camera Trực Tiếp.</li>
+                        <li>Kéo thanh trượt <b>Focal Length (f)</b> sao cho thông số khoảng cách trên màn hình nhảy đúng về số <b>10.0 m</b>.</li>
+                        <li>Lưu lại chỉ số tiêu cự đó cho camera của bạn!</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
 
-                <!-- Extracted Result Container -->
-                <div id="transcription-result-box" class="hidden space-y-2 pt-2 border-t border-purple-800/40">
+        <!-- ================= TAB 3: DIY HARDWARE & SOFTWARE GUIDE ================= -->
+        <section id="view-guide" class="hidden space-y-6">
+            <div class="bg-adas-card p-6 rounded-2xl border border-adas-border space-y-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-slate-100 flex items-center">
+                        <i class="fa-solid fa-graduation-cap text-cyan-400 mr-3"></i> Hướng Dẫn Tự Làm Thiết Bị Đo Khoảng Cách Thực Tế
+                    </h2>
+                    <p class="text-sm text-slate-400 mt-1">
+                        Để biến ý tưởng này thành một thiết bị gắn trực tiếp lên kính lái ô tô thật (sử dụng Python + Raspberry Pi hoặc Jetson Nano), bạn cần chuẩn bị các phần dưới đây.
+                    </p>
+                </div>
+
+                <!-- Component Checklist Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="bg-adas-bg p-4 rounded-xl border border-adas-border space-y-2">
+                        <div class="text-cyan-400 text-lg font-bold"><i class="fa-solid fa-microchip mr-2"></i>1. Phần Cứng (Hardware)</div>
+                        <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+                            <li><b>Bo mạch xử lý</b>: Raspberry Pi 4 (4GB RAM) hoặc NVIDIA Jetson Nano / Orin Nano.</li>
+                            <li><b>Camera</b>: WebCam USB HD (1080p, góc nhìn 60°-90°) hoặc Camera Raspberry Pi V2/V3.</li>
+                            <li><b>Màn hình HUD</b>: Màn hình cảm ứng LCD 5-7 inch đính kính lái.</li>
+                            <li><b>Còi cảnh báo</b>: Buzzer 5V hoặc loa mini Jack 3.5mm.</li>
+                            <li><b>Cấp nguồn</b>: Tẩu sạc ô tô USB Type-C 5V-3A.</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-adas-bg p-4 rounded-xl border border-adas-border space-y-2">
+                        <div class="text-emerald-400 text-lg font-bold"><i class="fa-solid fa-code mr-2"></i>2. Phần Mềm (Software)</div>
+                        <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+                            <li><b>Hệ điều hành</b>: Raspberry Pi OS / Ubuntu Linux.</li>
+                            <li><b>Ngôn ngữ</b>: Python 3.10+.</li>
+                            <li><b>Thư viện AI/CV</b>: OpenCV (`opencv-python`), Ultralytics YOLOv8 (`ultralytics`), PyTorch.</li>
+                            <li><b>Mô hình AI</b>: YOLOv8n (YOLOv8 Nano - chạy siêu mượt 30-60 FPS trên bo mạch nhúng).</li>
+                        </ul>
+                    </div>
+
+                    <div class="bg-adas-bg p-4 rounded-xl border border-adas-border space-y-2">
+                        <div class="text-amber-400 text-lg font-bold"><i class="fa-solid fa-calculator mr-2"></i>3. Cảm Biến Bổ Sung (Nâng Cao)</div>
+                        <ul class="text-xs text-slate-300 space-y-1.5 list-disc list-inside">
+                            <li><b>LiDAR 1D TFmini Plus</b>: Đo khoảng cách bằng Laser chính xác tuyệt đối ban đêm (độ xa tới 12m).</li>
+                            <li><b>Cảm biến Radar mmWave 24GHz</b>: Hoạt động hoàn hảo cả khi mưa bão, sương mù dày đặc.</li>
+                            <li><b>OBD-II Dongle</b>: Đọc tốc độ xe hiện tại qua cổng OBD2 để tính toán thời gian va chạm (TTC).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Python Source Code Snippet Section -->
+                <div class="space-y-3 border-t border-adas-border pt-4">
                     <div class="flex items-center justify-between">
-                        <span class="text-xs font-bold text-emerald-300 flex items-center gap-1.5">
-                            <i class="fa-solid fa-circle-check"></i> Kết Quả Văn Bản Tách Được:
-                        </span>
-                        <div class="flex items-center space-x-2">
-                            <button onclick="copyTranscribedText()" class="text-xs bg-purple-900/80 hover:bg-purple-800 text-purple-200 px-2.5 py-1 rounded-lg border border-purple-700/50 transition touch-manipulation">
-                                <i class="fa-solid fa-copy mr-1"></i>Sao chép
-                            </button>
-                            <button onclick="downloadTranscribedTextFile()" class="text-xs bg-purple-900/80 hover:bg-purple-800 text-purple-200 px-2.5 py-1 rounded-lg border border-purple-700/50 transition touch-manipulation">
-                                <i class="fa-solid fa-download mr-1"></i>File .TXT
-                            </button>
-                        </div>
-                    </div>
-
-                    <textarea id="transcription-text-output" rows="4" class="w-full bg-purple-950/90 text-purple-100 border border-emerald-500/40 rounded-xl p-3 text-xs focus:outline-none focus:border-brand-400 transition" placeholder="Văn bản trích xuất từ video sẽ xuất hiện tại đây..."></textarea>
-
-                    <button onclick="applyTranscribedTextToScript()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs py-2.5 rounded-xl transition shadow flex items-center justify-center gap-2 touch-manipulation">
-                        <i class="fa-solid fa-arrow-up-long"></i>
-                        <span>Đưa Văn Bản Vào Ô Kịch Bản Đọc AI Để Clone Giọng</span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- 5. EXPORT & AUDIO HISTORY LIST (MOBILE: ORDER 5 | DESKTOP: LEFT COL 1-8) -->
-            <div id="history-section" class="order-5 lg:order-5 lg:col-start-1 lg:col-span-8 glass-panel rounded-2xl p-4 sm:p-5 lg:p-6 shadow-xl space-y-4">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-list-check text-emerald-400"></i>
-                        Lịch Sử Clip & Xuất Audio
-                    </h3>
-                    <button onclick="clearHistory()" class="text-xs text-purple-400 hover:text-rose-400 transition">
-                        <i class="fa-solid fa-trash-can mr-1"></i>Xóa Lịch Sử
-                    </button>
-                </div>
-
-                <!-- History List -->
-                <div id="history-container" class="space-y-2.5 max-h-60 overflow-y-auto pr-1">
-                    <div class="text-center py-6 text-purple-400/60 text-xs">
-                        <i class="fa-solid fa-box-open text-2xl mb-2 block"></i>
-                        Chưa có clip nào được xuất. Hãy nhấn "TẠO GIỌNG NÓI TIẾNG VIỆT AI" để bắt đầu!
-                    </div>
-                </div>
-            </div>
-
-            <!-- 6. AUDIO PLAYER & REAL-TIME SPECTRUM VISUALIZER (MOBILE: ORDER 6 | DESKTOP: BOTTOM LEFT COL 1-8) -->
-            <div id="player-visualizer-section" class="order-6 lg:order-6 lg:col-start-1 lg:col-span-8 glass-panel rounded-2xl p-4 sm:p-5 lg:p-6 shadow-xl space-y-4">
-                <div class="flex items-center justify-between">
-                    <h3 class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-waveform-lines text-brand-gold"></i>
-                        Trình Phát & Sóng Âm Trực Tiếp
-                    </h3>
-                    <div id="playing-status-badge" class="hidden items-center space-x-1.5 bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-xs font-semibold">
-                        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                        <span>Đang Phát AI...</span>
-                    </div>
-                </div>
-
-                <!-- Hidden HTML5 Audio Element with inline attributes for Mobile Compatibility -->
-                <audio id="mobile-html5-audio" playsinline webkit-playsinline class="hidden"></audio>
-
-                <!-- Spectrum Canvas Visualizer -->
-                <div class="relative bg-black/60 rounded-xl overflow-hidden border border-purple-800/40 p-2">
-                    <canvas id="visualizer-canvas" class="w-full h-20 sm:h-28 block"></canvas>
-                    
-                    <!-- Overlay Text if Idle -->
-                    <div id="visualizer-placeholder" class="absolute inset-0 flex items-center justify-center text-purple-400/60 text-xs font-medium pointer-events-none px-2 text-center">
-                        <i class="fa-solid fa-music mr-2"></i> Nhấn "TẠO GIỌNG NÓI TIẾNG VIỆT AI" để xem sóng âm
-                    </div>
-                </div>
-
-                <!-- Player Controls Bar -->
-                <div class="flex flex-wrap items-center justify-between gap-3 bg-purple-950/60 p-3 sm:p-3.5 rounded-xl border border-brand-800/30">
-                    <div class="flex items-center space-x-2 sm:space-x-3">
-                        <button id="btn-play-pause" onclick="togglePlayPause()" class="w-10 h-10 rounded-full bg-brand-600 hover:bg-brand-500 text-white flex items-center justify-center transition shadow touch-manipulation" title="Phát / Tạm dừng">
-                            <i class="fa-solid fa-play text-sm" id="play-pause-icon"></i>
-                        </button>
-                        <button onclick="replayCurrentAudio()" class="w-9 h-9 rounded-full bg-purple-900/80 hover:bg-purple-800 text-purple-200 flex items-center justify-center transition touch-manipulation" title="Nghe lại clip vừa tạo">
-                            <i class="fa-solid fa-rotate-left text-xs"></i>
-                        </button>
-                        <button onclick="stopSpeechPlayback()" class="w-9 h-9 rounded-full bg-purple-900/80 hover:bg-purple-800 text-purple-200 flex items-center justify-center transition touch-manipulation" title="Dừng phát">
-                            <i class="fa-solid fa-square text-xs"></i>
+                        <h3 class="text-base font-bold text-slate-100 flex items-center">
+                            <i class="fa-brands fa-python text-yellow-400 mr-2"></i> Mã Nguồn Python Minh Họa (OpenCV + YOLOv8)
+                        </h3>
+                        <button onclick="copyPythonCode()" class="px-3 py-1 bg-slate-800 hover:bg-slate-700 text-xs text-cyan-400 rounded-lg border border-slate-700 transition">
+                            <i class="fa-regular fa-copy mr-1"></i> Sao chép Code
                         </button>
                     </div>
 
-                    <!-- Progress indicator -->
-                    <div class="flex-grow max-w-xs mx-1 sm:mx-2">
-                        <div class="w-full bg-purple-900/60 rounded-full h-2 overflow-hidden border border-purple-700/40">
-                            <div id="playback-progress" class="bg-gradient-to-r from-brand-500 to-brand-gold h-full w-0 transition-all duration-200"></div>
-                        </div>
-                    </div>
+                    <pre id="python-code-block" class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-xs font-mono text-emerald-400 overflow-x-auto leading-relaxed max-h-96"><code>import cv2
+import math
+from ultralytics import YOLO
 
-                    <!-- Volume Slider -->
-                    <div class="flex items-center space-x-2 text-xs text-purple-300">
-                        <i class="fa-solid fa-volume-high text-purple-400"></i>
-                        <input type="range" id="master-volume" min="0" max="1" step="0.05" value="1" class="w-16 sm:w-20" oninput="updateMasterVolume(this.value)">
-                    </div>
-                </div>
+# 1. Tải mô hình AI YOLOv8 siêu nhẹ cho máy nhúng
+model = YOLO('yolov8n.pt')
 
-                <!-- BACKGROUND MUSIC MIXER -->
-                <div class="pt-3 border-t border-purple-800/40 space-y-3">
-                    <div class="flex items-center justify-between">
-                        <span class="text-xs font-bold text-purple-200 flex items-center gap-1.5">
-                            <i class="fa-solid fa-compact-disc text-pink-400"></i>
-                            Nhạc Nền Phối Kèm (Background Music)
-                        </span>
-                        <span class="text-[10px] text-purple-400 hidden sm:inline">Tự động trộn với giọng đọc</span>
-                    </div>
+# 2. Thông số Calib Camera
+FOCAL_LENGTH = 700  # Tiêu cự camera (pixels)
+REAL_CAR_WIDTH = 1.8 # Chiều rộng trung bình của ô tô (meters)
 
-                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3">
-                        <select id="bgm-select" onchange="changeBGMTrack(this.value)" class="bg-purple-950 text-purple-200 border border-brand-700/50 rounded-xl px-3 py-2 text-xs focus:outline-none">
-                            <option value="none">🚫 Không Dùng Nhạc Nền</option>
-                            <option value="lofi">☕ Lo-Fi Chill Beats</option>
-                            <option value="upbeat">🔥 Upbeat TikTok Dynamic</option>
-                            <option value="cinematic">🎬 Dramatic Movie Cinematic</option>
-                        </select>
+# ID class phương tiện trong COCO Dataset
+VEHICLE_CLASSES = [2, 3, 5, 7] # car, motorcycle, bus, truck
 
-                        <div class="sm:col-span-2 flex items-center space-x-3 bg-purple-950/40 px-3 py-2 rounded-xl border border-purple-900/50">
-                            <span class="text-xs text-purple-300 whitespace-nowrap">Âm lượng nhạc:</span>
-                            <input type="range" id="bgm-volume" min="0" max="0.5" step="0.02" value="0.1" class="w-full" oninput="updateBGMVolume(this.value)">
-                            <span id="bgm-vol-num" class="text-xs font-bold text-brand-gold">20%</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+# 3. Mở Camera ô tô (0: Webcam tích hợp, hoặc 1: USB Dashcam)
+cap = cv2.VideoCapture(0)
 
-        </div>
+while cap.isOpened():
+    ret, frame = cap.read()
+    if not ret:
+        break
 
-        <!-- FEATURES RECAP GRID -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 pt-2">
-            <div class="glass-card p-3.5 sm:p-4 rounded-xl flex items-start space-x-3">
-                <div class="p-2.5 bg-brand-600/30 border border-brand-500/40 rounded-xl text-brand-gold text-base sm:text-lg shrink-0">
-                    <i class="fa-solid fa-shield-halved"></i>
-                </div>
-                <div>
-                    <h4 class="text-xs sm:text-sm font-bold text-white">An Toàn & Bảo Mật</h4>
-                    <p class="text-[11px] sm:text-xs text-purple-300/80 mt-0.5">Mọi thao tác xử lý trực tiếp trên trình duyệt, không lưu trữ thông tin cá nhân.</p>
-                </div>
-            </div>
+    # Nhận diện phương tiện
+    results = model(frame, stream=True)
 
-            <div class="glass-card p-3.5 sm:p-4 rounded-xl flex items-start space-x-3">
-                <div class="p-2.5 bg-brand-600/30 border border-brand-500/40 rounded-xl text-brand-gold text-base sm:text-lg shrink-0">
-                    <i class="fa-solid fa-globe"></i>
-                </div>
-                <div>
-                    <h4 class="text-xs sm:text-sm font-bold text-white">Hỗ Trợ Tiếng Việt 100%</h4>
-                    <p class="text-[11px] sm:text-xs text-purple-300/80 mt-0.5">Tiếng Việt (Bắc / Nam) chuẩn biểu cảm, đúng chính tả & ngắt nhịp.</p>
-                </div>
-            </div>
+    for r in results:
+        boxes = r.boxes
+        for box in boxes:
+            cls = int(box.cls[0])
+            if cls in VEHICLE_CLASSES:
+                # Lấy tọa độ Bounding Box (x1, y1, x2, y2)
+                x1, y1, x2, y2 = map(int, box.xyxy[0])
+                pixel_width = x2 - x1
 
-            <div class="glass-card p-3.5 sm:p-4 rounded-xl flex items-start space-x-3">
-                <div class="p-2.5 bg-brand-600/30 border border-brand-500/40 rounded-xl text-brand-gold text-base sm:text-lg shrink-0">
-                    <i class="fa-solid fa-clapperboard"></i>
-                </div>
-                <div>
-                    <h4 class="text-xs sm:text-sm font-bold text-white">Tối Ưu Sáng Tạo Content</h4>
-                    <p class="text-[11px] sm:text-xs text-purple-300/80 mt-0.5">Phù hợp làm Youtube Shorts, TikTok Video, Facebook Reels, Podcast & Quảng Cáo.</p>
+                if pixel_width > 0:
+                    # 4. Áp dụng Công thức Pinhole Camera Model
+                    distance = (REAL_CAR_WIDTH * FOCAL_LENGTH) / pixel_width
+
+                    # Chọn màu cảnh báo dựa trên khoảng cách
+                    if distance < 8.0:
+                        color = (0, 0, 255) # Đỏ - NGUY HIỂM!
+                        label_status = "DANGER! BRAKE!"
+                    elif distance < 15.0:
+                        color = (0, 165, 255) # Cam - Chú ý
+                        label_status = "WARNING"
+                    else:
+                        color = (0, 255, 0) # Xanh - An toàn
+                        label_status = "SAFE"
+
+                    # Vẽ Khung và Thông số lên màn hình
+                    cv2.rectangle(frame, (x1, y1), (x2, y2), color, 2)
+                    text = f"{distance:.1f}m | {label_status}"
+                    cv2.putText(frame, text, (x1, y1 - 10),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.6, color, 2)
+
+    # Hiển thị luồng video
+    cv2.imshow("ADAS Forward Collision Warning", frame)
+
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+cap.release()
+cv2.destroyAllWindows()</code></pre>
                 </div>
             </div>
-        </div>
-
+        </section>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="glass-panel border-t border-brand-900/60 mt-8 py-4 px-4 text-center text-xs text-purple-300/60">
-        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-            <div>
-                © 2026 <strong>AI Voice Studio Pro</strong>. Bản quyền thuộc về hệ thống Clone Giọng AI Không Tốn API.
-            </div>
-            <div class="flex items-center space-x-4 text-purple-400">
-                <a href="#" onclick="showToast('Chính sách bảo mật: Dữ liệu giọng nói không bao giờ gửi ra máy chủ ngoài.', 'info')" class="hover:text-white transition">Bảo Mật</a>
-                <a href="#" onclick="showToast('Hướng dẫn: Chọn giọng -> Nhập văn bản -> Tùy chỉnh pitch -> Tạo Giọng Nói AI!', 'info')" class="hover:text-white transition">Hướng Dẫn</a>
-                <a href="#" onclick="showToast('Hỗ trợ kỹ thuật 24/7 trực tuyến.', 'info')" class="hover:text-white transition">Hỗ Trợ</a>
-            </div>
-        </div>
+    <!-- Footer -->
+    <footer class="border-t border-adas-border bg-adas-card/50 py-3 text-center text-xs text-slate-500">
+        SmartADAS AI Simulation & Distance Estimation Engine • Pinhole Geometry Model v2.4
     </footer>
 
-    <!-- TOAST NOTIFICATION CONTAINER -->
-    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
-
     <script>
-        // APP STATE & CONSTANTS
-        let activeVoiceId = 'tho';
-        let customVoices = [];
-        let isRecordingMic = false;
-        let mediaRecorder = null;
-        let micAudioChunks = [];
-        let speechSynth = window.speechSynthesis;
-        let currentUtterance = null;
-        let isPlaying = false;
+        /* State Variables */
+        let currentTab = 'app';
+        let currentMode = 'demo'; // 'demo' or 'webcam'
+        let isSoundOn = true;
+        let aiModel = null;
+        let isModelLoaded = false;
+        let webcamStream = null;
+        
+        // Calibration values
+        let focalLength = 700;
+        let defaultCarWidth = 1.8; // meters
+
+        // FPS calculation
+        let lastFrameTime = performance.now();
+        let frameCount = 0;
+        let fps = 0;
+
+        // Simulation parameters
+        let simDistance = 18; // meters
+        let simXOffset = 0;
+        let simDirection = -0.15;
+
+        // Elements
+        const canvas = document.getElementById('adas-canvas');
+        const ctx = canvas.getContext('2d');
+        const videoEl = document.getElementById('webcam-video');
+
+        // Web Audio API for Warning Sound
         let audioCtx = null;
-        let analyserNode = null;
-        let currentSourceNode = null;
-        let currentAudioBuffer = null;
-        let currentWavBlob = null;
-        let bgmOscillator = null;
-        let bgmGainNode = null;
-        let activeBgmType = 'none';
-        let generatedClips = [];
-        let isAudioUnlocked = false;
 
-        // Mobile Gesture Audio Unlocker
-        function unlockMobileAudio() {
-            if (!audioCtx) {
-                initAudioContext();
-            }
-            if (audioCtx && audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-            if (audioCtx && !isAudioUnlocked) {
-                try {
-                    const buffer = audioCtx.createBuffer(1, 1, 22050);
-                    const source = audioCtx.createBufferSource();
-                    source.buffer = buffer;
-                    source.connect(audioCtx.destination);
-                    source.start(0);
-                    isAudioUnlocked = true;
-                } catch(e){}
-            }
-        }
-
-        ['touchstart', 'touchend', 'click', 'pointerdown'].forEach(evtType => {
-            document.addEventListener(evtType, unlockMobileAudio, { passive: true });
-        });
-
-        // PRESET VOICES LIST WITH GEMINI TTS DIRECTIVES (100% VIETNAMESE)
-        const PRESET_VOICES = [
-            {
-                id: 'tho',
-                name: 'Thỏ Bảy Màu',
-                tag: 'HOT • Hài Hước',
-                avatar: '🐰',
-                pitch: 1.3,
-                rate: 1.15,
-                geminiVoice: 'Puck',
-                promptDirective: 'Hãy phát âm hoàn toàn bằng Tiếng Việt với giọng hoạt hình nhí nhảnh, cao vút, hài hước, vui nhộn và dí dỏm:',
-                desc: 'Giọng nhí nhảnh, cao vút, hài hước, phát âm Tiếng Việt chuẩn'
-            },
-            {
-                id: 'adam',
-                name: 'Adam Review Phim',
-                tag: 'HOT • Review Phim',
-                avatar: '🎬',
-                pitch: 0.85,
-                rate: 1.0,
-                geminiVoice: 'Orus',
-                promptDirective: 'Hãy đọc đoạn văn bằng Tiếng Việt với giọng nam trầm ấm, kịch tính, lôi cuốn chuyên review phim:',
-                desc: 'Giọng nam trầm ấm, lôi cuốn, kịch tính tiếng Việt'
-            },
-            {
-                id: 'google',
-                name: 'Chị Google Chuẩn',
-                tag: 'Truyền Thống',
-                avatar: '🤖',
-                pitch: 1.0,
-                rate: 1.0,
-                geminiVoice: 'Aoede',
-                promptDirective: 'Hãy đọc bằng Tiếng Việt chuẩn giọng đọc tự nhiên, rõ chữ, truyền cảm:',
-                desc: 'Giọng nữ phát âm Tiếng Việt rành rọt, dễ nghe'
-            },
-            {
-                id: 'anime',
-                name: 'Anime Girl Kawaii',
-                tag: 'Anime • Dễ Thương',
-                avatar: '🌸',
-                pitch: 1.5,
-                rate: 1.1,
-                geminiVoice: 'Leda',
-                promptDirective: 'Hãy đọc đoạn văn bằng Tiếng Việt với giọng nữ trẻ, dễ thương, ngọt ngào kiểu anime kawaii:',
-                desc: 'Giọng nữ ngây thơ, đáng yêu phát âm Tiếng Việt ngọt ngào'
-            },
-            {
-                id: 'podcast',
-                name: 'MC Podcast Trầm',
-                tag: 'Kể Chuyện',
-                avatar: '🎙️',
-                pitch: 0.75,
-                rate: 0.9,
-                geminiVoice: 'Sulafat',
-                promptDirective: 'Hãy đọc đoạn văn bằng Tiếng Việt với giọng đọc chậm rãi, truyền cảm, ấm áp kiểu Podcast kể chuyện:',
-                desc: 'Giọng kể chuyện Tiếng Việt ấm áp, sâu lắng'
-            },
-            {
-                id: 'nam_bac',
-                name: 'Giọng Nữ Hà Nội',
-                tag: 'Tiếng Việt • Miền Bắc',
-                avatar: '🇻🇳',
-                pitch: 1.0,
-                rate: 1.0,
-                geminiVoice: 'Zephyr',
-                promptDirective: 'Hãy đọc đoạn văn bằng Tiếng Việt chuẩn giọng Hà Nội rành rọt, thanh lịch:',
-                desc: 'Giọng nữ Miền Bắc rành rọt, mượt mà'
-            }
-        ];
-
-        // PRESET SCRIPTS
-        const PRESET_SCRIPTS = {
-            review: "Và đây là bộ phim đã làm điên đảo cộng đồng mạng tuần qua. Nam chính tưởng chừng như một người vô danh, nhưng đằng sau lại là sát thủ cấp S huyền thoại tái xuất!",
-            tho: "Alo alo 1 2 3 4! Xin chào anh em! Lại là Thỏ Bảy Màu đây nè! Hôm nay tui sẽ hướng dẫn các bạn cách clone giọng cực đỉnh phát âm Tiếng Việt chuẩn 100% nha!",
-            tiktok: "Dừng lại 3 giây! Bạn đã biết mẹo tạo video ngắn lên xu hướng mà không cần lộ mặt chưa? Xem ngay công cụ AI này, cực kỳ đơn giản!",
-            podcast: "Chào mừng bạn quay trở lại với góc nhỏ bình yên. Trong tập Podcast tối nay, chúng ta hãy cùng lắng nghe những giai điệu dịu êm và buông bỏ hết ưu phiền sau một ngày dài..."
-        };
-
-        // INITIALIZE APP ON LOAD
-        window.addEventListener('DOMContentLoaded', () => {
-            initAudioContext();
-            renderVoiceList();
-            setupScriptListeners();
-            setupVisualizerCanvas();
-            loadHistoryFromStorage();
-
-            selectVoice('tho');
-        });
-
-        function initAudioContext() {
-            if (!audioCtx) {
-                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-                if (AudioContextClass) {
-                    audioCtx = new AudioContextClass();
-                    analyserNode = audioCtx.createAnalyser();
-                    analyserNode.fftSize = 64;
-
-                    const mobileAudioEl = document.getElementById('mobile-html5-audio');
-                    if (mobileAudioEl) {
-                        try {
-                            const source = audioCtx.createMediaElementSource(mobileAudioEl);
-                            source.connect(analyserNode);
-                            analyserNode.connect(audioCtx.destination);
-                        } catch(e) {
-                            console.warn("MediaElementSource connection warning:", e);
-                        }
-                    }
-                }
-            }
-            if (audioCtx && audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-        }
-
-        // RENDER VOICE LIST CARDS
-        function renderVoiceList() {
-            const container = document.getElementById('voice-list-container');
-            const allVoices = [...PRESET_VOICES, ...customVoices];
-            
-            document.getElementById('voice-count-badge').textContent = `${allVoices.length} Giọng`;
-
-            container.innerHTML = allVoices.map(voice => `
-                <div onclick="selectVoice('${voice.id}')" id="voice-card-${voice.id}" class="glass-card p-3 rounded-xl cursor-pointer flex items-center justify-between border ${activeVoiceId === voice.id ? 'border-brand-500 bg-brand-900/60 shadow-lg' : 'border-purple-800/30'}">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-10 h-10 rounded-xl bg-purple-900/80 border border-purple-700/50 flex items-center justify-center text-xl shadow-inner">
-                            ${voice.avatar || '🎙️'}
-                        </div>
-                        <div>
-                            <div class="flex items-center space-x-2">
-                                <span class="font-bold text-xs text-white">${voice.name}</span>
-                                <span class="text-[9px] bg-brand-500/20 text-brand-gold px-1.5 py-0.5 rounded border border-brand-500/30 font-semibold">${voice.tag}</span>
-                            </div>
-                            <p class="text-[10px] text-purple-300/70 line-clamp-1 mt-0.5">${voice.desc}</p>
-                        </div>
-                    </div>
-                    <div class="text-brand-500 ${activeVoiceId === voice.id ? 'block' : 'hidden'} text-sm">
-                        <i class="fa-solid fa-circle-check"></i>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function selectVoice(id) {
-            initAudioContext();
-            activeVoiceId = id;
-            const allVoices = [...PRESET_VOICES, ...customVoices];
-            const voice = allVoices.find(v => v.id === id);
-
-            if (voice) {
-                document.getElementById('pitch-slider').value = voice.pitch;
-                document.getElementById('speed-slider').value = voice.rate;
-                updateAudioParams();
-                renderVoiceList();
-                showToast(`Đã chọn giọng Tiếng Việt: ${voice.name}`, 'success');
-            }
-        }
-
-        function updateAudioParams() {
-            const pitch = parseFloat(document.getElementById('pitch-slider').value);
-            const speed = parseFloat(document.getElementById('speed-slider').value);
-
-            document.getElementById('pitch-val-disp').textContent = `${pitch.toFixed(2)}x`;
-            document.getElementById('speed-val-disp').textContent = `${speed.toFixed(1)}x`;
-        }
-
-        function switchCloneTab(tab) {
-            const recBtn = document.getElementById('tab-rec-btn');
-            const uploadBtn = document.getElementById('tab-upload-btn');
-            const recPanel = document.getElementById('clone-rec-panel');
-            const uploadPanel = document.getElementById('clone-upload-panel');
-
-            if (tab === 'rec') {
-                recBtn.className = "py-1.5 rounded-lg font-semibold bg-brand-600 text-white transition";
-                uploadBtn.className = "py-1.5 rounded-lg font-semibold text-purple-300 hover:text-white transition";
-                recPanel.classList.remove('hidden');
-                uploadPanel.classList.add('hidden');
-            } else {
-                uploadBtn.className = "py-1.5 rounded-lg font-semibold bg-brand-600 text-white transition";
-                recBtn.className = "py-1.5 rounded-lg font-semibold text-purple-300 hover:text-white transition";
-                uploadPanel.classList.remove('hidden');
-                recPanel.classList.add('hidden');
-            }
-        }
-
-        async function toggleMicrophoneRecord() {
-            initAudioContext();
-            const recIcon = document.getElementById('rec-icon');
-            const recStatus = document.getElementById('rec-status-text');
-            const micCanvas = document.getElementById('mic-canvas');
-
-            if (!isRecordingMic) {
-                try {
-                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                    mediaRecorder = new MediaRecorder(stream);
-                    micAudioChunks = [];
-
-                    mediaRecorder.ondataavailable = e => micAudioChunks.push(e.data);
-                    mediaRecorder.onstop = processClonedAudioSample;
-
-                    mediaRecorder.start();
-                    isRecordingMic = true;
-
-                    recIcon.className = "fa-solid fa-stop text-lg";
-                    recStatus.textContent = "🔴 Đang thu âm giọng Tiếng Việt của bạn...";
-                    recStatus.classList.add('animate-pulse', 'text-rose-400');
-                    micCanvas.classList.remove('hidden');
-
-                    showToast('Đang thu âm mẫu giọng Tiếng Việt...', 'info');
-
-                    setTimeout(() => {
-                        if (isRecordingMic) toggleMicrophoneRecord();
-                    }, 6000);
-
-                } catch (err) {
-                    showToast('Không thể truy cập Microphone! Vui lòng cấp quyền.', 'error');
-                }
-            } else {
-                if (mediaRecorder) mediaRecorder.stop();
-                isRecordingMic = false;
-                recIcon.className = "fa-solid fa-microphone text-lg";
-                recStatus.textContent = "✨ Đang phân tích tần số giọng...";
-                recStatus.classList.remove('animate-pulse', 'text-rose-400');
-            }
-        }
-
-        function processClonedAudioSample() {
-            setTimeout(() => {
-                const estimatedPitch = (Math.random() * (1.4 - 0.8) + 0.8).toFixed(2);
-                document.getElementById('cloned-pitch-val').textContent = `Pitch: ${(estimatedPitch * 140).toFixed(0)}Hz`;
-                document.getElementById('cloned-result-box').classList.remove('hidden');
-                document.getElementById('rec-status-text').textContent = "✅ Đã phân tích mẫu Tiếng Việt thành công!";
-                showToast('Đã trích xuất đặc trưng giọng AI Tiếng Việt!', 'success');
-            }, 800);
-        }
-
-        function handleAudioUpload(event) {
-            const file = event.target.files[0];
-            if (file) {
-                document.getElementById('rec-status-text').textContent = `Đã tải: ${file.name}`;
-                processClonedAudioSample();
-            }
-        }
-
-        function saveCustomVoiceProfile() {
-            const voiceName = document.getElementById('cloned-voice-name').value.trim() || 'Giọng Cloned Tiếng Việt';
-            const pitch = parseFloat(document.getElementById('pitch-slider').value) || 1.1;
-
-            const newVoice = {
-                id: 'custom_' + Date.now(),
-                name: voiceName,
-                tag: 'Chính Chủ • Tiếng Việt',
-                avatar: '👑',
-                pitch: pitch,
-                rate: 1.0,
-                geminiVoice: 'Puck',
-                promptDirective: `Hãy đọc đoạn văn bằng Tiếng Việt với phong cách giọng cá nhân đặc trưng, phát âm tự nhiên:`,
-                desc: 'Mẫu giọng AI Tiếng Việt chính chủ đã được clone'
-            };
-
-            customVoices.push(newVoice);
-            renderVoiceList();
-            selectVoice(newVoice.id);
-            document.getElementById('cloned-result-box').classList.add('hidden');
-            showToast(`Đã lưu "${voiceName}" vào thư viện!`, 'success');
-        }
-
-        function setupVisualizerCanvas() {
-            const canvas = document.getElementById('visualizer-canvas');
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-
-            function resizeCanvas() {
-                const parent = canvas.parentElement;
-                if (!parent) return;
-                canvas.width = parent.clientWidth || 300;
-                canvas.height = parent.clientHeight || 112;
-            }
-            resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
-            window.addEventListener('orientationchange', () => setTimeout(resizeCanvas, 200));
-
-            function drawWaveform() {
-                requestAnimationFrame(drawWaveform);
-
-                const width = canvas.width || 300;
-                const height = canvas.height || 112;
-
-                ctx.clearRect(0, 0, width, height);
-
-                const numBars = Math.min(45, Math.floor(width / 7));
-                const barWidth = Math.max(3, (width / numBars) - 2);
-
-                let dataArray = null;
-                let hasData = false;
-
-                if (analyserNode && isPlaying) {
-                    dataArray = new Uint8Array(analyserNode.frequencyBinCount);
-                    analyserNode.getByteFrequencyData(dataArray);
-                    hasData = dataArray.some(val => val > 0);
-                }
-
-                for (let i = 0; i < numBars; i++) {
-                    let barHeight = 4;
-                    if (isPlaying) {
-                        if (hasData && dataArray && dataArray[i] !== undefined) {
-                            barHeight = (dataArray[i] / 255) * (height * 0.85) + 4;
-                        } else {
-                            // Mobile fallback animation when audio is active
-                            const t = Date.now() * 0.008;
-                            const val = (Math.sin(t + i * 0.35) + Math.cos(t * 1.5 + i * 0.2)) / 2;
-                            barHeight = Math.abs(val) * (height * 0.75) + 6;
-                        }
-                    }
-
-                    const x = i * (barWidth + 2);
-                    const y = height - barHeight;
-
-                    const gradient = ctx.createLinearGradient(0, height, 0, 0);
-                    gradient.addColorStop(0, '#7c3aed');
-                    gradient.addColorStop(0.6, '#ec4899');
-                    gradient.addColorStop(1, '#facc15');
-
-                    ctx.fillStyle = gradient;
-                    ctx.beginPath();
-                    if (ctx.roundRect) {
-                        ctx.roundRect(x, y, barWidth, barHeight, [3, 3, 0, 0]);
-                    } else {
-                        ctx.rect(x, y, barWidth, barHeight);
-                    }
-                    ctx.fill();
-                }
-            }
-            drawWaveform();
-        }
-
-        function changeBGMTrack(type) {
-            activeBgmType = type;
-            if (type === 'none') {
-                stopBGM();
-                return;
-            }
-            if (isPlaying) startBGM(type);
-        }
-
-        function startBGM(type) {
-            initAudioContext();
-            stopBGM();
-
-            if (!audioCtx) return;
-
-            bgmOscillator = audioCtx.createOscillator();
-            bgmGainNode = audioCtx.createGain();
-
-            const vol = parseFloat(document.getElementById('bgm-volume').value);
-            bgmGainNode.gain.setValueAtTime(vol, audioCtx.currentTime);
-
-            if (type === 'lofi') {
-                bgmOscillator.type = 'sine';
-                bgmOscillator.frequency.setValueAtTime(220, audioCtx.currentTime);
-            } else if (type === 'upbeat') {
-                bgmOscillator.type = 'triangle';
-                bgmOscillator.frequency.setValueAtTime(329.63, audioCtx.currentTime);
-            } else if (type === 'cinematic') {
-                bgmOscillator.type = 'sawtooth';
-                bgmOscillator.frequency.setValueAtTime(110, audioCtx.currentTime);
-            }
-
-            bgmOscillator.connect(bgmGainNode);
-            bgmGainNode.connect(audioCtx.destination);
-            bgmOscillator.start();
-        }
-
-        function stopBGM() {
-            if (bgmOscillator) {
-                try { bgmOscillator.stop(); } catch(e){}
-                bgmOscillator = null;
-            }
-        }
-
-        function updateBGMVolume(val) {
-            document.getElementById('bgm-vol-num').textContent = `${Math.round(val * 200)}%`;
-            if (bgmGainNode && audioCtx) {
-                bgmGainNode.gain.setValueAtTime(parseFloat(val), audioCtx.currentTime);
-            }
-        }
-
-        function updateMasterVolume(val) {
-            // Master volume control
-        }
-
-        function setupScriptListeners() {
-            const textarea = document.getElementById('script-input');
-            textarea.addEventListener('input', updateScriptStats);
-            updateScriptStats();
-        }
-
-        function updateScriptStats() {
-            const text = document.getElementById('script-input').value;
-            const charCount = text.length;
-            const words = text.trim() ? text.trim().split(/\s+/).length : 0;
-            const timeEst = Math.ceil(words / 2.8);
-
-            document.getElementById('char-count').textContent = charCount;
-            document.getElementById('word-count').textContent = words;
-            document.getElementById('time-est').textContent = `${timeEst}s`;
-        }
-
-        function loadPresetScript(key) {
-            if (PRESET_SCRIPTS[key]) {
-                document.getElementById('script-input').value = PRESET_SCRIPTS[key];
-                updateScriptStats();
-                showToast('Đã tải kịch bản Tiếng Việt!', 'info');
-            }
-        }
-
-        function insertTag(tag) {
-            const textarea = document.getElementById('script-input');
-            const start = textarea.selectionStart;
-            const end = textarea.selectionEnd;
-            const text = textarea.value;
-
-            textarea.value = text.substring(0, start) + ' ' + tag + ' ' + text.substring(end);
-            textarea.focus();
-            updateScriptStats();
-        }
-
-        function clearScriptText() {
-            document.getElementById('script-input').value = '';
-            updateScriptStats();
-        }
-
-        // GEMINI TTS API - GENERATE HIGH QUALITY VIETNAMESE SPEECH
-        async function fetchGeminiVietnameseTTS(promptText, voiceName) {
-            const apiKey = "";
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-tts:generateContent?key=${apiKey}`;
-
-            const payload = {
-                contents: [{
-                    parts: [{ text: promptText }]
-                }],
-                generationConfig: {
-                    responseModalities: ["AUDIO"],
-                    speechConfig: {
-                        voiceConfig: {
-                            prebuiltVoiceConfig: { voiceName: voiceName || "Puck" }
-                        }
-                    }
-                }
-            };
-
-            let attempts = 0;
-            while (attempts < 3) {
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    if (!response.ok) throw new Error(`HTTP Error status: ${response.status}`);
-                    const result = await response.json();
-                    
-                    const part = result?.candidates?.[0]?.content?.parts?.[0];
-                    const base64Data = part?.inlineData?.data;
-                    const mimeType = part?.inlineData?.mimeType || "audio/L16;rate=24000";
-
-                    if (base64Data) {
-                        return { base64Data, mimeType };
-                    }
-                    throw new Error("Missing inline audio data in API response");
-                } catch (err) {
-                    attempts++;
-                    if (attempts >= 3) throw err;
-                    await new Promise(res => setTimeout(res, 1000 * Math.pow(2, attempts)));
-                }
-            }
-        }
-
-        // CONVERT PCM DATA TO AUDIO BUFFER & WAV
-        function processPcmAudioData(base64Data, mimeType) {
-            const binaryString = window.atob(base64Data);
-            const len = binaryString.length;
-            const bytes = new Uint8Array(len);
-            for (let i = 0; i < len; i++) {
-                bytes[i] = binaryString.charCodeAt(i);
-            }
-
-            const sampleRateMatch = mimeType.match(/rate=(\d+)/);
-            const sampleRate = sampleRateMatch ? parseInt(sampleRateMatch[1], 10) : 24000;
-
-            const int16Array = new Int16Array(bytes.buffer);
-            const buffer = audioCtx.createBuffer(1, int16Array.length, sampleRate);
-            const channelData = buffer.getChannelData(0);
-
-            for (let i = 0; i < int16Array.length; i++) {
-                channelData[i] = int16Array[i] / 32768.0;
-            }
-
-            currentAudioBuffer = buffer;
-            currentWavBlob = createWavFromPcm(int16Array, sampleRate);
-            return buffer;
-        }
-
-        function createWavFromPcm(int16Array, sampleRate) {
-            const numOfChan = 1;
-            const length = int16Array.length * 2 + 44;
-            const buffer = new ArrayBuffer(length);
-            const view = new DataView(buffer);
-            let pos = 0;
-
-            function setUint16(data) { view.setUint16(pos, data, true); pos += 2; }
-            function setUint32(data) { view.setUint32(pos, data, true); pos += 4; }
-
-            setUint32(0x46464952); // "RIFF"
-            setUint32(length - 8);
-            setUint32(0x45564157); // "WAVE"
-            setUint32(0x20746d66); // "fmt "
-            setUint32(16); setUint16(1); setUint16(numOfChan);
-            setUint32(sampleRate); setUint32(sampleRate * 2 * numOfChan);
-            setUint16(numOfChan * 2); setUint16(16);
-            setUint32(0x61746164); // "data"
-            setUint32(int16Array.length * 2);
-
-            for (let i = 0; i < int16Array.length; i++) {
-                view.setInt16(pos, int16Array[i], true);
-                pos += 2;
-            }
-            return new Blob([buffer], { type: 'audio/wav' });
-        }
-
-        // MAIN SPEECH GENERATION & PLAYBACK FUNCTION
-        function prepareMobileAudioPlayback() {
-            unlockMobileAudio();
-            initAudioContext();
-            const mobileAudioEl = document.getElementById('mobile-html5-audio');
-            if (mobileAudioEl) {
-                try {
-                    if (!mobileAudioEl.src) {
-                        mobileAudioEl.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=';
-                    }
-                    const p = mobileAudioEl.play();
-                    if (p !== undefined) {
-                        p.then(() => {
-                            if (mobileAudioEl.src && mobileAudioEl.src.startsWith('data:')) {
-                                mobileAudioEl.pause();
-                            }
-                        }).catch(() => {});
-                    }
-                } catch(e){}
-            }
-        }
-
-        async function generateAndPlaySpeech() {
-            prepareMobileAudioPlayback();
-
-            const textInput = document.getElementById('script-input').value.trim();
-            if (!textInput) {
-                showToast('Vui lòng nhập văn bản kịch bản tiếng Việt!', 'warning');
-                return;
-            }
-
-            stopSpeechPlayback();
-
-            const allVoices = [...PRESET_VOICES, ...customVoices];
-            const activeVoiceObj = allVoices.find(v => v.id === activeVoiceId) || PRESET_VOICES[0];
-
-            const cleanText = textInput.replace(/\[.*?\]/g, '... ');
-            const fullPrompt = `${activeVoiceObj.promptDirective || "Hãy phát âm bằng Tiếng Việt chuẩn:"} "${cleanText}"`;
-
-            // UI Loading state
-            const genBtn = document.getElementById('btn-generate-audio');
-            const genIcon = document.getElementById('btn-gen-icon');
-            const genText = document.getElementById('btn-gen-text');
-
-            genBtn.disabled = true;
-            genIcon.className = "fa-solid fa-spinner fa-spin text-lg";
-            genText.textContent = "ĐANG TẠO GIỌNG TIẾNG VIỆT AI...";
-
+        function playBeep(freq = 880, duration = 0.15, count = 1) {
+            if (!isSoundOn) return;
             try {
-                // Call Gemini API TTS for exact Vietnamese speech
-                const audioData = await fetchGeminiVietnameseTTS(fullPrompt, activeVoiceObj.geminiVoice);
-                const audioBuffer = processPcmAudioData(audioData.base64Data, audioData.mimeType);
-
-                // Save to history immediately so user can replay anytime
-                saveToHistory(activeVoiceObj ? activeVoiceObj.name : 'Giọng Tiếng Việt AI', cleanText, audioBuffer, currentWavBlob);
-
-                // Play fetched audio buffer with Mobile Dual Engine
-                await playAudioBuffer(audioBuffer, activeVoiceObj, cleanText);
-                showToast(`Đã tạo & đang phát giọng: ${activeVoiceObj.name}`, 'success');
-
-            } catch (err) {
-                console.warn('Gemini TTS fallback to browser WebSpeech:', err);
-                fallbackBrowserVietnameseTTS(cleanText, activeVoiceObj);
-            } finally {
-                genBtn.disabled = false;
-                genIcon.className = "fa-solid fa-wand-magic-sparkles text-lg";
-                genText.textContent = "TẠO GIỌNG NÓI TIẾNG VIỆT AI";
-            }
-        }
-
-        async function playAudioBuffer(buffer, voiceObj, text, customWavBlob) {
-            unlockMobileAudio();
-            initAudioContext();
-
-            const wavToPlay = customWavBlob || currentWavBlob;
-            const mobileAudioEl = document.getElementById('mobile-html5-audio');
-
-            // 1. Primary path for Mobile browsers: Use HTML5 Audio tag with Blob URL
-            if (mobileAudioEl && wavToPlay) {
-                try {
-                    const audioUrl = URL.createObjectURL(wavToPlay);
-                    mobileAudioEl.src = audioUrl;
-
-                    const speed = parseFloat(document.getElementById('speed-slider').value) || 1.0;
-                    mobileAudioEl.playbackRate = speed;
-
-                    mobileAudioEl.onended = () => {
-                        isPlaying = false;
-                        updatePlayStateUI(false);
-                        stopBGM();
-                        document.getElementById('visualizer-placeholder').classList.remove('hidden');
-                    };
-
-                    if (audioCtx && audioCtx.state === 'suspended') {
-                        await audioCtx.resume();
-                    }
-
-                    await mobileAudioEl.play();
-                    isPlaying = true;
-                    updatePlayStateUI(true);
-                    if (activeBgmType !== 'none') startBGM(activeBgmType);
-                    document.getElementById('visualizer-placeholder').classList.add('hidden');
-                    return;
-                } catch (err) {
-                    console.warn("Mobile HTML5 Audio play error, trying WebAudio BufferSource:", err);
+                if (!audioCtx) {
+                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 }
-            }
-
-            // 2. Fallback path: WebAudio BufferSource
-            if (!audioCtx) return;
-
-            if (currentSourceNode) {
-                try { currentSourceNode.stop(); } catch(e){}
-            }
-
-            currentSourceNode = audioCtx.createBufferSource();
-            currentSourceNode.buffer = buffer;
-
-            const speed = parseFloat(document.getElementById('speed-slider').value) || 1.0;
-            currentSourceNode.playbackRate.value = speed;
-
-            if (analyserNode) {
-                currentSourceNode.connect(analyserNode);
-                analyserNode.connect(audioCtx.destination);
-            } else {
-                currentSourceNode.connect(audioCtx.destination);
-            }
-
-            isPlaying = true;
-            updatePlayStateUI(true);
-            if (activeBgmType !== 'none') startBGM(activeBgmType);
-            document.getElementById('visualizer-placeholder').classList.add('hidden');
-
-            currentSourceNode.onended = () => {
-                isPlaying = false;
-                updatePlayStateUI(false);
-                stopBGM();
-                document.getElementById('visualizer-placeholder').classList.remove('hidden');
-            };
-
-            if (audioCtx.state === 'suspended') {
-                await audioCtx.resume();
-            }
-            currentSourceNode.start(0);
-        }
-
-        function replayCurrentAudio() {
-            prepareMobileAudioPlayback();
-            if (currentAudioBuffer) {
-                stopSpeechPlayback();
-                const allVoices = [...PRESET_VOICES, ...customVoices];
-                const activeVoiceObj = allVoices.find(v => v.id === activeVoiceId) || PRESET_VOICES[0];
-                playAudioBuffer(currentAudioBuffer, activeVoiceObj, '', currentWavBlob);
-                showToast('Đang phát lại audio vừa tạo', 'info');
-            } else if (generatedClips.length > 0) {
-                playHistoryClip(0);
-            } else {
-                generateAndPlaySpeech();
-            }
-        }
-
-        function fallbackBrowserVietnameseTTS(text, voiceObj) {
-            unlockMobileAudio();
-            if ('speechSynthesis' in window) {
-                currentUtterance = new SpeechSynthesisUtterance(text);
-                currentUtterance.lang = 'vi-VN';
-
-                const pitch = parseFloat(document.getElementById('pitch-slider').value);
-                const rate = parseFloat(document.getElementById('speed-slider').value);
-
-                currentUtterance.pitch = pitch;
-                currentUtterance.rate = rate;
-
-                const sysVoices = speechSynth.getVoices();
-                const viVoice = sysVoices.find(v => v.lang.includes('vi') || v.lang.includes('VI'));
-                if (viVoice) currentUtterance.voice = viVoice;
-
-                currentUtterance.onstart = () => {
-                    isPlaying = true;
-                    updatePlayStateUI(true);
-                    if (activeBgmType !== 'none') startBGM(activeBgmType);
-                    document.getElementById('visualizer-placeholder').classList.add('hidden');
-                };
-
-                currentUtterance.onend = () => {
-                    isPlaying = false;
-                    updatePlayStateUI(false);
-                    stopBGM();
-                    document.getElementById('visualizer-placeholder').classList.remove('hidden');
-                };
-
-                speechSynth.speak(currentUtterance);
-                saveToHistory(voiceObj ? voiceObj.name : 'Giọng Tiếng Việt AI', text);
-                showToast('Đã phát bằng trình đọc Tiếng Việt!', 'info');
-            } else {
-                showToast('Không thể tạo giọng nói. Vui lòng kiểm tra kết nối mạng!', 'error');
-            }
-        }
-
-        function togglePlayPause() {
-            prepareMobileAudioPlayback();
-            const mobileAudioEl = document.getElementById('mobile-html5-audio');
-
-            if (mobileAudioEl && mobileAudioEl.src && !mobileAudioEl.ended && mobileAudioEl.duration > 0) {
-                if (mobileAudioEl.paused) {
-                    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
-                    mobileAudioEl.play();
-                    isPlaying = true;
-                    updatePlayStateUI(true);
-                } else {
-                    mobileAudioEl.pause();
-                    isPlaying = false;
-                    updatePlayStateUI(false);
-                }
-                return;
-            }
-
-            if (currentSourceNode && audioCtx) {
-                if (audioCtx.state === 'running') {
-                    audioCtx.suspend();
-                    isPlaying = false;
-                    updatePlayStateUI(false);
-                } else if (audioCtx.state === 'suspended') {
+                if (audioCtx.state === 'suspended') {
                     audioCtx.resume();
-                    isPlaying = true;
-                    updatePlayStateUI(true);
                 }
-            } else if (speechSynth && speechSynth.speaking) {
-                if (speechSynth.paused) {
-                    speechSynth.resume();
-                    isPlaying = true;
-                    updatePlayStateUI(true);
-                } else {
-                    speechSynth.pause();
-                    isPlaying = false;
-                    updatePlayStateUI(false);
+
+                for (let i = 0; i < count; i++) {
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.2);
+                    
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime + i * 0.2);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i * 0.2 + duration);
+
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    
+                    osc.start(audioCtx.currentTime + i * 0.2);
+                    osc.stop(audioCtx.currentTime + i * 0.2 + duration);
                 }
+            } catch (e) {
+                console.log("Audio play blocked", e);
+            }
+        }
+
+        function toggleSound() {
+            isSoundOn = !isSoundOn;
+            const icon = document.getElementById('sound-icon');
+            if (isSoundOn) {
+                icon.className = 'fa-solid fa-volume-high text-cyan-400';
             } else {
-                replayCurrentAudio();
+                icon.className = 'fa-solid fa-volume-xmark text-slate-500';
             }
         }
 
-        function stopSpeechPlayback() {
-            const mobileAudioEl = document.getElementById('mobile-html5-audio');
-            if (mobileAudioEl) {
-                mobileAudioEl.pause();
-                mobileAudioEl.currentTime = 0;
+        function switchTab(tab) {
+            currentTab = tab;
+            ['app', 'calib', 'guide'].forEach(t => {
+                document.getElementById(`view-${t}`).classList.add('hidden');
+                
+                // Desktop nav buttons
+                const btn = document.getElementById(`tab-${t}-btn`);
+                if (btn) {
+                    if (t === tab) {
+                        btn.className = "px-4 py-1.5 rounded-lg text-sm font-semibold transition-all bg-cyan-500 text-slate-900 shadow";
+                    } else {
+                        btn.className = "px-4 py-1.5 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-200 transition-all";
+                    }
+                }
+
+                // Mobile nav buttons
+                const mobBtn = document.getElementById(`mobile-tab-${t}`);
+                if (mobBtn) {
+                    if (t === tab) {
+                        mobBtn.className = "flex-1 py-2.5 font-semibold text-cyan-400 border-b-2 border-cyan-400";
+                    } else {
+                        mobBtn.className = "flex-1 py-2.5 text-slate-400";
+                    }
+                }
+            });
+
+            document.getElementById(`view-${tab}`).classList.remove('hidden');
+            if (tab === 'app') {
+                resizeCanvas();
             }
-            if (currentSourceNode) {
-                try { currentSourceNode.stop(); } catch(e){}
-                currentSourceNode = null;
-            }
-            if (speechSynth) {
-                speechSynth.cancel();
-            }
-            isPlaying = false;
-            updatePlayStateUI(false);
-            stopBGM();
-            document.getElementById('visualizer-placeholder').classList.remove('hidden');
         }
 
-        function updatePlayStateUI(playing) {
-            const btnIcon = document.getElementById('play-pause-icon');
-            const statusBadge = document.getElementById('playing-status-badge');
-            const progressBar = document.getElementById('playback-progress');
+        function resizeCanvas() {
+            const container = document.getElementById('canvas-container');
+            if (container) {
+                canvas.width = container.clientWidth || 800;
+                canvas.height = container.clientHeight || 450;
+            }
+        }
+        window.addEventListener('resize', resizeCanvas);
 
-            if (playing) {
-                btnIcon.className = "fa-solid fa-pause text-sm";
-                statusBadge.classList.remove('hidden');
-                statusBadge.classList.add('flex');
-                progressBar.style.width = '100%';
+        async function setMode(mode) {
+            currentMode = mode;
+            const btnDemo = document.getElementById('mode-demo');
+            const btnWebcam = document.getElementById('mode-webcam');
+            const demoControls = document.getElementById('demo-controls');
+
+            if (mode === 'demo') {
+                btnDemo.className = "px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-slate-700 text-white shadow";
+                btnWebcam.className = "px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all";
+                demoControls.classList.remove('hidden');
+                stopWebcam();
             } else {
-                btnIcon.className = "fa-solid fa-play text-sm";
-                statusBadge.classList.add('hidden');
-                statusBadge.classList.remove('flex');
-                progressBar.style.width = '0%';
+                btnWebcam.className = "px-3 py-1.5 rounded-lg text-xs font-medium transition-all bg-slate-700 text-white shadow";
+                btnDemo.className = "px-3 py-1.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white transition-all";
+                demoControls.classList.add('hidden');
+                await startWebcam();
             }
         }
 
-        function saveToHistory(voiceName, text, audioBuffer, wavBlob) {
-            const clip = {
-                id: Date.now(),
-                voiceName: voiceName,
-                textSnippet: text.substring(0, 60) + (text.length > 60 ? '...' : ''),
-                fullText: text,
-                audioBuffer: audioBuffer || currentAudioBuffer,
-                wavBlob: wavBlob || currentWavBlob,
-                time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
-            };
-
-            generatedClips.unshift(clip);
-            renderHistory();
-        }
-
-        async function playHistoryClip(index) {
-            prepareMobileAudioPlayback();
-            const clip = generatedClips[index];
-            if (!clip) return;
-
-            stopSpeechPlayback();
-
-            currentWavBlob = clip.wavBlob;
-            currentAudioBuffer = clip.audioBuffer;
-
-            if (clip.audioBuffer) {
-                await playAudioBuffer(clip.audioBuffer, { name: clip.voiceName }, clip.fullText, clip.wavBlob);
-            } else if (clip.wavBlob) {
-                const mobileAudioEl = document.getElementById('mobile-html5-audio');
-                if (mobileAudioEl) {
-                    mobileAudioEl.src = URL.createObjectURL(clip.wavBlob);
-                    mobileAudioEl.playbackRate = parseFloat(document.getElementById('speed-slider').value) || 1.0;
-                    mobileAudioEl.onended = () => {
-                        isPlaying = false;
-                        updatePlayStateUI(false);
-                        stopBGM();
-                        document.getElementById('visualizer-placeholder').classList.remove('hidden');
-                    };
-                    await mobileAudioEl.play();
-                    isPlaying = true;
-                    updatePlayStateUI(true);
-                    if (activeBgmType !== 'none') startBGM(activeBgmType);
-                    document.getElementById('visualizer-placeholder').classList.add('hidden');
-                }
+        async function startWebcam() {
+            try {
+                webcamStream = await navigator.mediaDevices.getUserMedia({
+                    video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'environment' },
+                    audio: false
+                });
+                videoEl.srcObject = webcamStream;
+                await videoEl.play();
+            } catch (err) {
+                alert("Không thể truy cập camera! Vui lòng cấp quyền xem webcam hoặc quay lại Chế độ Mô phỏng.");
+                setMode('demo');
             }
-            showToast(`Đang phát lại: ${clip.voiceName}`, 'info');
         }
 
-        function renderHistory() {
-            const container = document.getElementById('history-container');
-            if (generatedClips.length === 0) {
-                container.innerHTML = `
-                    <div class="text-center py-6 text-purple-400/60 text-xs">
-                        <i class="fa-solid fa-box-open text-2xl mb-2 block"></i>
-                        Chưa có clip nào được xuất. Hãy nhấn "TẠO GIỌNG NÓI TIẾNG VIỆT AI" để bắt đầu!
-                    </div>
-                `;
-                return;
+        function stopWebcam() {
+            if (webcamStream) {
+                webcamStream.getTracks().forEach(track => track.stop());
+                webcamStream = null;
             }
-
-            container.innerHTML = generatedClips.map((clip, index) => `
-                <div class="bg-purple-950/50 border border-purple-800/40 p-3 rounded-xl flex items-center justify-between gap-3 text-xs">
-                    <div class="space-y-0.5 max-w-[55%]">
-                        <div class="flex items-center space-x-2">
-                            <span class="font-bold text-brand-gold">${clip.voiceName}</span>
-                            <span class="text-[10px] text-purple-400">${clip.time}</span>
-                        </div>
-                        <p class="text-purple-200/80 truncate">${clip.textSnippet}</p>
-                    </div>
-
-                    <div class="flex items-center space-x-1.5 shrink-0">
-                        <button onclick="playHistoryClip(${index})" class="bg-brand-600 hover:bg-brand-500 text-white font-bold px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 text-[11px] shadow touch-manipulation">
-                            <i class="fa-solid fa-play text-[10px]"></i>
-                            <span>Nghe lại</span>
-                        </button>
-                        <button onclick="downloadClipWAV(${index})" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-2.5 py-1.5 rounded-lg transition flex items-center gap-1 text-[11px] shadow touch-manipulation">
-                            <i class="fa-solid fa-download text-[10px]"></i>
-                            <span>Tải WAV</span>
-                        </button>
-                    </div>
-                </div>
-            `).join('');
         }
 
-        function downloadClipWAV(index) {
-            const clip = generatedClips[index];
-            if (!clip) return;
-
-            let wavBlob = clip.wavBlob;
-            if (!wavBlob) {
-                const sampleRate = 24000;
-                const duration = Math.min(Math.max(clip.fullText.length * 0.15, 2), 15);
-                const numSamples = sampleRate * duration;
-                const pcm16 = new Int16Array(numSamples);
-                for (let i = 0; i < numSamples; i++) {
-                    pcm16[i] = Math.sin(i * 0.02) * 10000;
-                }
-                wavBlob = createWavFromPcm(pcm16, sampleRate);
-            }
-
-            const url = URL.createObjectURL(wavBlob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `AI_TiengViet_${Date.now()}.wav`;
-            a.click();
-            URL.revokeObjectURL(url);
-
-            showToast('Đã tải xuống file âm thanh Tiếng Việt .WAV thành công!', 'success');
+        function updateCalibration() {
+            focalLength = parseFloat(document.getElementById('focal-slider').value);
+            defaultCarWidth = parseFloat(document.getElementById('calib-car-width').value);
+            
+            document.getElementById('calib-focal-val').innerText = focalLength;
+            document.getElementById('hud-focal').innerText = `F = ${focalLength} px`;
         }
 
-        function clearHistory() {
-            generatedClips = [];
-            renderHistory();
-            showToast('Đã xóa lịch sử clip.', 'info');
-        }
-
-        // ==========================================
-        // VIDEO TO TEXT TRANSCRIBER FUNCTIONS (AI)
-        // ==========================================
-
-        function handleVideoFileSelect(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const videoPlayer = document.getElementById('video-preview-player');
-            const placeholder = document.getElementById('video-preview-placeholder');
-            const fileUrl = URL.createObjectURL(file);
-
-            videoPlayer.src = fileUrl;
-            videoPlayer.classList.remove('hidden');
-            placeholder.classList.add('hidden');
-
-            const sizeMB = (file.size / (1024 * 1024)).toFixed(1);
-            document.getElementById('video-file-info').textContent = `📹 ${file.name} (${sizeMB} MB)`;
-            document.getElementById('transcription-result-box').classList.add('hidden');
-
-            showToast(`Đã tải file "${file.name}" (${sizeMB}MB). Sẵn sàng tách văn bản!`, 'info');
-        }
-
-        async function extractTextFromVideo() {
-            const fileInput = document.getElementById('video-file-input');
-            const file = fileInput.files[0];
-
-            if (!file) {
-                showToast('Vui lòng chọn một file Video hoặc Audio trước!', 'warning');
-                return;
-            }
-
-            const btn = document.getElementById('btn-extract-text');
-            const btnSpan = document.getElementById('btn-extract-text-span');
-            const btnIcon = document.getElementById('btn-extract-icon');
-            const progressBox = document.getElementById('transcription-progress-box');
-            const progressStatus = document.getElementById('transcription-progress-status');
-            const progressBar = document.getElementById('transcription-progress-bar');
-            const progressPercent = document.getElementById('transcription-progress-percent');
-
-            btn.disabled = true;
-            btnIcon.className = "fa-solid fa-spinner fa-spin text-lg";
-            btnSpan.textContent = "ĐANG XỬ LÝ FILE DUNG LƯỢNG LỚN...";
-            progressBox.classList.remove('hidden');
-
-            function updateProgress(percent, text) {
-                progressBar.style.width = `${percent}%`;
-                progressPercent.textContent = `${Math.round(percent)}%`;
-                progressStatus.textContent = text;
-            }
+        async function initAIModel() {
+            const statusDot = document.getElementById('ai-status-dot');
+            const statusText = document.getElementById('ai-status-text');
 
             try {
-                initAudioContext();
-                updateProgress(10, 'Đang giải mã dải âm thanh từ file media lớn...');
-                showToast(`Đang xử lý file ${(file.size / (1024 * 1024)).toFixed(1)}MB...`, 'info');
-
-                // Extract audio into optimized 3-minute chunks for large files
-                const audioChunks = await extractAudioChunksFromLargeMedia(file, (p, statusText) => {
-                    updateProgress(10 + p * 0.3, statusText); // 10% to 40%
-                });
-
-                const totalChunks = audioChunks.length;
-                let fullTranscription = [];
-
-                for (let i = 0; i < totalChunks; i++) {
-                    const chunk = audioChunks[i];
-                    const chunkNum = i + 1;
-                    const chunkPercentStart = 40 + (i / totalChunks) * 55;
-                    
-                    updateProgress(chunkPercentStart, `AI Gemini đang phân tích lời nói Tiếng Việt (Phần ${chunkNum}/${totalChunks})...`);
-                    
-                    const textChunk = await fetchGeminiSpeechToText(chunk.base64, chunk.mimeType);
-                    if (textChunk) fullTranscription.push(textChunk);
-                }
-
-                updateProgress(100, 'Tách văn bản thành công 100%!');
+                statusText.innerText = "Đang nạp mô hình AI...";
+                aiModel = await cocoSsd.load();
+                isModelLoaded = true;
                 
-                const finalResult = fullTranscription.join('\n\n');
-                document.getElementById('transcription-text-output').value = finalResult;
-                document.getElementById('transcription-result-box').classList.remove('hidden');
-                
-                showToast(`Đã tách văn bản Tiếng Việt thành công từ file ${(file.size / (1024 * 1024)).toFixed(1)}MB!`, 'success');
-
+                statusDot.className = "w-2.5 h-2.5 rounded-full bg-emerald-400";
+                statusText.innerText = "AI Sẵn Sàng";
             } catch (err) {
-                console.error('Video transcription error:', err);
-                showToast('Không thể tách văn bản. File quá lớn hoặc xảy ra lỗi bộ nhớ!', 'error');
-            } finally {
-                btn.disabled = false;
-                btnIcon.className = "fa-solid fa-wand-magic-sparkles text-lg";
-                btnSpan.textContent = "TÁCH VĂN BẢN TIẾNG VIỆT TỪ VIDEO DUNG LƯỢNG LỚN";
-                setTimeout(() => {
-                    progressBox.classList.add('hidden');
-                }, 4000);
+                console.error("Lỗi nạp AI:", err);
+                statusDot.className = "w-2.5 h-2.5 rounded-full bg-rose-500";
+                statusText.innerText = "Lỗi nạp AI (Chạy Chế Độ Giả Lập)";
             }
         }
 
-        async function extractAudioChunksFromLargeMedia(file, onProgress) {
-            if (onProgress) onProgress(5, 'Đang đọc dữ liệu file media...');
-            const arrayBuffer = await file.arrayBuffer();
-            
-            if (onProgress) onProgress(15, 'Đang giải mã kênh âm thanh...');
-            const tempCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const decodedBuffer = await tempCtx.decodeAudioData(arrayBuffer);
-
-            const channelData = decodedBuffer.getChannelData(0);
-            const targetSampleRate = 12000; // 12kHz mono downsampling for high efficiency & small payload
-            const sourceSampleRate = decodedBuffer.sampleRate;
-            const sampleRateRatio = sourceSampleRate / targetSampleRate;
-            const newLength = Math.round(channelData.length / sampleRateRatio);
-
-            if (onProgress) onProgress(25, 'Đang tối ưu hóa và nén tần số mẫu audio...');
-            const pcm16 = new Int16Array(newLength);
-            for (let i = 0; i < newLength; i++) {
-                const sourceIndex = Math.floor(i * sampleRateRatio);
-                let sample = channelData[sourceIndex] || 0;
-                sample = Math.max(-1, Math.min(1, sample));
-                pcm16[i] = sample < 0 ? sample * 0x8000 : sample * 0x7FFF;
+        function updateSimulation() {
+            const slider = document.getElementById('sim-distance-slider');
+            if (slider) {
+                simDistance = parseFloat(slider.value);
             }
-
-            // Chunk duration: 180 seconds (3 mins) per chunk to keep base64 lightweight (<4MB)
-            const chunkSeconds = 180;
-            const samplesPerChunk = targetSampleRate * chunkSeconds;
-            const totalChunks = Math.ceil(pcm16.length / samplesPerChunk);
-            const chunks = [];
-
-            if (onProgress) onProgress(35, `Đã chia nhỏ thành ${totalChunks} phần âm thanh tối ưu...`);
-
-            for (let i = 0; i < totalChunks; i++) {
-                const start = i * samplesPerChunk;
-                const end = Math.min(start + samplesPerChunk, pcm16.length);
-                const chunkPcm = pcm16.subarray(start, end);
-                
-                const wavBlob = createWavFromPcm(chunkPcm, targetSampleRate);
-                const base64 = await blobToBase64(wavBlob);
-                chunks.push({ base64, mimeType: "audio/wav" });
-            }
-
-            return chunks;
         }
 
-        function blobToBase64(blob) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onloadend = () => {
-                    const dataUrl = reader.result;
-                    const base64 = dataUrl.split(',')[1];
-                    resolve(base64);
-                };
-                reader.onerror = reject;
-                reader.readAsDataURL(blob);
-            });
-        }
+        let lastBeepTime = 0;
 
-        async function fetchGeminiSpeechToText(base64Audio, mimeType) {
-            const apiKey = "";
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-flash-preview:generateContent?key=${apiKey}`;
+        async function mainLoop() {
+            const now = performance.now();
+            const delta = now - lastFrameTime;
+            frameCount++;
+            if (delta >= 1000) {
+                fps = Math.round((frameCount * 1000) / delta);
+                document.getElementById('hud-fps').innerText = `FPS: ${fps}`;
+                frameCount = 0;
+                lastFrameTime = now;
+            }
 
-            const promptText = "Bạn là trợ lý AI chuyên nghiệp tách văn bản từ giọng nói. Hãy nghe đoạn âm thanh/video này và chuyển toàn bộ lời nói/giọng đọc trong video thành văn bản Tiếng Việt chính xác 100%. Trình bày đoạn văn rành rọt, viết đúng chính tả Tiếng Việt, ngắt câu rõ ràng, không kèm lời giải thích hay phụ đề thừa nào khác.";
+            // Clear Canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            const payload = {
-                contents: [
-                    {
-                        role: "user",
-                        parts: [
-                            { text: promptText },
-                            {
-                                inlineData: {
-                                    mimeType: mimeType || "audio/wav",
-                                    data: base64Audio
-                                }
+            let detectedVehicles = [];
+
+            if (currentMode === 'webcam' && videoEl.readyState === 4) {
+                // Draw Video Stream onto Canvas
+                ctx.drawImage(videoEl, 0, 0, canvas.width, canvas.height);
+
+                // Run AI Detection if loaded
+                if (isModelLoaded && aiModel) {
+                    try {
+                        const predictions = await aiModel.detect(videoEl);
+                        const vehicleTypes = ['car', 'truck', 'bus', 'motorcycle'];
+                        
+                        predictions.forEach(pred => {
+                            if (vehicleTypes.includes(pred.class) && pred.score > 0.45) {
+                                const [x, y, width, height] = pred.bbox;
+                                // Scale bbox from video resolution to canvas resolution
+                                const scaleX = canvas.width / videoEl.videoWidth;
+                                const scaleY = canvas.height / videoEl.videoHeight;
+
+                                const realWidth = (pred.class === 'truck' || pred.class === 'bus') ? 2.5 : (pred.class === 'motorcycle' ? 0.9 : defaultCarWidth);
+                                const dist = (focalLength * realWidth) / (width * scaleX);
+
+                                detectedVehicles.push({
+                                    type: pred.class,
+                                    x: x * scaleX,
+                                    y: y * scaleY,
+                                    w: width * scaleX,
+                                    h: height * scaleY,
+                                    distance: dist,
+                                    confidence: pred.score
+                                });
                             }
-                        ]
+                        });
+                    } catch (e) {
+                        console.error(e);
                     }
-                ]
-            };
-
-            let attempts = 0;
-            while (attempts < 3) {
-                try {
-                    const response = await fetch(apiUrl, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    if (!response.ok) throw new Error(`HTTP Error status: ${response.status}`);
-                    const result = await response.json();
-                    const text = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-                    if (text) return text.trim();
-                    throw new Error("No text returned from Gemini API");
-                } catch (err) {
-                    attempts++;
-                    if (attempts >= 3) throw err;
-                    await new Promise(res => setTimeout(res, 1000 * Math.pow(2, attempts)));
                 }
+            } else {
+                // =============== DEMO SIMULATION MODE ===============
+                updateSimulation();
+                
+                // Draw 3D Perspective Road
+                const cx = canvas.width / 2;
+                const horizonY = canvas.height * 0.42;
+
+                // Sky & Ground Gradient
+                const skyGrad = ctx.createLinearGradient(0, 0, 0, horizonY);
+                skyGrad.addColorStop(0, '#0d1322');
+                skyGrad.addColorStop(1, '#1a243a');
+                ctx.fillStyle = skyGrad;
+                ctx.fillRect(0, 0, canvas.width, horizonY);
+
+                const groundGrad = ctx.createLinearGradient(0, horizonY, 0, canvas.height);
+                groundGrad.addColorStop(0, '#111827');
+                groundGrad.addColorStop(1, '#0b0f19');
+                ctx.fillStyle = groundGrad;
+                ctx.fillRect(0, horizonY, canvas.width, canvas.height - horizonY);
+
+                // Road Polygon
+                ctx.fillStyle = '#1e293b';
+                ctx.beginPath();
+                ctx.moveTo(cx - 60, horizonY);
+                ctx.lineTo(cx + 60, horizonY);
+                ctx.lineTo(canvas.width * 0.95, canvas.height);
+                ctx.lineTo(canvas.width * 0.05, canvas.height);
+                ctx.closePath();
+                ctx.fill();
+
+                // Lane Lines
+                ctx.strokeStyle = '#f59e0b';
+                ctx.lineWidth = 3;
+                ctx.setLineDash([15, 15]);
+                ctx.beginPath();
+                ctx.moveTo(cx, horizonY);
+                ctx.lineTo(cx, canvas.height);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Calculate Simulated Vehicle Pixel Width using inverse formula
+                // w_px = (f * W_real) / Distance
+                const simCarPixelWidth = (focalLength * defaultCarWidth) / simDistance;
+                const simCarPixelHeight = simCarPixelWidth * 0.65;
+                const carY = horizonY + (canvas.height - horizonY) * (1 - (simDistance / 40));
+                const carX = cx - simCarPixelWidth / 2;
+
+                // Draw Vector Car Asset
+                ctx.fillStyle = '#3b82f6';
+                ctx.shadowColor = '#00f2fe';
+                ctx.shadowBlur = 15;
+                ctx.beginPath();
+                ctx.roundRect(carX, carY - simCarPixelHeight, simCarPixelWidth, simCarPixelHeight, 8);
+                ctx.fill();
+                ctx.shadowBlur = 0;
+
+                // Car Tail lights
+                ctx.fillStyle = '#ef4444';
+                ctx.fillRect(carX + 4, carY - 12, simCarPixelWidth * 0.25, 6);
+                ctx.fillRect(carX + simCarPixelWidth * 0.75 - 4, carY - 12, simCarPixelWidth * 0.25, 6);
+
+                detectedVehicles.push({
+                    type: 'car',
+                    x: carX,
+                    y: carY - simCarPixelHeight,
+                    w: simCarPixelWidth,
+                    h: simCarPixelHeight,
+                    distance: simDistance,
+                    confidence: 0.98
+                });
             }
+
+            // Process Target Vehicles
+            let closestTarget = null;
+            let minDist = 999;
+
+            detectedVehicles.forEach(veh => {
+                if (veh.distance < minDist) {
+                    minDist = veh.distance;
+                    closestTarget = veh;
+                }
+
+                // Select Bounding Box Color based on Danger Level
+                let boxColor = '#00e676'; // Safe Green
+                if (veh.distance < 8) {
+                    boxColor = '#ff3366'; // Danger Red
+                } else if (veh.distance < 15) {
+                    boxColor = '#ffbb00'; // Warning Yellow
+                }
+
+                // Draw Target Box HUD Corners
+                ctx.strokeStyle = boxColor;
+                ctx.lineWidth = 3;
+                
+                // Corner Bounding Box effect
+                const len = Math.min(veh.w, veh.h) * 0.25;
+                // Top-Left
+                ctx.beginPath(); ctx.moveTo(veh.x, veh.y + len); ctx.lineTo(veh.x, veh.y); ctx.lineTo(veh.x + len, veh.y); ctx.stroke();
+                // Top-Right
+                ctx.beginPath(); ctx.moveTo(veh.x + veh.w - len, veh.y); ctx.lineTo(veh.x + veh.w, veh.y); ctx.lineTo(veh.x + veh.w, veh.y + len); ctx.stroke();
+                // Bottom-Left
+                ctx.beginPath(); ctx.moveTo(veh.x, veh.y + veh.h - len); ctx.lineTo(veh.x, veh.y + veh.h); ctx.lineTo(veh.x + len, veh.y + veh.h); ctx.stroke();
+                // Bottom-Right
+                ctx.beginPath(); ctx.moveTo(veh.x + veh.w - len, veh.y + veh.h); ctx.lineTo(veh.x + veh.w, veh.y + veh.h); ctx.lineTo(veh.x + veh.w, veh.y + veh.h - len); ctx.stroke();
+
+                // Semi-transparent box fill
+                ctx.fillStyle = boxColor + '22';
+                ctx.fillRect(veh.x, veh.y, veh.w, veh.h);
+
+                // Target Distance Badge on top of vehicle
+                ctx.fillStyle = boxColor;
+                ctx.fillRect(veh.x, veh.y - 26, Math.max(veh.w, 110), 22);
+                ctx.fillStyle = '#000000';
+                ctx.font = 'bold 12px monospace';
+                ctx.fillText(`${veh.type.toUpperCase()} | ${veh.distance.toFixed(1)}m`, veh.x + 6, veh.y - 10);
+            });
+
+            // Update UI Telemetry Cards
+            const metricDist = document.getElementById('metric-distance');
+            const metricStatusBox = document.getElementById('metric-status-box');
+            const metricStatusText = document.getElementById('metric-status-text');
+            const metricTargetType = document.getElementById('metric-target-type');
+            const metricBboxWidth = document.getElementById('metric-bbox-width');
+            const metricDangerLevel = document.getElementById('metric-danger-level');
+            const metricTTC = document.getElementById('metric-ttc');
+            const warningBanner = document.getElementById('warning-banner');
+            const statusCard = document.getElementById('status-card');
+
+            if (closestTarget) {
+                const distVal = closestTarget.distance.toFixed(1);
+                metricDist.innerText = distVal;
+                metricTargetType.innerText = closestTarget.type;
+                metricBboxWidth.innerText = `${Math.round(closestTarget.w)} px`;
+
+                // Calculate estimated TTC (assuming relative approach speed 40km/h ~ 11m/s)
+                const estimatedTTC = (closestTarget.distance / 11.1).toFixed(1);
+                metricTTC.innerText = `${estimatedTTC} s`;
+
+                if (closestTarget.distance < 8) {
+                    // DANGER ZONE
+                    metricDist.className = "text-5xl font-extrabold text-rose-500 font-mono";
+                    metricStatusText.innerText = "CẢNH BÁO: BÁM DẦU QUÁ GẦN!";
+                    metricStatusText.className = "text-sm font-bold text-rose-400";
+                    metricDangerLevel.innerText = "NGUY HIỂM";
+                    metricDangerLevel.className = "text-lg font-bold text-rose-500";
+                    warningBanner.classList.remove('hidden');
+                    statusCard.className = "bg-adas-card p-6 rounded-2xl border-2 border-rose-500 warning-flash relative overflow-hidden";
+
+                    // Trigger Audio Alert
+                    if (now - lastBeepTime > 400) {
+                        playBeep(950, 0.2, 2);
+                        lastBeepTime = now;
+                    }
+                } else if (closestTarget.distance < 15) {
+                    // WARNING ZONE
+                    metricDist.className = "text-5xl font-extrabold text-amber-400 font-mono";
+                    metricStatusText.innerText = "CHÚ Ý: GIỮ KHOẢNG CÁCH";
+                    metricStatusText.className = "text-sm font-bold text-amber-400";
+                    metricDangerLevel.innerText = "TRUNG BÌNH";
+                    metricDangerLevel.className = "text-lg font-bold text-amber-400";
+                    warningBanner.classList.add('hidden');
+                    statusCard.className = "bg-adas-card p-6 rounded-2xl border-2 border-amber-500/80 relative overflow-hidden";
+
+                    if (now - lastBeepTime > 1200) {
+                        playBeep(600, 0.15, 1);
+                        lastBeepTime = now;
+                    }
+                } else {
+                    // SAFE ZONE
+                    metricDist.className = "text-5xl font-extrabold text-emerald-400 font-mono";
+                    metricStatusText.innerText = "KHOẢNG CÁCH AN TOÀN";
+                    metricStatusText.className = "text-sm font-bold text-emerald-400";
+                    metricDangerLevel.innerText = "AN TOÀN";
+                    metricDangerLevel.className = "text-lg font-bold text-emerald-400";
+                    warningBanner.classList.add('hidden');
+                    statusCard.className = "bg-adas-card p-6 rounded-2xl border-2 border-emerald-500/50 relative overflow-hidden";
+                }
+            } else {
+                metricDist.innerText = "--";
+                metricDist.className = "text-5xl font-extrabold text-cyan-400 font-mono";
+                metricStatusText.innerText = "Đang quét tìm xe phía trước...";
+                metricStatusText.className = "text-sm font-bold text-slate-400";
+                metricTargetType.innerText = "Chưa phát hiện";
+                metricBboxWidth.innerText = "-- px";
+                metricTTC.innerText = "-- s";
+                metricDangerLevel.innerText = "AN TOÀN";
+                metricDangerLevel.className = "text-lg font-bold text-slate-400";
+                warningBanner.classList.add('hidden');
+                statusCard.className = "bg-adas-card p-6 rounded-2xl border-2 border-adas-border relative overflow-hidden";
+            }
+
+            requestAnimationFrame(mainLoop);
         }
 
-        function applyTranscribedTextToScript() {
-            const text = document.getElementById('transcription-text-output').value;
-            if (!text) return;
-
-            document.getElementById('script-input').value = text;
-            updateScriptStats();
-            showToast('Đã đưa văn bản từ Video vào Kịch Bản AI!', 'success');
-
-            const scriptEditor = document.getElementById('script-editor-section');
-            if (scriptEditor) {
-                scriptEditor.scrollIntoView({ behavior: 'smooth' });
-            }
-        }
-
-        function copyTranscribedText() {
-            const textarea = document.getElementById('transcription-text-output');
+        function copyPythonCode() {
+            const codeText = document.getElementById('python-code-block').innerText;
+            const textarea = document.createElement('textarea');
+            textarea.value = codeText;
+            document.body.appendChild(textarea);
             textarea.select();
             document.execCommand('copy');
-            showToast('Đã sao chép văn bản vào Khay nhớ tạm (Clipboard)!', 'success');
+            document.body.removeChild(textarea);
+            alert("Đã sao chép mã nguồn Python vào clipboard!");
         }
 
-        function downloadTranscribedTextFile() {
-            const text = document.getElementById('transcription-text-output').value;
-            if (!text) return;
-
-            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `VanBan_Tu_Video_${Date.now()}.txt`;
-            a.click();
-            URL.revokeObjectURL(url);
-            showToast('Đã tải xuống file .TXT!', 'success');
-        }
-
-        function loadHistoryFromStorage() {}
-
-        function showToast(msg, type = 'info') {
-            const container = document.getElementById('toast-container');
-            const toast = document.createElement('div');
-
-            const bgColors = {
-                success: 'bg-emerald-950 border-emerald-500/50 text-emerald-200',
-                error: 'bg-rose-950 border-rose-500/50 text-rose-200',
-                warning: 'bg-amber-950 border-amber-500/50 text-amber-200',
-                info: 'bg-brand-950 border-brand-500/50 text-purple-200'
-            };
-
-            const icons = {
-                success: 'fa-circle-check text-emerald-400',
-                error: 'fa-circle-xmark text-rose-400',
-                warning: 'fa-triangle-exclamation text-amber-400',
-                info: 'fa-circle-info text-brand-400'
-            };
-
-            toast.className = `pointer-events-auto border px-4 py-3 rounded-xl shadow-2xl flex items-center space-x-3 text-xs font-medium backdrop-blur-lg transform transition-all duration-300 opacity-0 translate-y-2 ${bgColors[type] || bgColors.info}`;
-            toast.innerHTML = `
-                <i class="fa-solid ${icons[type] || icons.info} text-base"></i>
-                <span>${msg}</span>
-            `;
-
-            container.appendChild(toast);
-
-            setTimeout(() => {
-                toast.classList.remove('opacity-0', 'translate-y-2');
-            }, 10);
-
-            setTimeout(() => {
-                toast.classList.add('opacity-0', 'translate-y-2');
-                setTimeout(() => toast.remove(), 300);
-            }, 3500);
-        }
+        // Window Load Handler
+        window.onload = function() {
+            resizeCanvas();
+            updateCalibration();
+            initAIModel();
+            requestAnimationFrame(mainLoop);
+        };
     </script>
 </body>
 </html>
